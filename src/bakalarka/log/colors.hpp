@@ -1,3 +1,5 @@
+#pragma once
+
 #define BLACK "\033[30;m"
 #define RED "\033[31m" 
 #define GREEN "\033[32;m"

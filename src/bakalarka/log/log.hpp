@@ -1,3 +1,5 @@
+#pragma once
+
 #include "colors.hpp"
 #include "Logger.hpp"
 #include <sstream>
