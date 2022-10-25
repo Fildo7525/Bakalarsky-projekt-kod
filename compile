@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ~/Bakalarka/workspace/
+catkin_make
+source ./devel/setup.bash
+
