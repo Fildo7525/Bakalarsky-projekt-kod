@@ -1,6 +1,7 @@
-#include "log/log.hpp"
+#include "communication/BlackMetal.hpp"
+#include "log.hpp"
 
-INIT_DEBUG(main)
+INIT_MODULE(main)
 
 int main (int argc, char *argv[])
 {

@@ -4,7 +4,7 @@
 #include "Logger.hpp"
 #include <sstream>
 
-#define INIT_DEBUG(MODULE) Logger lg(#MODULE);
+#define INIT_MODULE(MODULE) Logger lg(#MODULE);
 
 #define LOG(msg, color) \
 	do { \

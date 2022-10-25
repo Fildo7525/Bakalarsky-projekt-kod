@@ -6,7 +6,7 @@ add_library(bm_communication
 target_include_directories(
 	bm_communication
 PUBLIC
-	../log
+	${CMAKE_SOURCE_DIR}/log
 )
 
 target_link_libraries(
