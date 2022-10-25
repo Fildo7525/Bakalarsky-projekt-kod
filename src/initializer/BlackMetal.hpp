@@ -21,6 +21,8 @@ enum class Command {
 	PREPARE_WHEEL_CONTROLER,
 };
 
+} // namespace bm
+
 class BlackMetal
 {
 public:
@@ -33,7 +35,7 @@ public:
 	static std::shared_ptr<BlackMetal> instance();
 
 	~BlackMetal();
-	Status execute(Command cmd, const int leftWheelVelocity = 0, const int rightWheelVelocity = 0);
+	Status execute(bm::Command cmd, const int leftWheelVelocity = 0, const int rightWheelVelocity = 0);
 private:
 	BlackMetal();
 	BlackMetal(const BlackMetal &) = delete;
@@ -48,6 +50,4 @@ private:
 	int m_clientFD;
 	int m_socket;
 };
-
-} // namespace bm
 

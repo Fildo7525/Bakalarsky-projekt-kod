@@ -3,26 +3,25 @@
 #include <memory>
 #include <string>
 
-using bm::BlackMetal;
 
-bool bm::BlackMetal::m_initialized = false;
-std::shared_ptr<BlackMetal> bm::BlackMetal::m_instance =
+bool BlackMetal::m_initialized = false;
+std::shared_ptr<BlackMetal> BlackMetal::m_instance =
 	std::shared_ptr<BlackMetal>(new BlackMetal);
 
-std::shared_ptr<bm::BlackMetal> bm::BlackMetal::instance()
+std::shared_ptr<BlackMetal> BlackMetal::instance()
 {
 	return m_instance;
 }
 
-bm::BlackMetal::~BlackMetal()
+BlackMetal::~BlackMetal()
 {
 	// closing the connected socket
 	close(m_clientFD);
 }
 
-bm::BlackMetal::Status bm::BlackMetal::execute(Command cmd, const int leftWheelVelocity, const int rightWheelVelocity)
+BlackMetal::Status BlackMetal::execute(bm::Command cmd, const int leftWheelVelocity, const int rightWheelVelocity)
 {
-	std::string message = "{\"UserID\":1,\"Command\":";
+	std::string message = "{\"UserID\":1,\"bm::Command\":";
 	message += std::to_string(int(cmd));
 	message += ",\"RightWheelSpeed\":" + std::to_string(rightWheelVelocity) +
 				",\"LeftWheelSpeed\":" + std::to_string(leftWheelVelocity) + "}";
@@ -35,10 +34,10 @@ bm::BlackMetal::Status bm::BlackMetal::execute(Command cmd, const int leftWheelV
 	return evalReturnState(buffer);
 }
 
-bm::BlackMetal::BlackMetal()
+BlackMetal::BlackMetal()
 {
 	struct sockaddr_in serv_addr;
-	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
+	// std::string hello = "{\"UserID\":1,\"bm::Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
 	if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		printf("\n Socket creation error \n");
 		return;
@@ -59,7 +58,7 @@ bm::BlackMetal::BlackMetal()
 	}
 }
 
-bm::BlackMetal::Status bm::BlackMetal::evalReturnState(const char *returnJson)
+BlackMetal::Status BlackMetal::evalReturnState(const char *returnJson)
 {
 	std::string msg(returnJson);
 	std::string tmp(msg.begin()+18,msg.begin()+27);
