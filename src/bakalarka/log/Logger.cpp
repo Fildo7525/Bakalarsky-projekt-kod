@@ -1,10 +1,8 @@
 #include "Logger.hpp"
-#include "log.hpp"
+
 #include <chrono>
 #include <cstdio>
 #include <ostream>
-
-INIT_MODULE(LOGGER);
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
