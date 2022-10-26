@@ -1,6 +1,14 @@
 #include "BlackMetal.hpp"
 #include "log.hpp"
 
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#define PORT 665
+
 INIT_MODULE(BlackMetal);
 
 bool BlackMetal::m_initialized = false;
