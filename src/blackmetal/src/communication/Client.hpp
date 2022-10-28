@@ -17,8 +17,8 @@ public:
 	std::string receive();
 
 	int socketFD();
-private:
-	bm::Status evalReturnState(const std::string &returnJson);
+protected:
+	virtual bm::Status evalReturnState(const std::string &returnJson) = 0;
 
 private:
 	/// File descriptor of the object.

@@ -11,5 +11,7 @@ public:
 	BMLogger();
 
 	void onTimerTimeoutReadSocket();
+private:
+	bm::Status evalReturnState(const std::string &returnJson) override;
 };
 

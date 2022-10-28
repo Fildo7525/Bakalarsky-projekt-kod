@@ -36,6 +36,15 @@ public:
 	void onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg);
 
 private:
+
+	/**
+	 * @brief Overriden function from the Client base class.
+	 *
+	 * @param returnJson Returned Json string from the server.
+	 */
+	bm::Status evalReturnState(const std::string &returnJson) override;
+
+private:
 	const double M_CHASIS_LENGTH;
 
 	double m_leftWheelSpeed;

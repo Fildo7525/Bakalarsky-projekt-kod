@@ -95,31 +95,3 @@ int Client::socketFD()
 	return m_socket;
 }
 
-static std::string retrieveAnswer(const std::string &msg)
-{
-	auto begin = msg.find(':');
-	if (begin == std::string::npos) {
-		begin = msg.find('=');
-		if (begin == std::string::npos) {
-			return "";
-		}
-	}
-
-	auto end = msg.find('}')+1;
-	return msg.substr(begin+1, end-1);
-}
-
-bm::Status Client::evalReturnState(const std::string &returnJson)
-{
-	std::string tmp = retrieveAnswer(returnJson);
-	INFO(tmp);
-
-	if (tmp == "RECIEVE_OK") {
-		INFO("The execution ran correctly");
-		return bm::Status::OK;
-	} else {
-		ERR("The rebot buffer is full. The send data will not be used.");
-		return bm::Status::FULL_BUFFER;
-	}
-}
-
