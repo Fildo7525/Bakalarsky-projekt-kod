@@ -2,4 +2,8 @@
 
 ./compile
 source ./install/setup.bash
-ros2 run blackmetal blackmetal
+
+# TODO: Crete a launch file
+ros2 run blackmetal blackmetal &
+ros2 run blackmetal bm_logServer &
+
