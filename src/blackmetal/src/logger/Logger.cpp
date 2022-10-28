@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cstdio>
+#include <mutex>
 #include <ostream>
 
 Logger::Logger(const char *module, dbg_level lvl)
@@ -17,9 +18,13 @@ void Logger::log(const char *codePath, pid_t pid, const char *message, const cha
 	std::time_t pretty_time = std::chrono::system_clock::to_time_t(time);
 	std::string log_time = std::ctime(&pretty_time);
 	log_time.pop_back();
- 
-	std::printf("%s [%d] %s => %s: %s\033[0;0m\n", color, pid, m_moduleName, codePath, message);
-	m_logFile << log_time << "\t[" << pid << "] " << m_moduleName << " => " << codePath << ": " << message << '\n';
+
+	static std::mutex mut;
+	{
+		std::lock_guard<std::mutex> lock(mut);
+		std::printf("%s [%d] %s => %s: %s\033[0;0m\n", color, pid, m_moduleName, codePath, message);
+		m_logFile << log_time << "\t[" << pid << "] " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	}
 }
 
 dbg_level Logger::level()
