@@ -22,9 +22,6 @@ public:
 	/// Constructor.
 	BlackMetal();
 
-	/// Destructor.
-	~BlackMetal();
-
 	/**
 	 * @brief Convert Twist messages and send them to the Blackmetal robot.
 	 *

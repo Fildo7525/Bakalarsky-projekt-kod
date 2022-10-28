@@ -20,10 +20,6 @@ BlackMetal::BlackMetal()
 	);
 }
 
-BlackMetal::~BlackMetal()
-{
-}
-
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 {
 	DBG("Message geometry_msgs::msg::Twist: " << geometry_msgs::msg::to_yaml(msg));
