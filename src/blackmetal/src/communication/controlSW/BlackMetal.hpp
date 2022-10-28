@@ -16,7 +16,7 @@
  */
 class BlackMetal
 	: public rclcpp::Node
-	, public Client
+	, private Client
 {
 public:
 	/// Constructor.

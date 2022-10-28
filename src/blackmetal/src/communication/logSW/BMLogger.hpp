@@ -4,7 +4,7 @@
 
 class BMLogger
 	: public rclcpp::Node
-	, public Client
+	, private Client
 {
 public:
 	/// Constructor.
