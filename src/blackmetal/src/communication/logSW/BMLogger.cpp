@@ -17,6 +17,6 @@ BMLogger::BMLogger()
 
 void BMLogger::onTimerTimeoutReadSocket()
 {
-	INFO("BlackMetal: " << recieve());
+	INFO("BlackMetal: " << receive());
 }
 

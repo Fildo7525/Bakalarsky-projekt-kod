@@ -58,7 +58,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 	DBG("The server send" << numberOfBytes);
 
 	if ((numberOfBytes = read(socketFD(), buffer, 1024)) < 0) {
-		FATAL("The data could not be recieved");
+		FATAL("The data could not be received");
 		return bm::Status::RECIEVE_ERROR;
 	}
 	INFO("Recieved: " << buffer);
@@ -76,13 +76,13 @@ bm::Status Client::request(int rightWheel, int leftWheel)
 	return std::get<bm::Status>(buffer);
 }
 
-std::string Client::recieve()
+std::string Client::receive()
 {
 	int numberOfBytes = 0;
 	char buffer[1024] = { 0 };
 
 	if ((numberOfBytes = read(socketFD(), buffer, 1024)) < 0) {
-		FATAL("The data could not be recieved");
+		FATAL("The data could not be received");
 		return std::string();
 	}
 	INFO("Recieved: " << buffer);

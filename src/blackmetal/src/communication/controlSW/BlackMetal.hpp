@@ -31,7 +31,7 @@ public:
 	 * This function wates for the Twist messages. Transfers them to the json type of string and sends them to the robot.
 	 * The linear and angular parameters have to be calculated for wheel for the json.
 	 *
-	 * @param msg The recieved message.
+	 * @param msg The received message.
 	 */
 	void onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg);
 
