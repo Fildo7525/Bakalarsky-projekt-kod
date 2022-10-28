@@ -3,6 +3,8 @@
 
 #define PORT 665
 
+INIT_MODULE(BlackMetal);
+
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
 	, Client(PORT, "192.168.1.3")

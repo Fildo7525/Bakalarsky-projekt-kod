@@ -3,6 +3,7 @@
 
 #include <chrono>
 
+INIT_MODULE(BMLogger);
 using namespace std::chrono_literals;
 
 #define PORT 664

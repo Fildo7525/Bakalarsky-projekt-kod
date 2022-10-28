@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+INIT_MODULE(Client);
+
 Client::Client(int port, const std::string &address)
 {
 	struct sockaddr_in serv_addr;

@@ -15,12 +15,19 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-add_subdirectory(src/communication)
+add_subdirectory(src/communication/controlSW)
+add_subdirectory(src/communication/logSW)
+add_subdirectory(src/logger)
+
+
+
+
+
 
 # Main Program
 add_executable(blackmetal src/blackmetal.cpp)
 target_link_libraries(blackmetal
-	bm_communication
+	bm_controlSW
 )
 target_include_directories(
 	blackmetal
@@ -46,6 +53,11 @@ install(TARGETS blackmetal
 	DESTINATION lib/${PROJECT_NAME})
 
 
+
+
+
+
+
 # Logging server
 add_executable(log_server ./src/bm_logServer.cpp)
 target_include_directories(
@@ -56,7 +68,7 @@ PUBLIC
 	$<INSTALL_INTERFACE:include>
 )
 target_link_libraries(log_server
-	bm_logging
+	bm_logSW
 )
 ament_target_dependencies(log_server
 	"rclcpp"

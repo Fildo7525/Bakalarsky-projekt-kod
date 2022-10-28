@@ -1,4 +1,4 @@
-#include "communication/BMLogger.hpp"
+#include "communication/logSW/BMLogger.hpp"
 
 int main (int argc, char *argv[])
 {

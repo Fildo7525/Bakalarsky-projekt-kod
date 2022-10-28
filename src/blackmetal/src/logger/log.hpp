@@ -5,7 +5,7 @@
 
 #include <sstream>
 
-#define INIT_MODULE(MODULE) Logger lg(#MODULE);
+#define INIT_MODULE(MODULE) static Logger lg(#MODULE);
 
 #define LOG(msg, color, log_level) \
 	do { \

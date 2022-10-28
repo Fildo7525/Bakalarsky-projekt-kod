@@ -6,8 +6,8 @@
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
-	, m_level(lvl)
 	, m_logFile("/home/fildo/Bakalarka/workspace/log/" + std::string(module) + ".log", std::ios::app)
+	, m_level(lvl)
 {
 }
 
