@@ -3,7 +3,5 @@
 ./compile
 source ./install/setup.bash
 
-# TODO: Crete a launch file
-ros2 run blackmetal blackmetal &
-ros2 run blackmetal bm_logServer &
+ros2 launch blackmetal blackmetal.launch.py
 
