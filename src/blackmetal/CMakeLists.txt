@@ -7,6 +7,7 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # find dependencies
@@ -35,13 +36,6 @@ PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>
 )
-
-target_compile_features(
-	blackmetal
-PUBLIC
-	c_std_99
-	cxx_std_17
-)	# Require C99 and C++17
 
 ament_target_dependencies(blackmetal
 	"rclcpp"
@@ -73,12 +67,6 @@ target_link_libraries(log_server
 ament_target_dependencies(log_server
 	"rclcpp"
 )
-target_compile_features(
-	log_server
-PUBLIC
-	c_std_99
-	cxx_std_17
-)	# Require C99 and C++17
 
 install(TARGETS log_server
 	DESTINATION lib/${PROJECT_NAME})
