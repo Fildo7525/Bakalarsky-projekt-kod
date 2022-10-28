@@ -12,6 +12,7 @@ target_include_directories(
 	bm_controlSW
 PUBLIC
 	${CMAKE_SOURCE_DIR}/src/logger
+	${CMAKE_SOURCE_DIR}/src/communication
 )
 target_link_libraries(bm_controlSW
 	logger

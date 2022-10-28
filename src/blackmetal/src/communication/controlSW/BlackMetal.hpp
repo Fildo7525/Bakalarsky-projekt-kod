@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Client.hpp"
+#include "Client.hpp"
 
 #include <string>
 #include <memory>
@@ -42,6 +42,7 @@ private:
 	bm::Status evalReturnState(const std::string &returnJson) override;
 
 private:
+	// TODO: Find out what is the length
 	const double M_CHASIS_LENGTH;
 
 	double m_leftWheelSpeed;
