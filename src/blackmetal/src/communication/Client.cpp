@@ -46,24 +46,12 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 	message += std::to_string(int(cmd));
 	message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
 				",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
-	char buffer[1024] = { 0 };
 
 	INFO("sending: " << message);
 
-	int numberOfBytes = 0;
-	if ((numberOfBytes = send(socketFD(), message.c_str(), message.size(), 0)) < 0) {
-		FATAL("Could not send the command to server");
-		return bm::Status::SEND_ERROR;
-	}
-	DBG("The server send" << numberOfBytes);
-
-	if ((numberOfBytes = read(socketFD(), buffer, 1024)) < 0) {
-		FATAL("The data could not be received");
-		return bm::Status::RECIEVE_ERROR;
-	}
-	INFO("Recieved: " << buffer);
-	DBG("The server send" << numberOfBytes);
-	return buffer;
+	this->send(message);
+	receive(message);
+	return message;
 }
 
 bm::Status Client::request(int rightWheel, int leftWheel)
@@ -76,18 +64,32 @@ bm::Status Client::request(int rightWheel, int leftWheel)
 	return std::get<bm::Status>(buffer);
 }
 
-std::string Client::receive()
+bm::Status Client::send(const std::string &msg)
+{
+	int numberOfBytes = 0;
+	if ((numberOfBytes = ::send(socketFD(), msg.c_str(), msg.size(), 0)) < 0) {
+		FATAL("Could not send the command to server");
+		return bm::Status::SEND_ERROR;
+	}
+	DBG("The server send" << numberOfBytes);
+	return bm::Status::OK;
+}
+
+bm::Status Client::receive(std::string &msg)
 {
 	int numberOfBytes = 0;
 	char buffer[1024] = { 0 };
 
+	INFO("Receiving...");
 	if ((numberOfBytes = read(socketFD(), buffer, 1024)) < 0) {
 		FATAL("The data could not be received");
-		return std::string();
+		return bm::Status::RECIEVE_ERROR;
 	}
+	msg.clear();
+	msg = buffer;
 	INFO("Recieved: " << buffer);
 	DBG("The server send" << numberOfBytes);
-	return buffer;
+	return bm::Status::OK;
 }
 
 int Client::socketFD()

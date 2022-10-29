@@ -14,7 +14,8 @@ public:
 	virtual std::variant<bm::Status, std::string> execute(bm::Command cmd, int rightWheel, int leftWheel);
 	bm::Status request(int rightWheel, int leftWheel);
 
-	std::string receive();
+	bm::Status send(const std::string &msg);
+	bm::Status receive(std::string &msg);
 
 	int socketFD();
 protected:
