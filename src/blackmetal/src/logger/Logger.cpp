@@ -12,7 +12,25 @@ Logger::Logger(const char *module, dbg_level lvl)
 {
 }
 
-void Logger::log(const char *codePath, pid_t pid, const char *message, const char *color)
+const char* Logger::dbgLevelToString(const dbg_level level)
+{
+	switch (level) {
+		case dbg_level::DBG:
+			return "DBG";
+		case dbg_level::INFO:
+			return "INFO";
+		case dbg_level::WARN:
+			return "WARN";
+		case dbg_level::ERR:
+			return "ERR";
+		case dbg_level::FATAL:
+			return "FATAL";
+		default:
+			return "";
+	}
+}
+
+void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, const char *message, const char *color)
 {
 	auto time = std::chrono::system_clock::now();
 	std::time_t pretty_time = std::chrono::system_clock::to_time_t(time);
@@ -22,8 +40,12 @@ void Logger::log(const char *codePath, pid_t pid, const char *message, const cha
 	static std::mutex mut;
 	{
 		std::lock_guard<std::mutex> lock(mut);
-		std::printf("%s [%d] %s => %s: %s\033[0;0m\n", color, pid, m_moduleName, codePath, message);
-		m_logFile << log_time << "\t[" << pid << "] " << m_moduleName << " => " << codePath << ": " << message << '\n';
+		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
+			std::fprintf(stderr, "%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
+		} else {
+			std::printf("%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
+		}
+		m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
 	}
 }
 
