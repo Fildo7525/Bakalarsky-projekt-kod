@@ -10,6 +10,7 @@ BlackMetal::BlackMetal()
 	, Client(PORT, "192.168.1.3")
 	, M_CHASIS_LENGTH(0.45)
 {
+	INFO("Client connected. Continuing the parameter initialization");
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
 			"bm_movement",
@@ -30,16 +31,17 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 
 static std::string retrieveAnswer(const std::string &msg)
 {
-	auto begin = msg.find(':');
-	if (begin == std::string::npos) {
-		begin = msg.find('=');
-		if (begin == std::string::npos) {
+	auto offset = msg.find(':');
+	if (offset == std::string::npos) {
+		offset = msg.find('=');
+		if (offset == std::string::npos) {
 			return "";
 		}
 	}
 
-	auto end = msg.find('}')+1;
-	return msg.substr(begin+1, end-1);
+	auto range = msg.find('}') - 3 - offset;
+	WARN("Beigning is calculated to " << offset << ". End of recieved stirng is " << range << ". Length: " << msg.length());
+	return msg.substr(offset+2, range);
 }
 
 bm::Status BlackMetal::evalReturnState(const std::string &returnJson)
