@@ -7,3 +7,5 @@ install
 log
 doc/latex
 doc/html
+src/blackmetal/launch/__pycache__/blackmetal.launch.cpython-310.pyc
+
