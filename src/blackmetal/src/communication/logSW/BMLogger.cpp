@@ -12,12 +12,22 @@ BMLogger::BMLogger()
 	: rclcpp::Node("bm_logger")
 	, Client(PORT, "192.168.1.3")
 {
-	this->create_wall_timer(1s, [this](){ onTimerTimeoutReadSocket(); });
+	INFO("Server created starting the timer.");
+	m_timer = this->create_wall_timer(1s, [this](){
+							 INFO("Check for new messages");
+							 onTimerTimeoutReadSocket();
+	});
 }
 
 void BMLogger::onTimerTimeoutReadSocket()
 {
-	INFO("BlackMetal: " << receive());
+	std::string msg;
+	this->send("");
+	if (receive(msg) != bm::Status::OK) {
+		FATAL("The logging message from robot could not be received");
+	} else {
+		INFO("BlackMetal: " << msg);
+	}
 }
 
 bm::Status BMLogger::evalReturnState(const std::string &returnJson)

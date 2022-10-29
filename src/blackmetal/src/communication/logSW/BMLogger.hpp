@@ -13,5 +13,6 @@ public:
 	void onTimerTimeoutReadSocket();
 private:
 	bm::Status evalReturnState(const std::string &returnJson) override;
+	rclcpp::TimerBase::SharedPtr m_timer;
 };
 
