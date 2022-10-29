@@ -52,6 +52,8 @@ public:
 	 */
 	dbg_level level();
 
+	std::string moduleName();
+
 	/**
 	 * @brief Free the resources.
 	 */

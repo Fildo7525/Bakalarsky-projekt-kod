@@ -7,7 +7,7 @@
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
-	, m_logFile("/home/fildo/Bakalarka/workspace/log/" + std::string(module) + ".log", std::ios::app)
+	, m_logFile("/home/fildo7525/Bakalarka/code/log/" + std::string(module) + __TIME__ + ".log", std::ios::app)
 	, m_level(lvl)
 {
 }
@@ -30,6 +30,11 @@ void Logger::log(const char *codePath, pid_t pid, const char *message, const cha
 dbg_level Logger::level()
 {
 	return m_level;
+}
+
+std::string Logger::moduleName()
+{
+	return m_moduleName;
 }
 
 Logger::~Logger()
