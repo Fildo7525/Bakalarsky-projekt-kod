@@ -32,6 +32,9 @@ public:
 	/// Constructor
 	explicit Logger(const char *module, dbg_level lvl = dbg_level::INFO);
 
+	const char* dbgLevelToString(const dbg_level level);
+	static const char* dbgLevelToString(const dbg_level level);
+
 	/**
 	 * @brief Log message at a specific codePath with a colour to the screen.
 	 *
@@ -43,7 +46,7 @@ public:
 	 * @param message Message to be printed.
 	 * @param color Color of the text based on the logging level.
 	 */
-	void log(const char *codePath, pid_t pid, const char *message, const char *color = "");
+	void log(const dbg_level dbgLevel, const char *codePath, pid_t pid, const char *message, const char *color = "");
 
 	/**
 	 * @brief Prints info about the class.

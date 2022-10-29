@@ -14,7 +14,7 @@
 		if (lg.level() <= log_level) { \
 			std::stringstream ss; \
 			ss << msg; \
-			lg.log(__func__, getpid(), ss.str().c_str(), color); \
+			lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
 		} \
 	} while(false)
 
