@@ -44,6 +44,7 @@ private:
 private:
 	// TODO: Find out what is the length
 	const double M_CHASIS_LENGTH;
+	const double M_WHEEL_RADIUS;
 
 	double m_leftWheelSpeed;
 	double m_rightWheelSpeed;
