@@ -5,3 +5,5 @@ install
 ./log/*
 
 log
+doc/latex
+doc/html
