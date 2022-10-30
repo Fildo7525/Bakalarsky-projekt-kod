@@ -32,6 +32,7 @@ enum class Command {
 /**
  * @enum Status
  * @brief return status of the server.
+ *
  * The robot receives the json string and returns a json string with a specific return status.
  * This status is than mapped on BlackMetal::Status enum type.
  */

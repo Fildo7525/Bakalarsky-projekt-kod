@@ -2,17 +2,19 @@
 
 #include "Client.hpp"
 
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+
 #include <string>
 #include <memory>
 
-#include <rclcpp/rclcpp.hpp>
-#include "geometry_msgs/msg/twist.hpp"
-
 /**
  * @class BlackMetal
- * @brief Singleton class for communication with the blackmetal robot.
+ * @brief Class for communication with the blackmetal robot.
  *
- * The class creates client and returns this instance on every call.
+ * This class inherrits the functionality of Client class
+ * and implements the methods for communication with the mentione Black Metal robot.
+ * The left and right wheel velocities are converted from geometry_msgs::msg::Twist message type.
  */
 class BlackMetal
 	: public rclcpp::Node
@@ -37,16 +39,21 @@ private:
 	/**
 	 * @brief Overriden function from the Client base class.
 	 *
+	 * The function parses the received json string and converts the result to bm::Status.
+	 *
 	 * @param returnJson Returned Json string from the server.
 	 */
 	bm::Status evalReturnState(const std::string &returnJson) override;
 
 private:
-	// TODO: Find out what is the length
+	// TODO: Find out what is the chasis length.
 	const double M_CHASIS_LENGTH;
+	// TODO: Find out what is the wheel radius.
 	const double M_WHEEL_RADIUS;
 
+	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
+	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
 	/// Subscriber that wates for the Twist message and executes the onTwistRecievedSendJson callback on it.

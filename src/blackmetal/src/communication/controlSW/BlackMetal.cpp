@@ -1,4 +1,5 @@
 #include "BlackMetal.hpp"
+
 #include "log.hpp"
 
 #define PORT 665

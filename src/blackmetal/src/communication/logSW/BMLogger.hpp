@@ -10,9 +10,23 @@ public:
 	/// Constructor.
 	BMLogger();
 
+	/**
+	 * @brief A Callback function called every second in the timer to read the data from the socket.
+	 *
+	 * The calling time is set to one second. However, if the server does not send data
+	 * during that period, the function blocks until the server does not send us some string to log.
+	 */
 	void onTimerTimeoutReadSocket();
 private:
+	/**
+	 * @brief Overridden function from Client base class.
+	 *
+	 * @param returnJson The returned json string.
+	 */
 	bm::Status evalReturnState(const std::string &returnJson) override;
+
+private:
+	/// Timer calling the defined callback function.
 	rclcpp::TimerBase::SharedPtr m_timer;
 };
 
