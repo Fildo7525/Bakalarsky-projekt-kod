@@ -45,6 +45,7 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 		} else {
 			std::printf("%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		}
+		fflush(stdout);
 		m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
 	}
 }
