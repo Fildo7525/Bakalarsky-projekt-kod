@@ -42,7 +42,7 @@ static std::string retrieveAnswer(const std::string &msg)
 	}
 
 	auto range = msg.find('}') - 3 - offset;
-	WARN("Beigning is calculated to " << offset << ". End of recieved stirng is " << range << ". Length: " << msg.length());
+	WARN("Beigning is calculated to " << offset << ". End of received stirng is " << range << ". Length: " << msg.length());
 	return msg.substr(offset+2, range);
 }
 
@@ -51,7 +51,7 @@ bm::Status BlackMetal::evalReturnState(const std::string &returnJson)
 	std::string tmp = retrieveAnswer(returnJson);
 	INFO(tmp);
 
-	if (tmp == "RECIEVE_OK") {
+	if (tmp == "RECEIVE_OK") {
 		INFO("The execution ran correctly");
 		return bm::Status::OK;
 	} else {

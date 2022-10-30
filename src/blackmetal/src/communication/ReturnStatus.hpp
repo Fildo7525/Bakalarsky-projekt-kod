@@ -43,8 +43,8 @@ enum class Status {
 	FULL_BUFFER,
 	/// The client could not send data to the server.
 	SEND_ERROR,
-	/// The response could not be recieved.
-	RECIEVE_ERROR,
+	/// The response could not be received.
+	RECEIVE_ERROR,
 };
 
 } // namespace bm

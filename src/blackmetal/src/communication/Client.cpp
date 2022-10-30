@@ -83,7 +83,7 @@ bm::Status Client::receive(std::string &msg)
 	INFO("Receiving...");
 	if ((numberOfBytes = read(socketFD(), buffer, 1024)) < 0) {
 		FATAL("The data could not be received");
-		return bm::Status::RECIEVE_ERROR;
+		return bm::Status::RECEIVE_ERROR;
 	}
 	msg.clear();
 	msg = buffer;
