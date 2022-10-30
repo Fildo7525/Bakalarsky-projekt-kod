@@ -20,6 +20,7 @@ void Logger::log(const char *codePath, pid_t pid, const char *message, const cha
  
 	std::printf("%s [%d] %s => %s: %s\033[0;0m\n", color, pid, m_moduleName, codePath, message);
 	m_logFile << log_time << "\t[" << pid << "] " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	fflush(stdout);
 }
 
 dbg_level Logger::level()
