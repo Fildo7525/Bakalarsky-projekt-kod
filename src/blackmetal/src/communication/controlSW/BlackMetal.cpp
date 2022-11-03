@@ -9,7 +9,7 @@ INIT_MODULE(BlackMetal);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, Client(PORT, "192.168.1.68")
+	, Client(PORT, "192.168.1.3")
 	, M_CHASIS_LENGTH(0.45)
 	, M_WHEEL_RADIUS(0.1)
 {
