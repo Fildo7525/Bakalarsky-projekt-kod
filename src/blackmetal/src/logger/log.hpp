@@ -5,6 +5,8 @@
 
 #include <sstream>
 
+#ifndef NDEBUG
+
 #define INIT_MODULE(MODULE) static Logger lg(#MODULE);
 
 #define LOG(msg, color, log_level) \
@@ -12,7 +14,7 @@
 		if (lg.level() <= log_level) { \
 			std::stringstream ss; \
 			ss << msg; \
-			lg.log(__func__, getpid(), ss.str().c_str(), color); \
+			lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
 		} \
 	} while(false)
 
@@ -22,3 +24,14 @@
 #define ERR(msg) LOG(msg, RED, dbg_level::ERR)
 #define FATAL(msg) LOG(msg, BACKGROUND_BRIGHT_RED, dbg_level::FATAL)
 
+#else
+
+#define INIT_MODULE(MODULE) ;
+
+#define DBG(msg)  ;
+#define INFO(msg) ;
+#define WARN(msg) ;
+#define ERR(msg)  ;
+#define FATAL(msg) ;
+
+#endif
