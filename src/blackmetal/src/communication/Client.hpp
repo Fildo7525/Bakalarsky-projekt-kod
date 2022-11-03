@@ -20,6 +20,9 @@ public:
 	/// Destructor
 	virtual ~Client();
 
+	static std::string stringifyStatus(const bm::Status status);
+	static std::string stringifyCommand(const bm::Command command);
+
 	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.
 	 *
@@ -31,7 +34,7 @@ public:
 	 * 		   bm::Status::RECEIVE_ERROR when the ::send function crashes,
 	 * 		   returned std::string message otherwise.
 	 */
-	virtual std::variant<bm::Status, std::string> execute(bm::Command cmd, int rightWheel, int leftWheel);
+	virtual std::variant<bm::Status, std::string> execute(bm::Command cmd, int rightWheel = 0, int leftWheel = 0);
 
 	/**
 	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_VELOCITY.

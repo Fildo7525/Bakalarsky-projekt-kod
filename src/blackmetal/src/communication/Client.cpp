@@ -40,6 +40,44 @@ Client::~Client()
 	close(m_clientFD);
 }
 
+std::string Client::stringifyStatus(const bm::Status status)
+{
+	switch (status) {
+		case bm::Status::FULL_BUFFER:
+			return "bm::Status::FULL_BUFFER";
+		case bm::Status::RECEIVE_ERROR:
+			return "bm::Status::RECEIVE_ERROR";
+		case bm::Status::SEND_ERROR:
+			return "bm::Status::SEND_ERROR";
+		case bm::Status::OK:
+			return "bm::Status::OK";
+	}
+	return "Unknown bm::Status";
+}
+
+std::string Client::stringifyCommand(const bm::Command command)
+{
+	switch (command) {
+		case bm::Command::PREPARE_WHEEL_CONTROLLER:
+			return "bm::Command::PREPARE_WHEEL_CONTROLLER";
+		case bm::Command::GET_LR_WHEEL_VELOCITY:
+			return "bm::Command::GET_LR_WHEEL_VELOCITY";
+		case bm::Command::SET_LR_WHEEL_VELOCITY:
+			return "bm::Command::SET_LR_WHEEL_VELOCITY";
+		case bm::Command::EMG_SOPT:
+			return "bm::Command::EMG_SOPT";
+		case bm::Command::EMPTY:
+			return "bm::Command::EMPTY";
+		case bm::Command::NONE_4:
+			return "bm::Command::NONE_4";
+		case bm::Command::NONE_5:
+			return "bm::Command::NONE_5";
+		case bm::Command::NORMAL_STOP:
+			return "bm::Command::NORMAL_STOP";
+	}
+	return "Unknown bm::Command";
+}
+
 std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int rightWheel, int leftWheel)
 {
 	std::string message = "{\"UserID\":1,\"Command\":";
