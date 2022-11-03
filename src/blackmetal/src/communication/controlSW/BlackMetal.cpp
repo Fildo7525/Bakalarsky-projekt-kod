@@ -1,5 +1,6 @@
 #include "BlackMetal.hpp"
 
+#include "colors.hpp"
 #include "log.hpp"
 
 #define PORT 665
@@ -13,6 +14,16 @@ BlackMetal::BlackMetal()
 	, M_WHEEL_RADIUS(0.1)
 {
 	INFO("Client connected. Continuing the parameter initialization");
+
+	auto preparedState = execute(bm::Command::PREPARE_WHEEL_CONTROLLER);
+	const bm::Status *status = std::get_if<bm::Status>(&preparedState);
+
+	if (status != nullptr) {
+		ERR("The robot returned an error: " << Client::stringifyStatus(*status));
+	} else {
+		INFO("The robot succeeded with message: " << std::get<std::string>(preparedState));
+	}
+
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
 			"bm_movement",
@@ -31,32 +42,16 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	request(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
-static std::string retrieveAnswer(const std::string &msg)
-{
-	auto offset = msg.find(':');
-	if (offset == std::string::npos) {
-		offset = msg.find('=');
-		if (offset == std::string::npos) {
-			return "";
-		}
-	}
-
-	auto range = msg.find('}') - 3 - offset;
-	WARN("Beigning is calculated to " << offset << ". End of received stirng is " << range << ". Length: " << msg.length());
-	return msg.substr(offset+2, range);
-}
-
 bm::Status BlackMetal::evalReturnState(const std::string &returnJson)
 {
-	std::string tmp = retrieveAnswer(returnJson);
-	INFO(tmp);
+	INFO("\033[32;1m" << returnJson << RESET);
 
-	if (tmp == "RECEIVE_OK") {
-		INFO("The execution ran correctly");
-		return bm::Status::OK;
-	} else {
+	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
 		ERR("The rebot buffer is full. The send data will not be used.");
 		return bm::Status::FULL_BUFFER;
 	}
+
+	INFO("The execution ran correctly");
+	return bm::Status::OK;
 }
 
