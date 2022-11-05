@@ -20,7 +20,18 @@ public:
 	/// Destructor
 	virtual ~Client();
 
+	/**
+	 * @brief Get the string represnetation of the bm::Status code.
+	 *
+	 * @param status Status to be transformed.
+	 */
 	static std::string stringifyStatus(const bm::Status status);
+
+	/**
+	 * @brief Get the string represnetation of the bm::Command code.
+	 *
+	 * @param command Status to be transformed.
+	 */
 	static std::string stringifyCommand(const bm::Command command);
 
 	/**
