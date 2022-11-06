@@ -54,22 +54,22 @@ install(TARGETS blackmetal
 
 
 # Logging server
-add_executable(log_server ./src/bm_logServer.cpp)
+add_executable(bm_logger ./src/bm_logServer.cpp)
 target_include_directories(
-	log_server
+	bm_logger
 PUBLIC
 	${CMAKE_SOURCE_DIR}/src/logger
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 	$<INSTALL_INTERFACE:include>
 )
-target_link_libraries(log_server
+target_link_libraries(bm_logger
 	bm_logSW
 )
-ament_target_dependencies(log_server
+ament_target_dependencies(bm_logger
 	"rclcpp"
 )
 
-install(TARGETS log_server
+install(TARGETS bm_logger
 	DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
