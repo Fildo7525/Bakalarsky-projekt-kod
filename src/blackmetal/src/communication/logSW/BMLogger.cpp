@@ -12,6 +12,7 @@ BMLogger::BMLogger()
 	: rclcpp::Node("bm_logger")
 	, Client(PORT, "192.168.1.3")
 {
+	this->declare_parameter("bm_csIP", "192.168.1.3");
 	INFO("Server created starting the timer.");
 	m_timer = this->create_wall_timer(1s, [this](){
 							 INFO("Check for new messages");
