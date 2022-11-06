@@ -12,34 +12,49 @@ INIT_MODULE(Client);
 
 Client::Client(int port, const std::string &address)
 {
-	struct sockaddr_in serv_addr;
-	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
-	if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		FATAL("\n Socket creation error \n");
-		return;
-	}
-
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(port);
-
-	// Convert IPv4 and IPv6 addresses from text to binary form
-	if (inet_pton(AF_INET, address.c_str(), &serv_addr.sin_addr) <= 0) {
-		FATAL("Invalid address Address: " << address << ", not supported \n");
-		return;
-	}
-
-	DBG("The address is valid and supported");
-
-	if ((clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
-		FATAL("Connection Failed: " << strerror(clientFD));
-		return;
-	}
+	start(port, address);
 }
 
 Client::~Client()
 {
+	stop();
+}
+
+void Client::start(int port, const std::string &address)
+{
+	m_address = address;
+	if (!m_connected) {
+		struct sockaddr_in serv_addr;
+		int clientFD;
+		// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
+		if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+			FATAL("\n Socket creation error \n");
+			return;
+		}
+
+		serv_addr.sin_family = AF_INET;
+		serv_addr.sin_port = htons(port);
+
+		// Convert IPv4 and IPv6 addresses from text to binary form
+		if (inet_pton(AF_INET, address.c_str(), &serv_addr.sin_addr) <= 0) {
+			FATAL("\nInvalid address Address: " << address << ", not supported \n");
+			return;
+		}
+
+		if ((clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
+			FATAL("\nConnection Failed: " << strerror(clientFD));
+			return;
+		}
+		DBG("Client successfully connected to " << m_address);
+		m_connected = true;
+	}
+}
+
+void Client::stop()
+{
 	// closing the connected socket
-	close(m_clientFD);
+	m_connected = false;
+	close(m_socket);
 }
 
 std::string Client::stringifyStatus(const bm::Status status)
@@ -87,7 +102,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 	message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
 				",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
 
-	INFO("sending: " << message);
+	DBG("sending: " << message);
 
 	this->send(message);
 	receive(message);
@@ -111,7 +126,7 @@ bm::Status Client::send(const std::string &msg)
 		FATAL("Could not send the command to server");
 		return bm::Status::SEND_ERROR;
 	}
-	DBG("The server send" << numberOfBytes);
+	DBG("The server send " << numberOfBytes << " bytes");
 	return bm::Status::OK;
 }
 
@@ -132,8 +147,18 @@ bm::Status Client::receive(std::string &msg)
 	return bm::Status::OK;
 }
 
+std::string Client::address()
+{
+	return m_address;
+}
+
 int Client::socketFD()
 {
 	return m_socket;
+}
+
+bool Client::connected()
+{
+	return m_connected;
 }
 

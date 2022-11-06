@@ -47,9 +47,9 @@ private:
 
 private:
 	// TODO: Find out what is the chasis length.
-	const double M_CHASIS_LENGTH;
+	double m_chasisLength;
 	// TODO: Find out what is the wheel radius.
-	const double M_WHEEL_RADIUS;
+	double m_wheelRadius;
 
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
