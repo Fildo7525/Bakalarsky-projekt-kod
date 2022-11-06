@@ -162,3 +162,9 @@ bool Client::connected()
 	return m_connected;
 }
 
+bm::Status Client::evalReturnState(const std::string &returnJson)
+{
+	(void) returnJson;
+	return bm::Status::OK;
+}
+

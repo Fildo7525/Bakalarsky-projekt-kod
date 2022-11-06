@@ -32,9 +32,3 @@ void BMLogger::onTimerTimeoutReadSocket()
 	}
 }
 
-bm::Status BMLogger::evalReturnState(const std::string &returnJson)
-{
-	(void) returnJson;
-	return bm::Status::OK;
-}
-

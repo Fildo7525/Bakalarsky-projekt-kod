@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Client.hpp"
 
 #include <rclcpp/rclcpp.hpp>
@@ -17,14 +19,6 @@ public:
 	 * during that period, the function blocks until the server does not send us some string to log.
 	 */
 	void onTimerTimeoutReadSocket();
-private:
-	/**
-	 * @brief Overridden function from Client base class.
-	 *
-	 * @param returnJson The returned json string.
-	 */
-	bm::Status evalReturnState(const std::string &returnJson) override;
-
 private:
 	/// Timer calling the defined callback function.
 	rclcpp::TimerBase::SharedPtr m_timer;

@@ -110,11 +110,12 @@ public:
 	bool connected();
 protected:
 	/**
-	 * @brief Pure virtual function that evaluates the request status.
+	 * @brief Virtual function that evaluates the request status.
+	 * WARN: This function always return bm::Status::OK if it is not overriden.
 	 *
 	 * @param returnJson Json string returned from the communication.
 	 */
-	virtual bm::Status evalReturnState(const std::string &returnJson) = 0;
+	virtual bm::Status evalReturnState(const std::string &returnJson);
 
 private:
 	/// Ip addres to which we tried or are connected to.
