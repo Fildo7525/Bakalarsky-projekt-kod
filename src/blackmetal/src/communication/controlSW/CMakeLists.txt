@@ -18,6 +18,12 @@ target_link_libraries(bm_controlSW
 	logger
 )
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	target_link_libraries(bm_controlSW
+		stopwatch
+	)
+endif()
+
 ament_target_dependencies(bm_controlSW
 	"rclcpp"
 	"std_msgs"
