@@ -13,6 +13,7 @@ BlackMetal::BlackMetal()
 	, M_CHASIS_LENGTH(0.45)
 	, M_WHEEL_RADIUS(0.1)
 {
+	this->declare_parameter("bm_csIP", "192.168.1.3");
 	INFO("Client connected. Continuing the parameter initialization");
 
 	m_twistSubscriber
