@@ -9,7 +9,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE "Debug")
+
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -20,6 +22,9 @@ find_package(geometry_msgs REQUIRED)
 add_subdirectory(src/communication/controlSW)
 add_subdirectory(src/communication/logSW)
 add_subdirectory(src/logger)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	add_subdirectory(src/stopwatch)
+endif()
 
 
 
