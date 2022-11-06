@@ -9,10 +9,12 @@ INIT_MODULE(BlackMetal);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, Client(PORT, "192.168.1.3")
-	, M_CHASIS_LENGTH(0.45)
-	, M_WHEEL_RADIUS(0.1)
+	, Client()
 {
+	m_chasisLength = declare_parameter<double>("chasis", 1);
+	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
+	this->start(PORT, declare_parameter("bm_csIP", "192.168.1.3"));
+
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
 			"bm_movement",

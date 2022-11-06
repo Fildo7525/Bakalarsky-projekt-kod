@@ -15,6 +15,8 @@
 class Client
 {
 public:
+	/// Default constructor
+	Client() = default;
 	/// Constructor
 	Client(int port, const std::string &address);
 	/// Destructor
@@ -34,7 +36,7 @@ public:
 	void stop();
 
 	/**
-	 * @brief Get the string representation of the bm::Status code.
+	 * @brief Get the string represnetation of the bm::Status code.
 	 *
 	 * @param status Status to be transformed.
 	 */
@@ -93,9 +95,19 @@ public:
 	bm::Status receive(std::string &msg);
 
 	/**
+	 * @brief Returns the address with which was the start method called with.
+	 */
+	std::string address();
+
+	/**
 	 * @brief Returns a copy of socket file descriptor.
 	 */
 	int socketFD();
+
+	/**
+	 * @brief Indicates if we are or are not connected.
+	 */
+	bool connected();
 protected:
 	/**
 	 * @brief Virtual function that evaluates the request status.
@@ -105,11 +117,11 @@ protected:
 	virtual bm::Status evalReturnState(const std::string &returnJson) = 0;
 
 private:
-	/// IP address to which we tried or are connected to.
+	/// Ip addres to which we tried or are connected to.
 	std::string m_address;
-	int m_clientFD;
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
-	/// Flag checking the client's connection.
+	/// Flach chacking the client's connection.
 	bool m_connected;
 };
+

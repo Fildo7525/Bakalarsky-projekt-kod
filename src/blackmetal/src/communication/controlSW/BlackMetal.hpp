@@ -46,10 +46,10 @@ private:
 	bm::Status evalReturnState(const std::string &returnJson) override;
 
 private:
-	// TODO: Find out what is the chassis length.
-	const double M_CHASIS_LENGTH;
+	// TODO: Find out what is the chasis length.
+	double m_chasisLength;
 	// TODO: Find out what is the wheel radius.
-	const double M_WHEEL_RADIUS;
+	double m_wheelRadius;
 
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
