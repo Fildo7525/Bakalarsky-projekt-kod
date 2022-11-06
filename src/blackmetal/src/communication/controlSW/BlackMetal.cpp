@@ -17,7 +17,7 @@ BlackMetal::BlackMetal()
 
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
-			"bm_movement",
+			"cmd_vel",
 			1,
 			[this] (const geometry_msgs::msg::Twist &msg) {
 				this->onTwistRecievedSendJson(msg);
