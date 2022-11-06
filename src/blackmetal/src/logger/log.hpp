@@ -7,8 +7,14 @@
 
 #ifndef NDEBUG
 
-#define LOG_DEFAULT_LEVEL(MODULE)             static Logger lg(#MODULE);
+#define LOG_DEFATUL_LEVEL(MODULE)             static Logger lg(#MODULE);
 #define LOG_CUSTOM_LEVEL(MODULE, LOG_LEVEL)   static Logger lg(#MODULE, LOG_LEVEL);
+
+#define GET_3RD_ARG(arg1, arg2, arg3, ...) arg3
+#define PRINT_STRING_MACRO_CHOOSER(...) \
+	GET_3RD_ARG(__VA_ARGS__, LOG_CUSTOM_LEVEL, LOG_DEFATUL_LEVEL, )
+
+#define INIT_MODULE(...) PRINT_STRING_MACRO_CHOOSER(__VA_ARGS__)(__VA_ARGS__)
 
 #define GET_3RD_ARG(arg1, arg2, arg3, ...) arg3
 #define PRINT_STRING_MACRO_CHOOSER(...) \
