@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Client.hpp"
 
 #include <rclcpp/rclcpp.hpp>
@@ -31,14 +33,6 @@ public:
 	 * Based on their meaning change the logging level and do some actions.
 	 */
 	void onTimerTimeoutReadSocket();
-private:
-	/**
-	 * @brief Overridden function from Client base class.
-	 *
-	 * @param returnJson The returned json string.
-	 */
-	bm::Status evalReturnState(const std::string &returnJson) override;
-
 private:
 	/// Timer calling the defined callback function.
 	rclcpp::TimerBase::SharedPtr m_timer;

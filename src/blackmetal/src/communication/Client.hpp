@@ -114,7 +114,7 @@ protected:
 	 *
 	 * @param returnJson Json string returned from the communication.
 	 */
-	virtual bm::Status evalReturnState(const std::string &returnJson) = 0;
+	virtual bm::Status evalReturnState(const std::string &returnJson);
 
 private:
 	/// Ip addres to which we tried or are connected to.
