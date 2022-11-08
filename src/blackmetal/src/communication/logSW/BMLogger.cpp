@@ -16,7 +16,7 @@ BMLogger::BMLogger()
 
 	INFO("Server created starting the timer.");
 	m_timer = this->create_wall_timer(1s, [this](){
-							 INFO("Check for new messages");
+							 DBG("Check for new messages");
 							 onTimerTimeoutReadSocket();
 	});
 }

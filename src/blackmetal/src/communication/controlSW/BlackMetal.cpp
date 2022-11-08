@@ -15,6 +15,10 @@ BlackMetal::BlackMetal()
 	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
 	this->start(PORT, declare_parameter("bm_csIP", "192.168.1.3"));
 
+	DBG("Chasis has lenght " << m_chasisLength << " m");
+	DBG("Wheel has radius " << m_wheelRadius << " m");
+	DBG("Address set to " << address() << ":" << PORT);
+
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
 			"cmd_vel",
