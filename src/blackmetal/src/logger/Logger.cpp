@@ -57,14 +57,18 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	std::string log_time = std::ctime(&pretty_time);
 	log_time.pop_back();
 
-	static std::mutex mut;
-	{
-		std::lock_guard<std::mutex> lock(mut);
+	static std::mutex screenMutex;
+	static std::mutex fileMutex;
+	if (dbgLevel >= m_level) {
+		std::lock_guard<std::mutex> lock(screenMutex);
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
 			std::fprintf(stderr, "%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		} else {
 			std::printf("%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		}
+	}
+	{
+		std::lock_guard<std::mutex> lock(fileMutex);
 		m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
 	}
 }
