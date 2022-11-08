@@ -24,7 +24,7 @@ def generate_launch_description():
 		),
 		Node(
 			package='blackmetal',
-			executable='log_server',
+			executable='bm_logger',
 			output='screen',
 			parameters = [config_log],
 			emulate_tty=True
