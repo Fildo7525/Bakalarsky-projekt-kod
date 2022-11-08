@@ -57,8 +57,8 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	std::string log_time = std::ctime(&pretty_time);
 	log_time.pop_back();
 
-	static std::mutex screenMutex;
-	static std::mutex fileMutex;
+	std::mutex screenMutex;
+	std::mutex fileMutex;
 	if (dbgLevel >= m_level) {
 		std::lock_guard<std::mutex> lock(screenMutex);
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
