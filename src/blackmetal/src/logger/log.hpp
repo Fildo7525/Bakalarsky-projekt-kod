@@ -11,11 +11,9 @@
 
 #define LOG(msg, color, log_level) \
 	do { \
-		if (lg.level() <= log_level) { \
-			std::stringstream ss; \
-			ss << msg; \
-			lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
-		} \
+		std::stringstream ss; \
+		ss << msg; \
+		lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
 	} while(false)
 
 #define DBG(msg) LOG(msg, GRAY, dbg_level::DBG)
