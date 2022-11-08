@@ -81,8 +81,8 @@ std::string Client::stringifyCommand(const bm::Command command)
 			return "bm::Command::GET_LR_WHEEL_VELOCITY";
 		case bm::Command::SET_LR_WHEEL_VELOCITY:
 			return "bm::Command::SET_LR_WHEEL_VELOCITY";
-		case bm::Command::EMG_SOPT:
-			return "bm::Command::EMG_SOPT";
+		case bm::Command::EMG_STOP:
+			return "bm::Command::EMG_STOP";
 		case bm::Command::EMPTY:
 			return "bm::Command::EMPTY";
 		case bm::Command::NONE_4:
