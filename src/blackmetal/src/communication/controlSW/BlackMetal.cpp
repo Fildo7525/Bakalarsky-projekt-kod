@@ -23,6 +23,7 @@ BlackMetal::BlackMetal()
 				this->onTwistRecievedSendJson(msg);
 			}
 	);
+	// TODO: Create a service for executing the other commands.
 }
 
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
