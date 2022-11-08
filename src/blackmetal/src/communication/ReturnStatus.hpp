@@ -13,7 +13,7 @@ enum class Command {
 	/// Empty command
 	EMPTY,
 	/// Emergency stop
-	EMG_SOPT,
+	EMG_STOP,
 	/// Normal stop
 	NORMAL_STOP,
 	/// Sets Left and right wheel velocity.
