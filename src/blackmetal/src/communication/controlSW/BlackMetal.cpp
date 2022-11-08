@@ -5,15 +5,14 @@
 
 #define PORT 665
 
-INIT_MODULE(BlackMetal);
+INIT_MODULE(BlackMetal, dbg_level::DBG);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, Client()
+	, Client(PORT, "192.168.1.3")
 {
 	m_chasisLength = declare_parameter<double>("chasis", 1);
 	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
-	this->start(PORT, declare_parameter("bm_csIP", "192.168.1.3"));
 
 	DBG("Chasis has lenght " << m_chasisLength << " m");
 	DBG("Wheel has radius " << m_wheelRadius << " m");
