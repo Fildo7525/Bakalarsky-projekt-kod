@@ -24,6 +24,7 @@ void Client::start(int port, const std::string &address)
 {
 	m_address = address;
 	if (!m_connected) {
+		INFO("Client is connecting to " << m_address << ":" << port);
 		struct sockaddr_in serv_addr;
 		int clientFD;
 		// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -45,7 +46,7 @@ void Client::start(int port, const std::string &address)
 			FATAL("\nConnection Failed: " << strerror(clientFD));
 			return;
 		}
-		DBG("Client successfully connected to " << m_address);
+		INFO("Client successfully connected to " << m_address << ":" << port);
 		m_connected = true;
 	}
 }
