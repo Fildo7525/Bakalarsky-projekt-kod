@@ -104,8 +104,8 @@ bm::Status Client::request(int rightWheel, int leftWheel)
 
 bm::Status Client::send(const std::string &msg)
 {
-	int numberOfBytes = 0;
-	if ((numberOfBytes = ::send(socketFD(), msg.c_str(), msg.size(), 0)) < 0) {
+	int numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
+	if (numberOfBytes < 0) {
 		FATAL("Could not send the command to server");
 		return bm::Status::SEND_ERROR;
 	}
@@ -119,7 +119,7 @@ bm::Status Client::receive(std::string &msg)
 	char buffer[1024] = { 0 };
 
 	INFO("Receiving...");
-	if ((numberOfBytes = read(socketFD(), buffer, 1024)) < 0) {
+	if ((numberOfBytes = read(m_socket, buffer, 1024)) < 0) {
 		FATAL("The data could not be received");
 		return bm::Status::RECEIVE_ERROR;
 	}

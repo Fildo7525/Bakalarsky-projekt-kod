@@ -15,15 +15,6 @@ BlackMetal::BlackMetal()
 {
 	INFO("Client connected. Continuing the parameter initialization");
 
-	auto preparedState = execute(bm::Command::PREPARE_WHEEL_CONTROLLER);
-	const bm::Status *status = std::get_if<bm::Status>(&preparedState);
-
-	if (status != nullptr) {
-		ERR("The robot returned an error: " << Client::stringifyStatus(*status));
-	} else {
-		INFO("The robot succeeded with message: " << std::get<std::string>(preparedState));
-	}
-
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
 			"bm_movement",
