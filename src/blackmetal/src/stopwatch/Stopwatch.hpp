@@ -52,3 +52,18 @@ private:
 	std::chrono::system_clock::time_point m_start;
 };
 
+#ifndef NDEBUG
+
+#define TIC \
+	{ \
+		Stopwatch stopwatch;
+
+#define TOC \
+	} \
+
+#else
+
+#define TIC ;
+#define TOC ;
+
+#endif // NDEBUG

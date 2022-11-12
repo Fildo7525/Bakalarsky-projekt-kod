@@ -1,9 +1,7 @@
 #include "Client.hpp"
 #include "log.hpp"
 
-#ifndef NDEBUG
 #include "stopwatch/Stopwatch.hpp"
-#endif // NDEBUG
 
 #include <arpa/inet.h>
 #include <memory>
@@ -93,16 +91,12 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 
 	INFO("sending: " << message);
 
-	{
-#ifndef NDEBUG
-		Stopwatch time;
-#endif
-		this->send(message);
-		receive(message);
-	}
-#ifndef NDEBUG
+	TIC;
+	this->send(message);
+	receive(message);
+	TOC;
 	DBG("The send and receive ran in " << Stopwatch::lastStoppedTime() << " micros seconds");
-#endif
+
 	return message;
 }
 
