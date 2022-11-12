@@ -22,9 +22,6 @@ find_package(geometry_msgs REQUIRED)
 add_subdirectory(src/communication/controlSW)
 add_subdirectory(src/communication/logSW)
 add_subdirectory(src/logger)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_subdirectory(src/stopwatch)
-endif()
 
 
 
@@ -32,7 +29,7 @@ endif()
 
 
 # Main Program
-add_executable(blackmetal src/blackmetal.cpp)
+add_executable(blackmetal src/blackmetal.cpp src/stopwatch/Stopwatch.hpp)
 target_link_libraries(blackmetal
 	bm_controlSW
 )
@@ -59,7 +56,7 @@ install(TARGETS blackmetal
 
 
 # Logging server
-add_executable(log_server ./src/bm_logServer.cpp)
+add_executable(bm_logger ./src/bm_logServer.cpp src/stopwatch/Stopwatch.hpp)
 target_include_directories(
 	log_server
 PUBLIC

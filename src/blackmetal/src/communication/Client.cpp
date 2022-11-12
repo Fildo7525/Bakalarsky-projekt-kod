@@ -91,11 +91,11 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 
 	INFO("sending: " << message);
 
-	TIC;
+	TICu;
 	this->send(message);
 	receive(message);
 	TOC;
-	DBG("The send and receive ran in " << Stopwatch::lastStoppedTime() << " micro seconds");
+	DBG("The send and receive ran in " << Stopwatch<std::chrono::microseconds>::lastStoppedTime() << " micro seconds");
 
 	return message;
 }
