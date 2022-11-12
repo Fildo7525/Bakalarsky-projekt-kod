@@ -95,7 +95,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 	this->send(message);
 	receive(message);
 	TOC;
-	DBG("The send and receive ran in " << Stopwatch::lastStoppedTime() << " micros seconds");
+	DBG("The send and receive ran in " << Stopwatch::lastStoppedTime() << " micro seconds");
 
 	return message;
 }
@@ -127,14 +127,14 @@ bm::Status Client::receive(std::string &msg)
 	char buffer[1024] = { 0 };
 
 	INFO("Receiving...");
-	if ((numberOfBytes = read(m_socket, buffer, 1024)) < 0) {
+	if ((numberOfBytes = ::read(m_socket, buffer, 1024)) < 0) {
 		FATAL("The data could not be received");
 		return bm::Status::RECEIVE_ERROR;
 	}
 	msg.clear();
 	msg = buffer;
-	INFO("Recieved: " << buffer);
-	DBG("The server send" << numberOfBytes);
+	INFO("Received: " << buffer);
+	DBG("The server send " << numberOfBytes << " bytes");
 	return bm::Status::OK;
 }
 

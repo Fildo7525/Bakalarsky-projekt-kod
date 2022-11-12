@@ -13,7 +13,12 @@ BlackMetal::BlackMetal()
 	, M_CHASIS_LENGTH(0.45)
 	, M_WHEEL_RADIUS(0.1)
 {
-	INFO("Client connected. Continuing the parameter initialization");
+	m_chassisLength = declare_parameter<double>("chassis", 1);
+	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
+
+	DBG("Chassis has length " << m_chasisLength << " m");
+	DBG("Wheel has radius " << m_wheelRadius << " m");
+	DBG("Address set to " << address() << ":" << PORT);
 
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
@@ -28,8 +33,8 @@ BlackMetal::BlackMetal()
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 {
 	DBG("Message geometry_msgs::msg::Twist: " << geometry_msgs::msg::to_yaml(msg));
-	m_rightWheelSpeed = (msg.linear.x + 0.5 * M_CHASIS_LENGTH * msg.angular.z)/M_WHEEL_RADIUS;
-	m_leftWheelSpeed = (msg.linear.x - 0.5 * M_CHASIS_LENGTH * msg.angular.z)/M_WHEEL_RADIUS;
+	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_chassisLength * msg.angular.z)/m_wheelRadius;
+	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_chassisLength * msg.angular.z)/m_wheelRadius;
 	request(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
