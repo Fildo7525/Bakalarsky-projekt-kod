@@ -3,9 +3,9 @@
 <package format="3">
   <name>blackmetal</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Package creating driver in ROS2 to use for BlackMetal robot</description>
   <maintainer email="f.lobpreis@gmail.com">fildo7525</maintainer>
-  <license>TODO: License declaration</license>
+  <license>License Apache 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
