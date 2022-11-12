@@ -23,6 +23,8 @@
 #define WARN(msg) LOG(msg, YELLOW, dbg_level::WARN)
 #define ERR(msg) LOG(msg, RED, dbg_level::ERR)
 #define FATAL(msg) LOG(msg, BACKGROUND_BRIGHT_RED, dbg_level::FATAL)
+/// Passes a success log message to the registered logger. Works only in debug build.
+#define SUCCESS(msg) LOG(msg, BOLD_GREEN, dbg_level::SUCCESS)
 
 #else
 
@@ -33,5 +35,7 @@
 #define WARN(msg) ;
 #define ERR(msg)  ;
 #define FATAL(msg) ;
+/// Macro is defined only in debug mode.
+#define SUCCESS(msg) ;
 
 #endif

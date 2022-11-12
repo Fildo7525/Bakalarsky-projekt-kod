@@ -14,6 +14,7 @@ enum class dbg_level {
 	WARN,
 	ERR,
 	FATAL,
+	SUCCESS
 };
 
 /**

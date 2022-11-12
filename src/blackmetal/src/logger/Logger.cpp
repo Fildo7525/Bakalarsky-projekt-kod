@@ -7,7 +7,7 @@
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
-	, m_logFile("/home/fildo7525/Bakalarka/code/log/" + std::string(module) + __TIME__ + ".log", std::ios::app)
+	, m_logFile("~/Bakalarka/code/log/" + std::string(module) + __TIME__ + ".log", std::ios::app)
 	, m_level(lvl)
 {
 }
@@ -25,6 +25,8 @@ const char* Logger::dbgLevelToString(const dbg_level level)
 			return "ERR";
 		case dbg_level::FATAL:
 			return "FATAL";
+		case dbg_level::SUCCESS:
+			return "SUCCESS";
 		default:
 			return "";
 	}
