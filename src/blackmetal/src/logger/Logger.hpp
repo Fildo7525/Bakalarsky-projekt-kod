@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 /**
- * @brief Logging levels ordered from the most verbous to the least verbous.
+ * @brief Logging levels ordered from the most verbose to the least verbose.
  */
 enum class dbg_level {
 	DBG,
@@ -19,11 +19,11 @@ enum class dbg_level {
 
 /**
  * @class Logger
- * @brief Class handelling all the debugging from the macros in @file log.hpp
+ * @brief Class handling all the debugging from the macros in @file log.hpp
  *
  * The ros2 logger does not support the functionality that is in this file.
- * The buildint logger would have to defile the modules on every write and will dump
- * all the logs to the same file. The structure is different, too. Therefor I have created 
+ * The builtin logger does not define modules but writes all the logs to the same file.
+ * The structure is different, too. Therefore I have created
  * a Logger class that suits my needs.
  *
  * TODO: The logging level could be changed during the runtime.
@@ -51,7 +51,7 @@ public:
 	 * @brief Log message at a specific codePath with a colour to the screen.
 	 *
 	 * The same log is printed to the file named according to the module name. In the file
-	 * is a timestamp at the beginnging of the logging message. This method is counting with
+	 * is a timestamp at the beginning of the logging message. This method is counting with
 	 * multiple threads writing to the standard output and to the same file. Thus the 
 	 * printing is guarded with scoped mutex.
 	 *
@@ -84,7 +84,7 @@ private:
 	const char *m_moduleName;
 	/// Stream of the logging file.
 	std::fstream m_logFile;
-	/// Logging level fot the module.
+	/// Logging level for the module.
 	dbg_level m_level;
 };
 

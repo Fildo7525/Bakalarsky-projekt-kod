@@ -10,10 +10,10 @@
 
 /**
  * @class BlackMetal
- * @brief Class for communication with the blackmetal robot.
+ * @brief Class for communication with the Blackmetal robot.
  *
- * This class inherrits the functionality of Client class
- * and implements the methods for communication with the mentione Black Metal robot.
+ * This class inherits the functionality of Client class
+ * and implements the methods for communication with the mentioned Black Metal robot.
  * The left and right wheel velocities are converted from geometry_msgs::msg::Twist message type.
  */
 class BlackMetal
@@ -27,7 +27,7 @@ public:
 	/**
 	 * @brief Convert Twist messages and send them to the Blackmetal robot.
 	 *
-	 * This function wates for the Twist messages. Transfers them to the json type of string and sends them to the robot.
+	 * This function waits for the Twist messages. Transfers them to the json type of string and sends them to the robot.
 	 * The linear and angular parameters have to be calculated for wheel for the json.
 	 *
 	 * @param msg The received message.
@@ -37,7 +37,7 @@ public:
 private:
 
 	/**
-	 * @brief Overriden function from the Client base class.
+	 * @brief Overridden function from the Client base class.
 	 *
 	 * The function parses the received json string and converts the result to bm::Status.
 	 *
@@ -46,8 +46,8 @@ private:
 	bm::Status evalReturnState(const std::string &returnJson) override;
 
 private:
-	// TODO: Find out what is the chasis length.
-	double m_chasisLength;
+	// TODO: Find out what is the chassis length.
+	double m_chassisLength;
 	// TODO: Find out what is the wheel radius.
 	double m_wheelRadius;
 
@@ -56,7 +56,7 @@ private:
 	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
-	/// Subscriber that wates for the Twist message and executes the onTwistRecievedSendJson callback on it.
+	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
 };
 
