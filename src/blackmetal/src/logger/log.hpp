@@ -33,7 +33,7 @@
 
 #else
 
-#define INIT_MODULE(MODULE) ;
+#define INIT_MODULE(...) ;
 
 #define DBG(msg)  ;
 #define INFO(msg) ;
