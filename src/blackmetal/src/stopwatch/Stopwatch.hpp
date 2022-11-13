@@ -6,6 +6,8 @@
 #include <type_traits>
 using namespace std::chrono_literals;
 
+extern std::mutex mut;
+
 /**
  * @class Stopwatch
  * @brief Benchmark the program using the RAII procedure.
@@ -76,7 +78,6 @@ Stopwatch<T>::~Stopwatch()
 {
 	auto diff = std::chrono::high_resolution_clock::now() - m_start;
 	double diffMiliseconds = std::chrono::duration_cast<T>(diff).count();
-	std::mutex mut;
 	{
 		std::lock_guard<std::mutex> lock(mut);
 		m_stoppedTimes.push_back(diffMiliseconds);
@@ -86,7 +87,6 @@ Stopwatch<T>::~Stopwatch()
 template <typename T>
 const double &Stopwatch<T>::lastStoppedTime()
 {
-	std::mutex mut;
 	{
 		std::lock_guard<std::mutex>lock(mut);
 		return m_stoppedTimes.back();
@@ -99,7 +99,6 @@ const double &Stopwatch<T>::stoppedTimeAt(const std::vector<double>::size_type i
 	if (index > m_stoppedTimes.size()) {
 		return lastStoppedTime();
 	}
-	std::mutex mut;
 	{
 		std::lock_guard<std::mutex> lock(mut);
 		return m_stoppedTimes.at(index);
@@ -114,18 +113,22 @@ const std::vector<double>& Stopwatch<T>::getStoppedTimes()
 
 #ifndef NDEBUG
 
+/// Measure the time in micorseconds
 #define TICu \
 	{ \
 		Stopwatch<std::chrono::microseconds> stopwatch;
 
+/// Measure the time in milliseconds
 #define TICm \
 	{ \
 		Stopwatch<std::chrono::milliseconds> stopwatch;
 
+/// Measure the time in seconds
 #define TICs \
 	{ \
 		Stopwatch<std::chrono::seconds> stopwatch;
 
+/// Endpoint of time measuring
 #define TOC \
 	} \
 
