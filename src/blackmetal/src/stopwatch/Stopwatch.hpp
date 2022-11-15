@@ -60,8 +60,8 @@ private:
 	static std::vector<double> m_stoppedTimes;
 };
 
-template <typename T>
-std::vector<double> Stopwatch<T>::m_stoppedTimes = std::vector<double>();
+extern template
+std::vector<double> Stopwatch<std::chrono::milliseconds>::m_stoppedTimes;
 
 template <typename T>
 Stopwatch<T>::Stopwatch()

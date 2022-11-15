@@ -56,7 +56,7 @@ install(TARGETS blackmetal
 
 
 # Logging server
-add_executable(bm_logger ./src/bm_logServer.cpp src/stopwatch/Stopwatch.hpp)
+add_executable(log_server ./src/bm_logServer.cpp src/stopwatch/Stopwatch.hpp)
 target_include_directories(
 	log_server
 PUBLIC
