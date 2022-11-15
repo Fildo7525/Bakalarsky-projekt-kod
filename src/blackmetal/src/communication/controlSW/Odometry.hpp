@@ -23,6 +23,9 @@ public:
 	long leftWheelSpeed() const;
 	long rightWheelSpeed() const;
 private:
+	bm::Status evalReturnState(const std::string &returnJson);
+
+private:
 	BlackMetal &m_controlSoftware;
 	rclcpp::TimerBase::SharedPtr m_timer;
 
