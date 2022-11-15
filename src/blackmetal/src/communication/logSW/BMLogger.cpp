@@ -1,9 +1,10 @@
 #include "BMLogger.hpp"
+#include "Logger.hpp"
 #include "log.hpp"
 
 #include <chrono>
 
-INIT_MODULE(BMLogger);
+INIT_MODULE(BMLogger, dbg_level::WARN);
 using namespace std::chrono_literals;
 
 #define PORT 664

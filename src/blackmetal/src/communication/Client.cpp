@@ -112,7 +112,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 	message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
 				",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
 
-	DBG("sending: " << message);
+	INFO("sending: " << message);
 
 	TIC;
 	this->send(message);
@@ -149,15 +149,15 @@ bm::Status Client::receive(std::string &msg)
 	int numberOfBytes = 0;
 	char buffer[1024] = { 0 };
 
-	INFO("Receiving...");
-	if ((numberOfBytes = ::read(m_socket, buffer, 1024)) < 0) {
+	// INFO("Receiving...");
+	if ((numberOfBytes = read(m_socket, buffer, 1024)) < 0) {
 		FATAL("The data could not be received");
 		return bm::Status::RECEIVE_ERROR;
 	}
 	msg.clear();
 	msg = buffer;
-	INFO("Received: " << buffer);
-	DBG("The server send " << numberOfBytes << " bytes");
+	// INFO("Recieved: " << buffer);
+	// DBG("The server send" << numberOfBytes);
 	return bm::Status::OK;
 }
 
