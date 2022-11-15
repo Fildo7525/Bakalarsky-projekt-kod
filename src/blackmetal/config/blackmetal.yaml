@@ -1,5 +1,5 @@
 blackmetal:
   ros__parameters:
     bm_csIP: "192.168.1.3"
-    wheelRadius: 0.1
-    chasis: 0.5
+    wheelRadius: 0.08
+    chasis: 0.56
