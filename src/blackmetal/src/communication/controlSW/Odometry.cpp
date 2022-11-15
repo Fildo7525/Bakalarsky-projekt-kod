@@ -35,6 +35,10 @@ void Odometry::execute()
 		wheelSpeed = std::get<std::string>(temp);
 		DBG("Message received: " << wheelSpeed);
 	}
+	evalReturnState(wheelSpeed);
+
+	m_controlSoftware.send("");
+	m_controlSoftware.receive(wheelSpeed);
 	speed wheels = obtainWheelSpeeds(wheelSpeed);
 
 	std::lock_guard<std::mutex> lock(odometryMutex);
@@ -75,3 +79,13 @@ long Odometry::rightWheelSpeed() const
 	return m_rightWheel;
 }
 
+bm::Status Odometry::evalReturnState(const std::string &returnJson)
+{
+	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
+		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
+		return bm::Status::FULL_BUFFER;
+	}
+
+	SUCCESS(returnJson);
+	return bm::Status::OK;
+}
