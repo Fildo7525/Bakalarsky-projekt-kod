@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Client.hpp"
+class BlackMetal;
+#include "controlSW/Odometry.hpp"
 
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
 #include <string>
 #include <memory>
+#include <thread>
 
 /**
  * @class BlackMetal
@@ -18,7 +21,7 @@
  */
 class BlackMetal
 	: public rclcpp::Node
-	, private Client
+	, public Client
 {
 public:
 	/// Constructor.
@@ -58,5 +61,7 @@ private:
 
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
+	std::shared_ptr<Odometry> m_odometry;
+	std::thread m_odometryThread;
 };
 

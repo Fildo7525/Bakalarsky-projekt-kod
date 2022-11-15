@@ -1,7 +1,11 @@
 #include "BlackMetal.hpp"
 
+#include "Odometry.hpp"
 #include "colors.hpp"
 #include "log.hpp"
+
+#include <chrono>
+#include <functional>
 
 #define PORT 665
 
@@ -10,6 +14,7 @@ INIT_MODULE(BlackMetal, dbg_level::DBG);
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
 	, Client(PORT, "192.168.1.3")
+	, m_odometry(new Odometry(*this))
 {
 	m_chassisLength = declare_parameter<double>("chasis", 1);
 	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
@@ -26,7 +31,7 @@ BlackMetal::BlackMetal()
 				this->onTwistRecievedSendJson(msg);
 			}
 	);
-	// TODO: Create a service for executing the other commands.
+	WARN("Odometry created");
 }
 
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)

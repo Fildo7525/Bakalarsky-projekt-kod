@@ -4,6 +4,8 @@ add_library(bm_controlSW
 	BlackMetal.hpp
 	../Client.hpp
 	../Client.cpp
+	Odometry.cpp
+	Odometry.hpp
 )
 
 find_package(ament_cmake REQUIRED)

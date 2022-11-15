@@ -107,10 +107,15 @@ std::string Client::stringifyCommand(const bm::Command command)
 
 std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int rightWheel, int leftWheel)
 {
+	WARN(stringifyCommand(cmd));
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
-	message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
-				",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
+	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
+		message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
+					",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
+	} else {
+		message += "}";
+	}
 
 	INFO("sending: " << message);
 
@@ -149,8 +154,8 @@ bm::Status Client::receive(std::string &msg)
 	int numberOfBytes = 0;
 	char buffer[1024] = { 0 };
 
-	// INFO("Receiving...");
-	if ((numberOfBytes = read(m_socket, buffer, 1024)) < 0) {
+	DBG("Receiving...");
+	if ((numberOfBytes = ::read(m_socket, buffer, 1024)) < 0) {
 		FATAL("The data could not be received");
 		return bm::Status::RECEIVE_ERROR;
 	}
