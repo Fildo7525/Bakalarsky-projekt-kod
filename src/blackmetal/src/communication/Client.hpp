@@ -107,6 +107,7 @@ protected:
 private:
 	/// IP address to which we tried or are connected to.
 	std::string m_address;
+	int m_clientFD;
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
 	/// Flag checking the client's connection.

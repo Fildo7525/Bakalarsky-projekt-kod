@@ -47,7 +47,7 @@ private:
 
 private:
 	// TODO: Find out what is the chassis length.
-	double m_chassisLength;
+	const double M_CHASIS_LENGTH;
 	// TODO: Find out what is the wheel radius.
 	const double M_WHEEL_RADIUS;
 

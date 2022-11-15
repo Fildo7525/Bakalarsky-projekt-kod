@@ -32,8 +32,8 @@ Client::Client(int port, const std::string &address)
 
 	DBG("The address is valid and supported");
 
-	if ((clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
-		FATAL("Connection Failed: " << strerror(clientFD));
+	if ((m_clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
+		FATAL("Connection Failed: " << strerror(m_clientFD));
 		return;
 	}
 }
