@@ -117,7 +117,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 		message += "}";
 	}
 
-	INFO("sending: " << message);
+	DBG("sending: " << message);
 
 	TIC;
 	this->send(message);
