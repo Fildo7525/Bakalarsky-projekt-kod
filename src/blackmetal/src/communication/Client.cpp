@@ -29,8 +29,7 @@ void Client::start(int port, const std::string &address)
 		return;
 	}
 
-	m_address = address;
-	DBG("The client is not initialized. Connecting to " << m_address);
+	DBG("The client is not initialized. Connecting to " << address);
 	struct sockaddr_in serv_addr;
 	int clientFD;
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -58,13 +57,18 @@ void Client::start(int port, const std::string &address)
 	}
 	INFO("Client successfully connected");
 	m_connected = true;
+	m_address = address;
+	m_port = port;
+	SUCCESS("Client connected to " << m_address << ':' << m_port);
 }
 
 void Client::stop()
 {
 	// closing the connected socket
 	m_connected = false;
+	INFO("Closing connection with " << m_address << ':' <<  m_port);
 	close(m_socket);
+	close(m_clientFD);
 }
 
 std::string Client::stringifyStatus(const bm::Status status)
@@ -107,7 +111,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 
 std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int rightWheel, int leftWheel)
 {
-	WARN(stringifyCommand(cmd));
+	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
 	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
