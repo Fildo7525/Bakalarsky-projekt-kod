@@ -1,14 +1,15 @@
 #pragma once
 
 #include "Client.hpp"
+
 class BlackMetal;
 #include "controlSW/Odometry.hpp"
 
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
-#include <string>
 #include <memory>
+#include <string>
 #include <thread>
 
 /**
