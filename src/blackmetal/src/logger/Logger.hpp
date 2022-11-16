@@ -1,9 +1,9 @@
 #pragma once
 
+#include <unistd.h>
+
 #include <fstream>
 #include <iostream>
-
-#include <unistd.h>
 
 /**
  * @brief Logging levels ordered from the most verbose to the least verbose.

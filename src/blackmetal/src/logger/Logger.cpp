@@ -1,10 +1,11 @@
 #include "Logger.hpp"
 
+#include <unistd.h>
+
 #include <chrono>
 #include <cstdio>
 #include <mutex>
 #include <ostream>
-#include <unistd.h>
 #include <filesystem>
 
 const std::string currentDateTime() {

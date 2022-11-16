@@ -10,8 +10,8 @@
 #include <functional>
 #include <mutex>
 #include <stdexcept>
-#include <variant>
 #include <thread>
+#include <variant>
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;

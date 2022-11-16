@@ -1,5 +1,4 @@
 #include "BMLogger.hpp"
-#include "Logger.hpp"
 #include "log.hpp"
 
 #include <chrono>

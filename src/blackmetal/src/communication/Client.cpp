@@ -1,14 +1,15 @@
 #include "Client.hpp"
-#include "log.hpp"
 
 #include "stopwatch/Stopwatch.hpp"
+#include "log.hpp"
 
 #include <arpa/inet.h>
-#include <memory>
-#include <stdio.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#include <memory>
+#include <cstdio>
+#include <cstring>
 
 INIT_MODULE(Client);
 
