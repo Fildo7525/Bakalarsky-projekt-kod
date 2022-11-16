@@ -1,5 +1,7 @@
 #include "Odometry.hpp"
+
 #include "controlSW/BlackMetal.hpp"
+#include "stopwatch/Stopwatch.hpp"
 #include "log.hpp"
 
 #include <chrono>
@@ -39,16 +41,20 @@ void Odometry::execute()
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
 		temp = m_controlSoftware.execute(bm::Command::GET_LR_WHEEL_VELOCITY);
 	}
-	std::string wheelSpeed;
 
+	std::string wheelSpeed;
 	if (std::get_if<std::string>(&temp)) {
 		wheelSpeed = std::get<std::string>(temp);
 		DBG("Message received: " << wheelSpeed);
 	}
 	evalReturnState(wheelSpeed);
 
+	TIC;
 	m_controlSoftware.send("");
 	m_controlSoftware.receive(wheelSpeed);
+	TOC;
+	m_lastMeasuredTime = Stopwatch::lastStoppedTime();
+
 	Speed wheels = obtainWheelSpeeds(wheelSpeed);
 	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 
@@ -65,25 +71,19 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
+	// TODO: check if the try-catch block is necessary
 	long lws, rws;
 	try {
-		// WARN(nextAttempt);
-		// m_controlSoftware.receive(nextAttempt);
-
 		DBG("Next attempt: " << jsonMessage);
 		auto lws_start = jsonMessage.find_first_of('=') + 1;
 		auto lws_end = jsonMessage.find_first_of(' ');
-		// WARN("First substring: " << jsonMessage.substr(lws_start, lws_end));
 		lws = std::stol(jsonMessage.substr(lws_start, lws_end));
-		// WARN("Long of first substing: " << lws);
 
 		auto rws_start = jsonMessage.find_last_of('=') + 1;
 		auto rws_end = jsonMessage.find_last_of('}');
-		// WARN("Second substring: " << jsonMessage.substr(rws_start, rws_end));
 		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
-		// WARN("Long of second substing: " << rws);
 	} catch (std::out_of_range &e) {
-		DBG("Attemptin to receive the json on next read");
+		DBG("Attempting to receive the json on next read");
 		std::string nextAttempt;
 		m_controlSoftware.receive(nextAttempt);
 		return obtainWheelSpeeds(nextAttempt);
@@ -119,7 +119,7 @@ bm::Status Odometry::evalReturnState(const std::string &returnJson)
 }
 void Odometry::changeRobotLocation(Speed &&speed)
 {
-	double dt = g_pollTime.count(); // TODO: Plus the time of sending and receiving a request
+	double dt = g_pollTime.count() + m_lastMeasuredTime;
 	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	// auto icr = m_controlSoftware.chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
