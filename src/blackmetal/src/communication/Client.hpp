@@ -119,6 +119,8 @@ protected:
 private:
 	/// Ip addres to which we tried or are connected to.
 	std::string m_address;
+	int m_port;
+	int m_clientFD;
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
 	/// Flach chacking the client's connection.

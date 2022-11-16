@@ -14,6 +14,18 @@
  *
  * TODO: In the interview ask about the state and direction and their meaning.
  *
+ * The state can have five states:
+ *  - 0: STATE_UNKNOWN
+ *  - 1: STATE_READY
+ *  - 2: STATE_ERROR
+ *  - 3: STATE_RUN
+ *  - 4: STATE_SHUTDOWN
+ *
+ * The direction can have four states:
+ *  - 1: DIRECTION_NORTH
+ *  - 2: DIRECTION_SOUTH
+ *  - 3: DIRECTION_WEST
+ *  - 4: DIRECTION_EAST
  */
 class BMLogger
 	: public rclcpp::Node
