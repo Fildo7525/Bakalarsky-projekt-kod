@@ -77,6 +77,14 @@ private:
 	 */
 	bm::Status evalReturnState(const std::string &returnJson);
 
+	/**
+	 * @brief Changes the robot location based on the left and right wheel velocity.
+	 *
+	 * The location is calculated from the period of the polling @see execute function and the
+	 * time that takes to obtain the velocities of the wheels.
+	 *
+	 * @param speed Structure containing the left and right wheel velocity.
+	 */
 	void changeRobotLocation(Speed &&speed);
 
 private:
