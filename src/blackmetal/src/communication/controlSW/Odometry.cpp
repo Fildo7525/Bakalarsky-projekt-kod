@@ -29,7 +29,7 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 				this->execute();
 			}
 	);
-	WARN("Timer initialized");
+	INFO("Timer initialized");
 }
 
 void Odometry::execute()
@@ -70,7 +70,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 		// WARN(nextAttempt);
 		// m_controlSoftware.receive(nextAttempt);
 
-		// WARN("Next attempt: " << jsonMessage);
+		DBG("Next attempt: " << jsonMessage);
 		auto lws_start = jsonMessage.find_first_of('=') + 1;
 		auto lws_end = jsonMessage.find_first_of(' ');
 		// WARN("First substring: " << jsonMessage.substr(lws_start, lws_end));
@@ -83,6 +83,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 		// WARN("Long of second substing: " << rws);
 	} catch (std::out_of_range &e) {
+		DBG("Attemptin to receive the json on next read");
 		std::string nextAttempt;
 		m_controlSoftware.receive(nextAttempt);
 		return obtainWheelSpeeds(nextAttempt);
