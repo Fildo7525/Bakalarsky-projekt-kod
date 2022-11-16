@@ -98,5 +98,6 @@ private:
 	// The speeds in the blackmetal code are defined as longs.
 	long m_leftWheel;
 	long m_rightWheel;
+	double m_lastMeasuredTime;
 };
 
