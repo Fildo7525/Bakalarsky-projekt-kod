@@ -8,14 +8,17 @@ ID študenta: 111124<br />
 
 ## Kód
 
-Pre jednoduchosť spustenia a kompilovania kódu sú priložené tri súbory:
+Pre jednoduchosť zaobchádzania z packagom sú priložené štyri súbory:
   - compile
-  - build.sh
+  - cmpRun
   - clearLogs
+  - mergeLogFiles
 
-Ako vyplýva z názvu. Súbor ```compile``` kompiluje kód pomocou komandu ```colcon build```.<br />
-```build.sh``` tento kód skompiluje a spustí pomocou súboru ```blackmetal.launch.py```, ktorý sa nachádza v projekte.
-Posledný súbor vymaže súbory a priečinky v priečinku log.
+Ako vyplýva z názvu. Súbor ```compile``` kompiluje kód pomocou komandu ```colcon build```. ```cmpRun``` tento kód
+skompiluje a spustí pomocou súboru ```blackmetal.launch.py```, ktorý sa nachádza v projekte.
+Súbor ```clearLogs``` vymaže súbory a priečinky v priečinku log.<br />
+Posledný súbor spojí nami vybrané logovacie súbory do jedného. Logy sa usporiadajú podľa času legovania správ.
+Výsledný súbor so spojenými logovacími spravami sa vytvori v aktuálnom priečinku s názvom ```merged.log```
 
 ## Referencie
 
