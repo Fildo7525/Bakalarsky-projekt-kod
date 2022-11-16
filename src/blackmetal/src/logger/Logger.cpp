@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <mutex>
 #include <ostream>
+#include <unistd.h>
+#include <filesystem>
 
 const std::string currentDateTime() {
     time_t     now = time(0);
@@ -28,6 +30,11 @@ Logger::Logger(const char *module, dbg_level lvl)
 	, m_logFile(getLoggerPath(module), std::ios::app)
 	, m_level(lvl)
 {
+	std::string location = getenv("PWD") + std::string("/log/");
+	if (!std::filesystem::exists(location)) {
+		system("mkdir ./log/");
+	}
+	m_logFile.open( location + std::string(module) + __TIME__ + ".log", std::ios::app);
 }
 
 const char* Logger::dbgLevelToString(const dbg_level level)
