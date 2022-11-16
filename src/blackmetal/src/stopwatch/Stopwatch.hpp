@@ -47,6 +47,7 @@ public:
 	/**
 	 * @brief Get the const double reference to all the timestamps.
 	 */
+	[[deprecated("getStoppedTimes is not thread safe. Use stoppedTimeAt instead.")]]
 	static const std::vector<double> &getStoppedTimes();
 private:
 	/// Starting timestamp.
