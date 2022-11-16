@@ -3,6 +3,7 @@
 #include "log.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <exception>
 #include <functional>
 #include <mutex>
@@ -117,9 +118,23 @@ bm::Status Odometry::evalReturnState(const std::string &returnJson)
 }
 void Odometry::changeRobotLocation(Speed &&speed)
 {
-	std::lock_guard<std::mutex> lock(g_robotLocationMutex);
-	m_coordination.angle = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
-	// TODO: calculate the robot location
-	// m_coordination.x
+	double dt = g_pollTime.count(); // TODO: Plus the time of sending and receiving a request
+	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
+	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
+	// auto icr = m_controlSoftware.chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
+
+	auto vx = speedInCenterOfGravity *std::cos(m_coordination.angle);
+	auto vy = speedInCenterOfGravity *std::sin(m_coordination.angle);
+
+	auto dxt = vx * dt;
+	auto dyt = vy * dt;
+	auto changOfAngleInTime = angularVelocity * dt;
+
+	{
+		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
+		m_coordination.x += dxt;
+		m_coordination.y += dyt;
+		m_coordination.angle += changOfAngleInTime;
+	}
 }
 
