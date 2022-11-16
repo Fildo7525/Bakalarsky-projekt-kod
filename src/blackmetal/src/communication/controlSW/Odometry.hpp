@@ -5,8 +5,6 @@ class Odometry;
 
 #include <rclcpp/timer.hpp>
 
-extern std::mutex g_odometryMutex;
-
 /**
  * @class Odometry
  * @brief Manages left and right wheel speed using the control server.
@@ -24,8 +22,11 @@ public:
 	 * @brief Specifies the coordinates and angle of rotation of the robot.
 	 */
 	struct Coord {
+		/// The x coordinate of the robot in Cartesian plain.
 		int x;
+		/// The y coordinate of the robot in Cartesian plain.
 		int y;
+		/// The angle of the robot with the x axis in Cartesian plain.
 		double angle;
 	};
 
@@ -35,7 +36,9 @@ public:
 	 */
 	struct Speed
 	{
+		/// The velocity of left wheel.
 		long leftWheel;
+		/// The velocity of right wheel.
 		long rightWheel;
 	};
 
@@ -63,10 +66,17 @@ public:
 
 	/**
 	 * @brief Get the last left wheel speed.
+	 *
+	 * The output of this function is copy of the actual value.
+	 * Thus you can use this variable in non thread safe functions.
 	 */
 	long leftWheelSpeed() const;
+
 	/**
 	 * @brief Get the last right wheel speed.
+	 *
+	 * The output of this function is copy of the actual value.
+	 * Thus you can use this variable in non thread safe functions.
 	 */
 	long rightWheelSpeed() const;
 private:
@@ -80,8 +90,9 @@ private:
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
 	 *
-	 * The location is calculated from the period of the polling @see execute function and the
+	 * The location is calculated from the period of the polling execute function and the
 	 * time that takes to obtain the velocities of the wheels.
+	 * @see execute the polling function.
 	 *
 	 * @param speed Structure containing the left and right wheel velocity.
 	 */
@@ -96,8 +107,7 @@ private:
 	Coord m_coordination;
 
 	// The speeds in the blackmetal code are defined as longs.
-	long m_leftWheel;
-	long m_rightWheel;
+	Speed m_velocity;
 	double m_lastMeasuredTime;
 };
 

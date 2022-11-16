@@ -60,8 +60,8 @@ void Odometry::execute()
 
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
-		m_leftWheel = wheels.leftWheel;
-		m_rightWheel = wheels.rightWheel;
+		m_velocity.leftWheel = wheels.leftWheel;
+		m_velocity.rightWheel = wheels.rightWheel;
 	}
 
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, std::placeholders::_1), std::move(wheels)).detach();
@@ -98,13 +98,13 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 long Odometry::leftWheelSpeed() const
 {
 	std::lock_guard<std::mutex> lock(g_odometryMutex);
-	return m_leftWheel;
+	return m_velocity.leftWheel;
 }
 
 long Odometry::rightWheelSpeed() const
 {
 	std::lock_guard<std::mutex> lock(g_odometryMutex);
-	return m_rightWheel;
+	return m_velocity.rightWheel;
 }
 
 bm::Status Odometry::evalReturnState(const std::string &returnJson)

@@ -38,7 +38,13 @@ public:
 	 */
 	void onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg);
 
+	/**
+	 * @brief Retrieve the chassis length set in the config file.
+	 */
 	const double &chassisLength();
+	/**
+	 * @brief Retrieve the wheel radius set from the config file.
+	 */
 	const double &wheelRadius();
 
 private:
@@ -65,7 +71,11 @@ private:
 
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
+
+	/// Object handling the odometry of the robot.
 	std::shared_ptr<Odometry> m_odometry;
+
+	/// Thread in which m_odometry polls for the velocities.
 	std::thread m_odometryThread;
 };
 
