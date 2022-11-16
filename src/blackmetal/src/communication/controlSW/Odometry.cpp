@@ -39,14 +39,14 @@ void Odometry::execute()
 
 	m_controlSoftware.send("");
 	m_controlSoftware.receive(wheelSpeed);
-	speed wheels = obtainWheelSpeeds(wheelSpeed);
+	Speed wheels = obtainWheelSpeeds(wheelSpeed);
 
 	std::lock_guard<std::mutex> lock(odometryMutex);
 	m_leftWheel = wheels.leftWheel;
 	m_rightWheel = wheels.rightWheel;
 }
 
-Odometry::speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
+Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 {
 	// The structure will arrive in a wonnabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
