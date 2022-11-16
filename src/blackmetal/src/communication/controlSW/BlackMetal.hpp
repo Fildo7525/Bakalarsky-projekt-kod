@@ -37,6 +37,9 @@ public:
 	 */
 	void onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg);
 
+	const double &chassisLength();
+	const double &wheelRadius();
+
 private:
 
 	/**

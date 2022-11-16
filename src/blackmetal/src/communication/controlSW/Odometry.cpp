@@ -1,22 +1,29 @@
 #include "Odometry.hpp"
 #include "controlSW/BlackMetal.hpp"
 #include "log.hpp"
+
 #include <chrono>
 #include <exception>
+#include <functional>
 #include <mutex>
 #include <stdexcept>
 #include <variant>
+#include <thread>
 
-std::mutex odometryMutex;
+std::mutex g_odometryMutex;
+std::mutex g_robotLocationMutex;
+// TIP: The 3 second interval is just for debugging
+const std::chrono::milliseconds g_pollTime(3000);
 
 INIT_MODULE(Odometry);
 
 Odometry::Odometry(BlackMetal &controlSoftware)
 	: m_controlSoftware(controlSoftware)
+	, m_coordination({0, 0, 0})
 {
-	std::lock_guard<std::mutex> lock(odometryMutex);
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	m_timer = m_controlSoftware.create_wall_timer(
-			std::chrono::milliseconds(3000),
+			std::chrono::milliseconds(g_pollTime),
 			[this]() {
 				this->execute();
 			}
@@ -28,7 +35,7 @@ void Odometry::execute()
 {
 	std::variant<bm::Status, std::string> temp;
 	{
-		std::lock_guard<std::mutex> lock(odometryMutex);
+		std::lock_guard<std::mutex> lock(g_odometryMutex);
 		temp = m_controlSoftware.execute(bm::Command::GET_LR_WHEEL_VELOCITY);
 	}
 	std::string wheelSpeed;
@@ -44,9 +51,13 @@ void Odometry::execute()
 	Speed wheels = obtainWheelSpeeds(wheelSpeed);
 	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 
-	std::lock_guard<std::mutex> lock(odometryMutex);
-	m_leftWheel = wheels.leftWheel;
-	m_rightWheel = wheels.rightWheel;
+	{
+		std::lock_guard<std::mutex> lock(g_odometryMutex);
+		m_leftWheel = wheels.leftWheel;
+		m_rightWheel = wheels.rightWheel;
+	}
+
+	std::thread(std::bind(&Odometry::changeRobotLocation, this, std::placeholders::_1), std::move(wheels)).detach();
 }
 
 Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
@@ -84,13 +95,13 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 
 long Odometry::leftWheelSpeed() const
 {
-	std::lock_guard<std::mutex> lock(odometryMutex);
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	return m_leftWheel;
 }
 
 long Odometry::rightWheelSpeed() const
 {
-	std::lock_guard<std::mutex> lock(odometryMutex);
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	return m_rightWheel;
 }
 
@@ -104,3 +115,11 @@ bm::Status Odometry::evalReturnState(const std::string &returnJson)
 	SUCCESS(returnJson);
 	return bm::Status::OK;
 }
+void Odometry::changeRobotLocation(Speed &&speed)
+{
+	std::lock_guard<std::mutex> lock(g_robotLocationMutex);
+	m_coordination.angle = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
+	// TODO: calculate the robot location
+	// m_coordination.x
+}
+

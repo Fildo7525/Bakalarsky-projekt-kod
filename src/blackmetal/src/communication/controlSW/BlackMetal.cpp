@@ -53,3 +53,13 @@ bm::Status BlackMetal::evalReturnState(const std::string &returnJson)
 	return bm::Status::OK;
 }
 
+const double& BlackMetal::chassisLength()
+{
+	return M_CHASIS_LENGTH;
+}
+
+const double& BlackMetal::wheelRadius()
+{
+	return M_WHEEL_RADIUS;
+}
+

@@ -5,7 +5,7 @@ class Odometry;
 
 #include <rclcpp/timer.hpp>
 
-extern std::mutex odometryMutex;
+extern std::mutex g_odometryMutex;
 
 /**
  * @class Odometry
@@ -76,6 +76,8 @@ private:
 	 * @param returnJson Json containing whether the server could parse the received string.
 	 */
 	bm::Status evalReturnState(const std::string &returnJson);
+
+	void changeRobotLocation(Speed &&speed);
 
 private:
 	/// Instance of the control software client.
