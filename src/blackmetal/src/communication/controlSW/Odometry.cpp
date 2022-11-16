@@ -2,7 +2,9 @@
 #include "controlSW/BlackMetal.hpp"
 #include "log.hpp"
 #include <chrono>
+#include <exception>
 #include <mutex>
+#include <stdexcept>
 #include <variant>
 
 std::mutex odometryMutex;
@@ -14,7 +16,7 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 {
 	std::lock_guard<std::mutex> lock(odometryMutex);
 	m_timer = m_controlSoftware.create_wall_timer(
-			std::chrono::milliseconds(100),
+			std::chrono::milliseconds(3000),
 			[this]() {
 				this->execute();
 			}
@@ -40,6 +42,7 @@ void Odometry::execute()
 	m_controlSoftware.send("");
 	m_controlSoftware.receive(wheelSpeed);
 	Speed wheels = obtainWheelSpeeds(wheelSpeed);
+	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 
 	std::lock_guard<std::mutex> lock(odometryMutex);
 	m_leftWheel = wheels.leftWheel;
@@ -48,23 +51,35 @@ void Odometry::execute()
 
 Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 {
-	// The structure will arrive in a wonnabe json format
+	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-	auto lws_start = jsonMessage.find_first_of('=');
-	WARN("lws_start: " << lws_start);
-	auto lws_end = jsonMessage.find_first_of(' ');
-	WARN("lws_end: " << lws_end);
-	long lws = std::stol(jsonMessage.substr(lws_start, lws_end));
-	WARN("lws: " << lws);
+	long lws, rws;
+	try {
+		// WARN(nextAttempt);
+		// m_controlSoftware.receive(nextAttempt);
 
-	auto lrs_start = jsonMessage.find_last_of('=');
-	WARN("lrs_start: " << lrs_start);
-	auto lrs_end = jsonMessage.find_last_of('}');
-	WARN("lrs_end: " << lrs_end);
-	long lrs = std::stol(jsonMessage.substr(lrs_start, lrs_end));
-	WARN("lrs: " << lrs);
+		// WARN("Next attempt: " << jsonMessage);
+		auto lws_start = jsonMessage.find_first_of('=') + 1;
+		auto lws_end = jsonMessage.find_first_of(' ');
+		// WARN("First substring: " << jsonMessage.substr(lws_start, lws_end));
+		lws = std::stol(jsonMessage.substr(lws_start, lws_end));
+		// WARN("Long of first substing: " << lws);
 
-	return {lws, lrs};
+		auto rws_start = jsonMessage.find_last_of('=') + 1;
+		auto rws_end = jsonMessage.find_last_of('}');
+		// WARN("Second substring: " << jsonMessage.substr(rws_start, rws_end));
+		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
+		// WARN("Long of second substing: " << rws);
+	} catch (std::out_of_range &e) {
+		std::string nextAttempt;
+		m_controlSoftware.receive(nextAttempt);
+		return obtainWheelSpeeds(nextAttempt);
+	} catch (std::exception &e) {
+		ERR(e.what());
+		return {0,0};
+	}
+
+	return {lws, rws};
 }
 
 long Odometry::leftWheelSpeed() const
