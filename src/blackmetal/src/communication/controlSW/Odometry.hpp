@@ -23,9 +23,9 @@ public:
 	 */
 	struct Coord {
 		/// The x coordinate of the robot in Cartesian plain.
-		int x;
+		double x;
 		/// The y coordinate of the robot in Cartesian plain.
-		int y;
+		double y;
 		/// The angle of the robot with the x axis in Cartesian plain.
 		double angle;
 	};
