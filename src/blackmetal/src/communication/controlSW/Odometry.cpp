@@ -123,6 +123,7 @@ bm::Status Odometry::evalReturnState(const std::string &returnJson)
 	SUCCESS(returnJson);
 	return bm::Status::OK;
 }
+
 void Odometry::changeRobotLocation(Speed &&speed)
 {
 	double dt = g_pollTime.count() + m_lastMeasuredTime;
@@ -130,12 +131,12 @@ void Odometry::changeRobotLocation(Speed &&speed)
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	// auto icr = m_controlSoftware.chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
 
-	auto vx = speedInCenterOfGravity *std::cos(m_coordination.angle);
-	auto vy = speedInCenterOfGravity *std::sin(m_coordination.angle);
+	double vx = speedInCenterOfGravity *std::cos(m_coordination.angle);
+	double vy = speedInCenterOfGravity *std::sin(m_coordination.angle);
 
-	auto dxt = vx * dt;
-	auto dyt = vy * dt;
-	auto changOfAngleInTime = angularVelocity * dt;
+	double dxt = vx * dt;
+	double dyt = vy * dt;
+	double changOfAngleInTime = angularVelocity * dt;
 
 	{
 		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
