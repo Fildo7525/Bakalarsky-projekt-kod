@@ -13,6 +13,9 @@
 #include <thread>
 #include <variant>
 
+/// Defined by the BlackMetal source code.
+#define MAX_WHEEL_SPEED 1000
+
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
 // TIP: The 3 second interval is just for debugging
@@ -91,6 +94,9 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
 		ERR(e.what());
 		return {0,0};
 	}
+
+	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
+	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
 
 	return {lws, rws};
 }
