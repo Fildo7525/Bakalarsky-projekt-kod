@@ -27,6 +27,10 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 	: m_controlSoftware(controlSoftware)
 	, m_coordination({0, 0, 0})
 {
+	// TODO: Only the first call to execute is run in separate thread.
+	// Change it so that all the call would be run in separate thread
+	// the best approach would probably be to create the thread in constructor
+	// and place there a timer to lambda.
 	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	m_timer = m_controlSoftware.create_wall_timer(
 			std::chrono::milliseconds(g_pollTime),
