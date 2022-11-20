@@ -95,7 +95,8 @@ private:
 	 * time that takes to obtain the velocities of the wheels.
 	 * @see execute the polling function.
 	 *
-	 * @param speed Structure containing the left and right wheel velocity.
+	 * @param speed Rvalue reference to a structure containing the left and right wheel velocity.
+	 * @param elapsedTime The rvalue reference to the elapsed time after the receiving the robot velocity. 
 	 */
 	void changeRobotLocation(Speed &&speed, long double &&elapsedTime);
 
@@ -106,6 +107,7 @@ private:
 	rclcpp::TimerBase::SharedPtr m_timer;
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
 	Coord m_coordination;
+	/// Thread that polls the server at a certain frequency for the wheels velocity.
 	std::thread m_robotSpeedReceiver;
 
 	// The speeds in the blackmetal code are defined as longs.
