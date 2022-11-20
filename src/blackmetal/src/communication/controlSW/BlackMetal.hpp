@@ -47,7 +47,7 @@ private:
 
 private:
 	// TODO: Find out what is the chasis length.
-	double m_chasisLength;
+	double m_chassisLength;
 	// TODO: Find out what is the wheel radius.
 	double m_wheelRadius;
 

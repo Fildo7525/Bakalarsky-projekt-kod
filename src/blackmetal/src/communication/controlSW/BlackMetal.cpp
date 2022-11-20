@@ -11,10 +11,10 @@ BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
 	, Client(PORT, "192.168.1.3")
 {
-	m_chasisLength = declare_parameter<double>("chasis", 1);
+	m_chassisLength = declare_parameter<double>("chasis", 1);
 	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
 
-	DBG("Chasis has lenght " << m_chasisLength << " m");
+	DBG("Chasis has lenght " << m_chassisLength << " m");
 	DBG("Wheel has radius " << m_wheelRadius << " m");
 	DBG("Address set to " << address() << ":" << PORT);
 
