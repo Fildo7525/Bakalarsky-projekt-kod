@@ -126,7 +126,6 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 
 	this->send(message);
 	receive(message);
-	DBG("The send and receive ran in " << Stopwatch::lastStoppedTime() << " micro seconds");
 
 	return message;
 }
