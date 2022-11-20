@@ -74,8 +74,5 @@ private:
 
 	/// Object handling the odometry of the robot.
 	std::shared_ptr<Odometry> m_odometry;
-
-	/// Thread in which m_odometry polls for the velocities.
-	std::thread m_odometryThread;
 };
 

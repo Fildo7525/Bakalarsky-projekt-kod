@@ -1,5 +1,6 @@
 #pragma once
 
+#include <thread>
 class Odometry;
 #include "controlSW/BlackMetal.hpp"
 
@@ -96,7 +97,7 @@ private:
 	 *
 	 * @param speed Structure containing the left and right wheel velocity.
 	 */
-	void changeRobotLocation(Speed &&speed);
+	void changeRobotLocation(Speed &&speed, long double &&elapsedTime);
 
 private:
 	/// Instance of the control software client.
@@ -105,9 +106,9 @@ private:
 	rclcpp::TimerBase::SharedPtr m_timer;
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
 	Coord m_coordination;
+	std::thread m_robotSpeedReceiver;
 
 	// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;
-	double m_lastMeasuredTime;
 };
 

@@ -19,7 +19,9 @@
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
 // TIP: The 3 second interval is just for debugging
-const std::chrono::milliseconds g_pollTime(3000);
+constexpr std::chrono::milliseconds g_pollTime(3000);
+
+using namespace std::placeholders;
 
 INIT_MODULE(Odometry);
 
@@ -27,16 +29,14 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 	: m_controlSoftware(controlSoftware)
 	, m_coordination({0, 0, 0})
 {
-	// TODO: Only the first call to execute is run in separate thread.
-	// Change it so that all the call would be run in separate thread
-	// the best approach would probably be to create the thread in constructor
-	// and place there a timer to lambda.
 	std::lock_guard<std::mutex> lock(g_odometryMutex);
-	m_timer = m_controlSoftware.create_wall_timer(
-			std::chrono::milliseconds(g_pollTime),
-			[this]() {
-				this->execute();
+	m_robotSpeedReceiver = std::thread(
+		[this] () {
+			while (true) {
+				std::this_thread::sleep_for(g_pollTime);
+				execute();
 			}
+		}
 	);
 	INFO("Timer initialized");
 }
@@ -58,6 +58,7 @@ void Odometry::execute()
 
 	Speed wheels;
 	TIC;
+	// The send and receive methos are thread safe.
 	m_controlSoftware.send("");
 	m_controlSoftware.receive(wheelSpeed);
 
@@ -70,9 +71,9 @@ void Odometry::execute()
 		m_velocity.rightWheel = wheels.rightWheel;
 	}
 	TOC;
-	m_lastMeasuredTime = Stopwatch::lastStoppedTime();
+	double elapsedTime = Stopwatch::lastStoppedTime();
 
-	std::thread(std::bind(&Odometry::changeRobotLocation, this, std::placeholders::_1), std::move(wheels)).detach();
+	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
 Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
@@ -129,25 +130,37 @@ bm::Status Odometry::evalReturnState(const std::string &returnJson)
 	return bm::Status::OK;
 }
 
-void Odometry::changeRobotLocation(Speed &&speed)
+void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
-	double dt = g_pollTime.count() + m_lastMeasuredTime;
+	// The poll time is in milliseconds while th elapsedTime is in microseconds.
+	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
+	INFO("dt: " << dt);
 	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
+	INFO("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
+	INFO("CoG velocity: " << speedInCenterOfGravity);
 	// auto icr = m_controlSoftware.chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
 
-	double vx = speedInCenterOfGravity *std::cos(m_coordination.angle);
-	double vy = speedInCenterOfGravity *std::sin(m_coordination.angle);
+	double vx;
+	double vy;
+	{
+		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
+		vx = speedInCenterOfGravity * std::cos(m_coordination.angle);
+		vy = speedInCenterOfGravity * std::sin(m_coordination.angle);
+	}
 
 	double dxt = vx * dt;
+	INFO("x change: " << dxt);
 	double dyt = vy * dt;
-	double changOfAngleInTime = angularVelocity * dt;
+	INFO("y change: " << dyt);
+	double changeOfAngleInTime = angularVelocity * dt;
+	INFO("angle change: " << changeOfAngleInTime);
 
 	{
 		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
 		m_coordination.x += dxt;
 		m_coordination.y += dyt;
-		m_coordination.angle += changOfAngleInTime;
+		m_coordination.angle += changeOfAngleInTime;
 	}
 }
 
