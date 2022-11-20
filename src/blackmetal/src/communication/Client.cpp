@@ -26,14 +26,13 @@ Client::~Client()
 void Client::start(int port, const std::string &address)
 {
 	if (m_connected) {
-		WARN("The client is already connected to " << m_address);
+		WARN("The client is already connected to " << m_address << ':' << m_port);
 		return;
 	}
 
-	DBG("The client is not initialized. Connecting to " << address);
+	DBG("The client is not initialized. Connecting to " << address << ':' << m_port);
 	struct sockaddr_in serv_addr;
 	int clientFD;
-	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
 	if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		FATAL("\n Socket creation error \n");
 		return;
@@ -56,7 +55,6 @@ void Client::start(int port, const std::string &address)
 		FATAL("\nConnection Failed: " << strerror(clientFD));
 		return;
 	}
-	INFO("Client successfully connected");
 	m_connected = true;
 	m_address = address;
 	m_port = port;
@@ -113,6 +111,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int rightWheel, int leftWheel)
 {
 	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
+	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
 	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
@@ -171,8 +170,7 @@ bm::Status Client::receive(std::string &msg)
 	}
 	msg.clear();
 	msg = buffer;
-	// INFO("Recieved: " << buffer);
-	// DBG("The server send" << numberOfBytes);
+	DBG("The server send " << numberOfBytes);
 	return bm::Status::OK;
 }
 
