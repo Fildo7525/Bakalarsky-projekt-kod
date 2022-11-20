@@ -38,6 +38,7 @@ public:
 
 	/**
 	 * @brief Access a specified stopped time in the vector.
+	 * If the index parameter is bigger than the size of the vector the last stopped time is returned.
 	 *
 	 * @param index Index of the timestamp to access.
 	 * @return The const double reference to the timestamp.
