@@ -56,13 +56,12 @@ void Odometry::execute()
 	}
 	evalReturnState(wheelSpeed);
 
+	Speed wheels;
 	TIC;
 	m_controlSoftware.send("");
 	m_controlSoftware.receive(wheelSpeed);
-	TOC;
-	m_lastMeasuredTime = Stopwatch::lastStoppedTime();
 
-	Speed wheels = obtainWheelSpeeds(wheelSpeed);
+	wheels = obtainWheelSpeeds(wheelSpeed);
 	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 
 	{
@@ -70,6 +69,8 @@ void Odometry::execute()
 		m_velocity.leftWheel = wheels.leftWheel;
 		m_velocity.rightWheel = wheels.rightWheel;
 	}
+	TOC;
+	m_lastMeasuredTime = Stopwatch::lastStoppedTime();
 
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, std::placeholders::_1), std::move(wheels)).detach();
 }
