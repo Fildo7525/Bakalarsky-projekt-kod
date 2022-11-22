@@ -8,6 +8,7 @@
 #include <cmath>
 #include <exception>
 #include <functional>
+#include <limits>
 #include <mutex>
 #include <stdexcept>
 #include <thread>
@@ -23,7 +24,7 @@ constexpr std::chrono::milliseconds g_pollTime(3000);
 
 using namespace std::placeholders;
 
-INIT_MODULE(Odometry);
+INIT_MODULE(Odometry, dbg_level::DBG);
 
 Odometry::Odometry(BlackMetal &controlSoftware)
 	: m_controlSoftware(controlSoftware)
@@ -42,7 +43,7 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 
 void Odometry::execute()
 {
-	static Speed lastValue{0,0};
+	static Speed lastValue{std::numeric_limits<long>::max(), std::numeric_limits<long>::max()};
 	std::variant<bm::Status, std::string> temp;
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
