@@ -29,7 +29,6 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 	: m_controlSoftware(controlSoftware)
 	, m_coordination({0, 0, 0})
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	m_robotSpeedReceiver = std::thread(
 		[this] () {
 			while (true) {
@@ -43,6 +42,7 @@ Odometry::Odometry(BlackMetal &controlSoftware)
 
 void Odometry::execute()
 {
+	static Speed lastValue{0,0};
 	std::variant<bm::Status, std::string> temp;
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
@@ -63,7 +63,11 @@ void Odometry::execute()
 	m_controlSoftware.receive(wheelSpeed);
 
 	wheels = obtainWheelSpeeds(wheelSpeed);
-	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
+
+	if (wheels.leftWheel != lastValue.leftWheel || wheels.rightWheel != lastValue.rightWheel) {
+		INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
+		lastValue = wheels;
+	}
 
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
@@ -134,11 +138,11 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
 	// The poll time is in milliseconds while th elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
-	INFO("dt: " << dt);
+	DBG("dt: " << dt);
 	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
-	INFO("Angular velocity: " << angularVelocity);
+	DBG("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
-	INFO("CoG velocity: " << speedInCenterOfGravity);
+	DBG("CoG velocity: " << speedInCenterOfGravity);
 	// auto icr = m_controlSoftware.chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
 
 	double vx;
@@ -150,11 +154,11 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	}
 
 	double dxt = vx * dt;
-	INFO("x change: " << dxt);
+	DBG("x change: " << dxt);
 	double dyt = vy * dt;
-	INFO("y change: " << dyt);
+	DBG("y change: " << dyt);
 	double changeOfAngleInTime = angularVelocity * dt;
-	INFO("angle change: " << changeOfAngleInTime);
+	DBG("angle change: " << changeOfAngleInTime);
 
 	{
 		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
