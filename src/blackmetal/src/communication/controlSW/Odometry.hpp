@@ -63,7 +63,7 @@ public:
 	 * @param jsonMessage Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	Speed obtainWheelSpeeds(const std::string &jsonMessage);
+	Speed obtainWheelSpeeds(const std::string &jsonMessage) const;
 
 	/**
 	 * @brief Get the last left wheel speed.
