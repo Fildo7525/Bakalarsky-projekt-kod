@@ -81,7 +81,7 @@ void Odometry::execute()
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
-Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage)
+Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) const
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
