@@ -108,7 +108,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 	return "Unknown bm::Command";
 }
 
-std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int rightWheel, int leftWheel)
+std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
 {
 	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -121,7 +121,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 		message += "}";
 	}
 
-	DBG("sending: " << message);
+	INFO("sending: " << message);
 
 	this->send(message);
 	receive(message);
@@ -129,7 +129,7 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, int right
 	return message;
 }
 
-bm::Status Client::request(int rightWheel, int leftWheel)
+bm::Status Client::request(double rightWheel, double leftWheel)
 {
 	auto buffer = execute(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
 	const bm::Status *tmp = std::get_if<bm::Status>(&buffer);
