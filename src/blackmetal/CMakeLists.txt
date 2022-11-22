@@ -22,9 +22,7 @@ find_package(geometry_msgs REQUIRED)
 add_subdirectory(src/communication/controlSW)
 add_subdirectory(src/communication/logSW)
 add_subdirectory(src/logger)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_subdirectory(src/stopwatch)
-endif()
+add_subdirectory(src/stopwatch)
 
 
 
