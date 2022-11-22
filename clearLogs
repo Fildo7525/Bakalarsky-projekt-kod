@@ -1,4 +1,8 @@
 #!/bin/bash
 
+if [[ ! -d ./backupLogs ]]; then
+	mkdir ./backupLogs
+fi
+mv ./log/* ./backupLogs/
 rm -rf ./log/*
 
