@@ -4,38 +4,43 @@
 
 #include <chrono>
 #include <cstdio>
-#include <mutex>
 #include <ostream>
 #include <filesystem>
 
-const std::string currentDateTime() {
-    time_t     now = time(0);
-    struct tm  tstruct;
-    char       buf[80];
-    tstruct = *localtime(&now);
-    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-    // for more information about date/time format
-    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+#include <stdio.h>
 
-    return buf;
+const std::string currentDateTime() {
+	time_t now = time(0);
+	struct tm  tstruct;
+	char buf[80];
+	tstruct = *localtime(&now);
+	// Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+	// for more information about date/time format
+	strftime(buf, sizeof(buf), "%Y-%m-%d-%X", &tstruct);
+
+	return buf;
 }
 
 std::string getLoggerPath(const std::string &module)
 {
-	std::string name = "~/Bakalarka/code/log/" + module + '-' + currentDateTime() + ".log";
+	std::string name = getenv("PWD") + std::string("/log/run-") + currentDateTime() + '/' + module + '-' + currentDateTime() + ".log";
 	return name;
 }
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
-	, m_logFile(getLoggerPath(module), std::ios::app)
+	, m_logFile()
 	, m_level(lvl)
 {
-	std::string location = getenv("PWD") + std::string("/log/");
+	std::string location = getenv("PWD") + std::string("/log/run-") + currentDateTime();
 	if (!std::filesystem::exists(location)) {
-		system("mkdir ./log/");
+		std::filesystem::create_directory(location);
+		std::printf("\nCreating the location %s\n", location.c_str());
 	}
-	m_logFile.open( location + std::string(module) + __TIME__ + ".log", std::ios::app);
+	m_logFile.open( getLoggerPath(m_moduleName), std::ios::out);
+	if (!m_logFile.is_open()) {
+		std::cerr << "The log file " << getLoggerPath(m_moduleName) << " could not be opened. The logs will only be visible on the screen.\n";
+	}
 }
 
 const char* Logger::dbgLevelToString(const dbg_level level)
@@ -65,20 +70,17 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	std::string log_time = std::ctime(&pretty_time);
 	log_time.pop_back();
 
-	std::mutex screenMutex;
-	std::mutex fileMutex;
 	if (dbgLevel >= m_level) {
-		std::lock_guard<std::mutex> lock(screenMutex);
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
 			std::fprintf(stderr, "%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		} else {
 			std::printf("%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		}
 	}
-	{
-		std::lock_guard<std::mutex> lock(fileMutex);
-		m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	if (!m_logFile.is_open()) {
+		return;
 	}
+	m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
 }
 
 dbg_level Logger::level()
