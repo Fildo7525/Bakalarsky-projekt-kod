@@ -150,7 +150,9 @@ bm::Status Client::send(const std::string &msg)
 		FATAL("Could not send the command to server");
 		return bm::Status::SEND_ERROR;
 	}
-	DBG("The server send " << numberOfBytes << " bytes");
+	else {
+		DBG("The client sent " << msg);
+	}
 	return bm::Status::OK;
 }
 
