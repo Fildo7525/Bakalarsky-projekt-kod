@@ -26,7 +26,7 @@ using namespace std::placeholders;
 
 INIT_MODULE(Odometry, dbg_level::DBG);
 
-Odometry::Odometry(BlackMetal &controlSoftware)
+Odometry::Odometry(std::shared_ptr<BlackMetal> controlSoftware)
 	: m_controlSoftware(controlSoftware)
 	, m_coordination({0, 0, 0})
 {
@@ -47,7 +47,7 @@ void Odometry::execute()
 	std::variant<bm::Status, std::string> temp;
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
-		temp = m_controlSoftware.execute(bm::Command::GET_LR_WHEEL_VELOCITY);
+		temp = m_controlSoftware->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
 	}
 
 	std::string wheelSpeed;
@@ -60,8 +60,8 @@ void Odometry::execute()
 	Speed wheels;
 	TIC;
 	// The send and receive methos are thread safe.
-	m_controlSoftware.send("");
-	m_controlSoftware.receive(wheelSpeed);
+	m_controlSoftware->send("");
+	m_controlSoftware->receive(wheelSpeed);
 
 	wheels = obtainWheelSpeeds(wheelSpeed);
 
@@ -99,7 +99,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 	} catch (std::out_of_range &e) {
 		DBG("Attempting to receive the json on next read");
 		std::string nextAttempt;
-		m_controlSoftware.receive(nextAttempt);
+		m_controlSoftware->receive(nextAttempt);
 		return obtainWheelSpeeds(nextAttempt);
 	} catch (std::exception &e) {
 		ERR(e.what());
@@ -140,11 +140,11 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	// The poll time is in milliseconds while th elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
-	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware.chassisLength();
+	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware->chassisLength();
 	DBG("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	DBG("CoG velocity: " << speedInCenterOfGravity);
-	// auto icr = m_controlSoftware.chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
+	// auto icr = m_controlSoftware->chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
 
 	double vx;
 	double vy;

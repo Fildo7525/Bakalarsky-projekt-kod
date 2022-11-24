@@ -49,7 +49,7 @@ public:
 	 *
 	 * @param controlSoftware Reference to the control software connected to the robot.
 	 */
-	explicit Odometry(BlackMetal &controlSoftware);
+	explicit Odometry(std::shared_ptr<BlackMetal> controlSoftware);
 
 	/**
 	 * @brief Function polling the robot for its left and right wheel speed.
@@ -102,7 +102,7 @@ private:
 
 private:
 	/// Instance of the control software client.
-	BlackMetal &m_controlSoftware;
+	std::shared_ptr<BlackMetal> m_controlSoftware;
 	/// Timer invoking the execute function.
 	rclcpp::TimerBase::SharedPtr m_timer;
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
