@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ReturnStatus.hpp"
+#include "Queue.hpp"
 
 #include <string>
 #include <variant>
@@ -11,8 +12,12 @@
  * @brief Base class handling TCP/IP connections
  *
  * The classes inputs are port and address of the desired server.
- * This class than offers multiple methods of communication with
+ * This class then offers multiple methods of communication with
  * the mobile robot. The communication is handled by json strings.
+ *
+ * The order of send and received messages is organized using a thread
+ * safe queue.
+ * @see ts::Queue thread safe queue.
  *
  * NOTE:
  * The strings cannot be passed to parser, because the messages we
@@ -101,23 +106,17 @@ public:
 	bm::Status requestPosition(long rightWheel, long leftWheel);
 
 	/**
-	 * @brief Send a desired string message to the server.
+	 * @brief Add the request to priority queue to be sent to server.
+	 * @see ts::Queue Thread safe queue managing the requests send to the robot.
 	 *
-	 * @param msg message to be send.
-	 * @return bm::Status::SEND_ERROR when the ::send function crashes, bm::Status::OK otherwise.
+	 * @param msg Json string to be sent to the server.
 	 */
-	bm::Status send(const std::string &msg);
+	void enqueue(const std::string &msg);
 
 	/**
-	 * @brief Receive a message from the server.
-	 *
-	 * Be aware this is a blocking function.
-	 * The execution will stop until the server does not send a message to us.
-	 *
-	 * @param msg Variable where the received message should be saved.
-	 * @return bm::Status::RECEIVE_ERROR when the ::read function crashes, bm::Status::OK otherwise.
+	 * @brief Returns the first json message that is located in the odometry queue.
 	 */
-	bm::Status receive(std::string &msg);
+	std::string robotVelocity();
 
 	/**
 	 * @brief Returns the address with which was the start method called with.
@@ -145,6 +144,35 @@ protected:
 	 */
 	virtual bm::Status evalReturnState(const std::string &returnJson);
 
+	/**
+	 * @brief Send a desired string message to the server.
+	 *
+	 * @param msg message to be send.
+	 * @return bm::Status::SEND_ERROR when the ::send function crashes, bm::Status::OK otherwise.
+	 */
+	bm::Status send(const std::string &msg);
+
+	/**
+	 * @brief Receive a message from the server.
+	 *
+	 * Be aware this is a blocking function.
+	 * The execution will stop until the server does not send a message to us.
+	 *
+	 * @param msg Variable where the received message should be saved.
+	 * @return bm::Status::RECEIVE_ERROR when the ::read function crashes, bm::Status::OK otherwise.
+	 */
+	bm::Status receive(std::string &msg);
+
+private:
+	/**
+	 * @brief Method handling the json requests.
+	 *
+	 * The method runs in different thread detached from the main thread. Handles the requests
+	 * pushed to the priority queue. Uses the send and receive functions. The returned messages
+	 * containing the robot velocity is stored in m_odometryMessages queue. 
+	 */
+	void workerThread();
+
 private:
 	/// IP address to which we tried or are connected to.
 	std::string m_address;
@@ -155,11 +183,11 @@ private:
 	/// Port to which is the client connected to.
 	int m_port;
 
-	/// Synchronizes threads on receiving a request to server.
-	std::mutex m_receiveSynchronizer;
+	/// Thread safe priority queue managing the json string that are to be sent to the robot.
+	std::shared_ptr<ts::Queue> m_queue;
 
-	/// Synchronizes threads on sending a request to server.
-	std::mutex m_sendSynchronizer;
+	/// Thread safe queue containing the returned left and right wheel velocity.
+	std::shared_ptr<ts::Queue> m_odometryMessages;
 
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;

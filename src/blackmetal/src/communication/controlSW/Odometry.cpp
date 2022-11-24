@@ -1,5 +1,6 @@
 #include "Odometry.hpp"
 
+#include "ReturnStatus.hpp"
 #include "controlSW/BlackMetal.hpp"
 #include "stopwatch/Stopwatch.hpp"
 #include "log.hpp"
@@ -55,28 +56,14 @@ Odometry::Odometry(std::shared_ptr<Client> &controlClient)
 
 void Odometry::execute()
 {
-	static Speed lastValue{std::numeric_limits<long>::max(), std::numeric_limits<long>::max()};
-	std::variant<bm::Status, std::string> temp;
-	{
-		std::lock_guard<std::mutex> lock(g_odometryMutex);
-		temp = m_controlClient->sendRequest(bm::Command::GET_LR_WHEEL_POSITION);
-	}
-
-	std::string wheelSpeed;
-	if (std::get_if<std::string>(&temp)) {
-		wheelSpeed = std::get<std::string>(temp);
-		DBG("Message received: " << wheelSpeed);
-	}
-	evalReturnState(wheelSpeed);
-
+	static Speed lastValue;
 	Speed wheels;
+
 	TIC;
 
-	// The send and receive methos are thread safe.
-	m_controlClient->send("");
-	m_controlClient->receive(wheelSpeed);
-
-	wheels = obtainWheelSpeeds(wheelSpeed);
+	m_controlClient->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
+	std::string wheelSpeed = m_controlClient->robotVelocity();
+	wheels = obtainWheelSpeeds(std::move(wheelSpeed));
 
 	if (wheels.leftWheel != lastValue.leftWheel || wheels.rightWheel != lastValue.rightWheel) {
 		INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
@@ -88,13 +75,14 @@ void Odometry::execute()
 		m_velocity.leftWheel = wheels.leftWheel;
 		m_velocity.rightWheel = wheels.rightWheel;
 	}
-	TOC;
-	double elapsedTime = Stopwatch::lastStoppedTime();
 
+	TOC;
+
+	double elapsedTime = Stopwatch::lastStoppedTime();
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
-Odometry::Speed Odometry::obtainWheelSpeeds(const std::string jsonMessage) const
+Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
@@ -159,17 +147,6 @@ const double &Odometry::getWheelRadius()
 {
 	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	return m_wheelRadius;
-}
-
-bm::Status Odometry::evalReturnState(const std::string &returnJson)
-{
-	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
-		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
-		return bm::Status::FULL_BUFFER;
-	}
-
-	SUCCESS(returnJson);
-	return bm::Status::OK;
 }
 
 void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)

@@ -7,9 +7,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include <memory>
 #include <cstdio>
 #include <cstring>
+#include <memory>
+#include <thread>
 
 INIT_MODULE(Client);
 
@@ -17,8 +18,14 @@ INIT_MODULE(Client);
 #define WAIT_TIME 200'000
 
 Client::Client(int port, const std::string &address)
+	: m_queue(new ts::Queue("m_clientQueue"))
+	, m_odometryMessages(new ts::Queue("m_odometryQueue"))
 {
 	start(port, address);
+	std::thread([=] {
+		sleep(1);
+		workerThread();
+	}).detach();
 }
 
 Client::~Client()
@@ -29,11 +36,11 @@ Client::~Client()
 void Client::start(int port, const std::string &address)
 {
 	if (m_connected) {
-		WARN("The client is already connected to " << m_address << ':' << m_port);
+		WARN("The client is already connected to " << m_address << ':' << port);
 		return;
 	}
 
-	DBG("The client is not initialized. Connecting to " << address << ':' << m_port);
+	DBG("The client is not initialized. Connecting to " << address << ':' << port);
 	struct sockaddr_in serv_addr;
 	if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		FATAL("\n Socket creation error \n");
@@ -98,16 +105,8 @@ bm::Status Client::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelVal
 
 	INFO("sending: " << message);
 
-	bm::Status s = this->send(message);
-	if (s != bm::Status::OK) {
-		FATAL("Sending failed with status: " << bm::stringifyStatus(s));
-		return s;
-	}
-	s = receive(message);
-	if (s != bm::Status::OK) {
-		FATAL("Sending failed with status: " << bm::stringifyStatus(s));
-		return s;
-	}
+	this->enqueue(message);
+
 	return bm::Status::OK;
 }
 
@@ -121,43 +120,17 @@ bm::Status Client::requestPosition(long rightWheel, long leftWheel)
 	return sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
 }
 
-bm::Status Client::send(const std::string &msg)
+void Client::enqueue(const std::string &msg)
 {
-	int numberOfBytes;
-	{
-		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-		numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
-	}
-	if (numberOfBytes < 0) {
-		FATAL("Could not send the command to server");
-		return bm::Status::SEND_ERROR;
-	}
-	else {
-		DBG("The client sent " << msg);
-	}
-	return bm::Status::OK;
+	m_queue->push(msg);
 }
 
-bm::Status Client::receive(std::string &msg)
+std::string Client::robotVelocity()
 {
-	int numberOfBytes = 0;
-	char buffer[1024] = { 0 };
-
-	DBG("Receiving...");
-	{
-		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-		numberOfBytes = ::read(m_socket, buffer, 1024);
-	}
-	if (numberOfBytes < 0) {
-		FATAL("The data could not be received");
-		return bm::Status::RECEIVE_ERROR;
-	}
-	msg.clear();
-	msg = buffer;
-	DBG("The server send " << numberOfBytes);
-	return evalReturnState(msg);
+	DBG("Getting robot velocity");
+	auto front = m_odometryMessages->pop();
+	return front;
 }
-
 std::string Client::address()
 {
 	return m_address;
@@ -182,5 +155,98 @@ bm::Status Client::evalReturnState(const std::string &returnJson)
 
 	SUCCESS(returnJson);
 	return bm::Status::OK;
+}
+
+bm::Status Client::send(const std::string &msg)
+{
+	int numberOfBytes;
+	numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
+
+	if (numberOfBytes < 0) {
+		FATAL("Could not send the command to server");
+		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			return bm::Status::TIMEOUT_ERROR;
+		}
+		return bm::Status::SEND_ERROR;
+	}
+
+	DBG("The client sent " << msg);
+	return bm::Status::OK;
+}
+
+bm::Status Client::receive(std::string &msg)
+{
+	int numberOfBytes = 0;
+	char buffer[1024] = { 0 };
+
+	DBG("Receiving...");
+	numberOfBytes = ::read(m_socket, buffer, 1024);
+
+	if (numberOfBytes < 0) {
+		FATAL("The data could not be received");
+		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			return bm::Status::TIMEOUT_ERROR;
+		}
+		return bm::Status::RECEIVE_ERROR;
+	}
+
+	msg.clear();
+	msg = buffer;
+	DBG("The client send " << numberOfBytes);
+	return evalReturnState(msg);
+}
+
+void Client::workerThread()
+{
+	std::string message;
+	bool getSpeedCommand = false;
+
+	// Lambda function used for receiving messages from the server.
+	auto _receive = [this] (std::string &message) -> bm::Status {
+		auto receiveStatus = receive(message);
+		if (receiveStatus != bm::Status::OK) {
+			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
+		} else {
+			message = "";
+			DBG("The data were received");
+		}
+		return receiveStatus;
+	};
+
+	// Lambda function used for sending messages to the server.
+	auto _send = [this] (const std::string &message) -> bm::Status {
+		auto sendStatus = this->send(message);
+		if (sendStatus != bm::Status::OK) {
+			FATAL("Could not send: " << message << ". Trying again...");
+		} else {
+			DBG("The data were send");
+		}
+		return sendStatus;
+	};
+
+	while (m_connected) {
+		message = m_queue->pop();
+
+		if (message.find("Command\":6") != std::string::npos) {
+			SUCCESS("sending: " << message);
+			getSpeedCommand = true;
+		} else if (message.find("Command") != std::string::npos) {
+			INFO("sending: " << message);
+		}
+
+		_send(message);
+		_receive(message);
+
+		if (getSpeedCommand) {
+			getSpeedCommand = false;
+			std::string wheelSpeed;
+			// We take a risk and do not check for an error. The connection is established at this point.
+			// May be changed in the future.
+			INFO("Waite for the velocity");
+			receive(wheelSpeed);
+			WARN("Pushing data " << wheelSpeed << " to m_odometryMessages");
+			m_odometryMessages->push(wheelSpeed);
+		}
+	}
 }
 

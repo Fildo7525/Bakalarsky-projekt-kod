@@ -3,6 +3,8 @@
 std::string bm::stringifyStatus(const bm::Status status)
 {
 	switch (status) {
+		case bm::Status::TIMEOUT_ERROR:
+			return "bm::Status::TIMEOUT_ERROR";
 		case bm::Status::FULL_BUFFER:
 			return "bm::Status::FULL_BUFFER";
 		case bm::Status::RECEIVE_ERROR:

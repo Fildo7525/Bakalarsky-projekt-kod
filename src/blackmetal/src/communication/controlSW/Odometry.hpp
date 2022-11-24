@@ -67,7 +67,7 @@ public:
 	 * @param jsonMessage Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	Speed obtainWheelSpeeds(const std::string jsonMessage) const;
+	Speed obtainWheelSpeeds(std::string &&jsonMessage) const;
 
 	/**
 	 * @brief Get the last left wheel speed.
@@ -109,12 +109,6 @@ public:
 	 */
 	const double &getWheelRadius();
 private:
-	/**
-	 * @brief Evaluates the received message.
-	 *
-	 * @param returnJson Json containing whether the server could parse the received string.
-	 */
-	bm::Status evalReturnState(const std::string &returnJson);
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
