@@ -32,7 +32,6 @@ void Client::start(int port, const std::string &address)
 
 	DBG("The client is not initialized. Connecting to " << address << ':' << m_port);
 	struct sockaddr_in serv_addr;
-	int clientFD;
 	if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		FATAL("\n Socket creation error \n");
 		return;
@@ -51,8 +50,8 @@ void Client::start(int port, const std::string &address)
 
 	DBG("The address is valid and supported");
 
-	if ((clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
-		FATAL("\nConnection Failed: " << strerror(clientFD));
+	if ((m_clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
+		FATAL("\nConnection Failed: " << strerror(m_clientFD));
 		return;
 	}
 	m_connected = true;
@@ -108,7 +107,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 	return "Unknown bm::Command";
 }
 
-std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
+Client::ReturnStatus Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
 {
 	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -123,10 +122,17 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, double ri
 
 	INFO("sending: " << message);
 
-	this->send(message);
-	receive(message);
+	auto sendStatus = this->send(message);
+	if (sendStatus != bm::Status::OK) {
+		return ReturnStatus(sendStatus);
+	}
 
-	return message;
+	auto receiveStatus = receive(message);
+	if (receiveStatus != bm::Status::OK) {
+		return ReturnStatus(sendStatus);
+	}
+
+	return ReturnStatus(message);
 }
 
 bm::Status Client::request(double rightWheel, double leftWheel)
@@ -193,7 +199,12 @@ bool Client::connected()
 
 bm::Status Client::evalReturnState(const std::string &returnJson)
 {
-	(void) returnJson;
+	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
+		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
+		return bm::Status::FULL_BUFFER;
+	}
+
+	SUCCESS(returnJson);
 	return bm::Status::OK;
 }
 

@@ -16,6 +16,7 @@
 class Client
 {
 public:
+	using ReturnStatus = std::variant<bm::Status, std::string>;
 	/// Default constructor
 	Client() = default;
 	/// Constructor
@@ -53,6 +54,9 @@ public:
 	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.
 	 *
+	 * NOTE: The function does not need to be virutual, although if there was a case where the execute function
+	 * must be different for some case the class could be easily inheritted.
+	 *
 	 * @param cmd @see Command which should the robot execute.
 	 * @param rightWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
 	 * @param leftWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
@@ -61,7 +65,7 @@ public:
 	 * 		   bm::Status::RECEIVE_ERROR when the ::read function crashes,
 	 * 		   returned std::string message otherwise.
 	 */
-	virtual std::variant<bm::Status, std::string> execute(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
+	virtual ReturnStatus execute(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
 
 	/**
 	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_VELOCITY.
@@ -111,11 +115,13 @@ public:
 	bool connected();
 protected:
 	/**
-	 * @brief Virtual function that evaluates the request status.
+	 * @brief Function that evaluates the request status.
+	 *
+	 * The robot always returns a json that indicates if the request was successfull or the robot's buffer is full.
 	 *
 	 * @param returnJson Json string returned from the communication.
 	 */
-	virtual bm::Status evalReturnState(const std::string &returnJson);
+	bm::Status evalReturnState(const std::string &returnJson);
 
 private:
 	/// Ip addres to which we tried or are connected to.
