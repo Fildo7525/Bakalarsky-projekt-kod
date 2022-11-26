@@ -20,15 +20,17 @@
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
 // TIP: The 3 second interval is just for debugging
-constexpr std::chrono::milliseconds g_pollTime(3000);
+constexpr std::chrono::milliseconds g_pollTime(300);
 
 using namespace std::placeholders;
 
 INIT_MODULE(Odometry, dbg_level::DBG);
 
-Odometry::Odometry(std::shared_ptr<BlackMetal> controlSoftware)
-	: m_controlSoftware(controlSoftware)
+Odometry::Odometry(std::shared_ptr<Client> controlSoftware)
+	: m_controlClient(controlSoftware)
 	, m_coordination({0, 0, 0})
+	, m_chassisLength(std::numeric_limits<double>::max())
+	, m_wheelRadius(0)
 {
 	m_robotSpeedReceiver = std::thread(
 		[this] () {
@@ -47,7 +49,7 @@ void Odometry::execute()
 	std::variant<bm::Status, std::string> temp;
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
-		temp = m_controlSoftware->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
+		temp = m_controlClient->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
 	}
 
 	std::string wheelSpeed;
@@ -60,8 +62,8 @@ void Odometry::execute()
 	Speed wheels;
 	TIC;
 	// The send and receive methos are thread safe.
-	m_controlSoftware->send("");
-	m_controlSoftware->receive(wheelSpeed);
+	m_controlClient->send("");
+	m_controlClient->receive(wheelSpeed);
 
 	wheels = obtainWheelSpeeds(wheelSpeed);
 
@@ -99,7 +101,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 	} catch (std::out_of_range &e) {
 		DBG("Attempting to receive the json on next read");
 		std::string nextAttempt;
-		m_controlSoftware->receive(nextAttempt);
+		m_controlClient->receive(nextAttempt);
 		return obtainWheelSpeeds(nextAttempt);
 	} catch (std::exception &e) {
 		ERR(e.what());
@@ -124,6 +126,30 @@ long Odometry::rightWheelSpeed() const
 	return m_velocity.rightWheel;
 }
 
+void Odometry::setChassisLength(double chassisLength)
+{
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	m_chassisLength = chassisLength;
+}
+
+void Odometry::setWheelRadius(double wheelRadius)
+{
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	m_wheelRadius = wheelRadius;
+}
+
+const double &Odometry::getChassisLength()
+{
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	return m_chassisLength;
+}
+
+const double &Odometry::getWheelRadius()
+{
+	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	return m_wheelRadius;
+}
+
 bm::Status Odometry::evalReturnState(const std::string &returnJson)
 {
 	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
@@ -140,7 +166,7 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	// The poll time is in milliseconds while th elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
-	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_controlSoftware->chassisLength();
+	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	DBG("CoG velocity: " << speedInCenterOfGravity);

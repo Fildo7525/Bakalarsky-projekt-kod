@@ -22,7 +22,6 @@ class BlackMetal;
  */
 class BlackMetal
 	: public rclcpp::Node
-	, public Client
 {
 public:
 	/// Constructor.
@@ -48,25 +47,12 @@ public:
 	const double &wheelRadius();
 
 private:
-
-	/**
-	 * @brief Overridden function from the Client base class.
-	 *
-	 * The function parses the received json string and converts the result to bm::Status.
-	 *
-	 * @param returnJson Returned Json string from the server.
-	 */
-	bm::Status evalReturnState(const std::string &returnJson) override;
-
-private:
-	double m_chassisLength;
-	double m_wheelRadius;
-
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
 	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
+	std::shared_ptr<Client> m_controlClient;
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
 
