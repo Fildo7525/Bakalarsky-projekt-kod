@@ -197,6 +197,15 @@ bool Client::connected()
 	return m_connected;
 }
 
+void Client::workerThread()
+{
+	while (m_connected) {
+		std::string toSend = m_queue.pop();
+		send(toSend);
+
+	}
+}
+
 bm::Status Client::evalReturnState(const std::string &returnJson)
 {
 	if (returnJson.find("RECIEVE_OK") == std::string::npos) {

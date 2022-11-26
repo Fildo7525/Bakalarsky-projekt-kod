@@ -114,6 +114,9 @@ public:
 	 * @brief Indicates if we are or are not connected.
 	 */
 	bool connected();
+private:
+
+	void workerThread();
 protected:
 	/**
 	 * @brief Function that evaluates the request status.
