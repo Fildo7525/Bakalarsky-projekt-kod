@@ -20,11 +20,14 @@ public:
  
 	explicit Queue(unsigned long maxSize);
 	unsigned long size() const;
-	std::string && pop();
+	std::string pop();
 	void push(const std::string &item);
 
 private:
+	bool priorityQOrder(const std::string &lhs, const std::string &rhs);
+private:
 	unsigned long m_maxSize;
+	std::priority_queue<std::string, std::vector<std::string>, decltype(&Queue::priorityQOrder)> m_pqueue;
 	std::queue<std::string> m_queue;
 	mutable std::mutex m_qMutex;
 	mutable std::mutex m_communicationMutex;
