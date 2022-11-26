@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ReturnStatus.hpp"
+#include "queue/Queue.hpp"
 
 #include <string>
 #include <variant>
@@ -138,5 +139,6 @@ private:
 	std::mutex m_sendSynchronizer;
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
+	ts::Queue m_queue;
 };
 
