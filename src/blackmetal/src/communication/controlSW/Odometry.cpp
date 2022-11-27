@@ -87,10 +87,9 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-	// TODO: check if the try-catch block is necessary
 	long lws, rws;
 	try {
-		DBG("Next attempt: " << jsonMessage);
+		DBG("Attempt: " << jsonMessage);
 		auto lws_start = jsonMessage.find_first_of('=') + 1;
 		auto lws_end = jsonMessage.find_first_of(' ');
 		lws = std::stol(jsonMessage.substr(lws_start, lws_end));
@@ -98,11 +97,6 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 		auto rws_start = jsonMessage.find_last_of('=') + 1;
 		auto rws_end = jsonMessage.find_last_of('}');
 		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
-	} catch (std::out_of_range &e) {
-		DBG("Attempting to receive the json on next read");
-		std::string nextAttempt;
-		m_controlClient->receive(nextAttempt);
-		return obtainWheelSpeeds(nextAttempt);
 	} catch (std::exception &e) {
 		ERR(e.what());
 		return {0,0};
@@ -148,17 +142,6 @@ const double &Odometry::getWheelRadius()
 {
 	std::lock_guard<std::mutex> lock(g_odometryMutex);
 	return m_wheelRadius;
-}
-
-bm::Status Odometry::evalReturnState(const std::string &returnJson)
-{
-	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
-		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
-		return bm::Status::FULL_BUFFER;
-	}
-
-	SUCCESS(returnJson);
-	return bm::Status::OK;
 }
 
 void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
