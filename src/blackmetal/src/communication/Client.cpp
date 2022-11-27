@@ -14,6 +14,7 @@
 #include <cstring>
 
 #define WAIT_TIME 200ms
+#define CHECK_N_TIMES 10
 
 INIT_MODULE(Client);
 
@@ -163,8 +164,24 @@ bm::Status Client::send(const std::string &msg)
 		return bm::Status::OK;
 	};
 
-	std::future<bm::Status> output = std::async(sendFunction);
-	std::future_status status = output.wait_for(200ms);
+	/// Execute the function in another thread while checking for its state.
+	std::future<bm::Status> output = std::async(std::launch::async, sendFunction);
+	int repeatings = CHECK_N_TIMES;
+	do
+	{
+		std::future_status status = output.wait_for(std::chrono::milliseconds(WAIT_TIME/CHECK_N_TIMES));
+		switch (status) {
+			case std::future_status::timeout:
+			case std::future_status::deferred:
+				DBG("Checking send the staus...");
+				continue;
+			case std::future_status::ready:
+				INFO("The sending is completed");
+				return output.get();
+		}
+		repeatings--;
+	} while(repeatings > 0);
+	return bm::Status::TIMEOUT_ERROR;
 }
 
 bm::Status Client::receive(std::string &msg)
