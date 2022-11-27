@@ -46,24 +46,12 @@ Odometry::Odometry(std::shared_ptr<Client> controlSoftware)
 void Odometry::execute()
 {
 	static Speed lastValue{std::numeric_limits<long>::max(), std::numeric_limits<long>::max()};
-	std::variant<bm::Status, std::string> temp;
-	{
-		std::lock_guard<std::mutex> lock(g_odometryMutex);
-		temp = m_controlClient->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
-	}
-
 	std::string wheelSpeed;
-	if (std::get_if<std::string>(&temp)) {
-		wheelSpeed = std::get<std::string>(temp);
-		DBG("Message received: " << wheelSpeed);
-	}
-	evalReturnState(wheelSpeed);
-
 	Speed wheels;
+
 	TIC;
-	// The send and receive methos are thread safe.
-	m_controlClient->send("");
-	m_controlClient->receive(wheelSpeed);
+	m_controlClient->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
+	wheelSpeed = m_controlClient->robotVelocity();
 
 	wheels = obtainWheelSpeeds(wheelSpeed);
 

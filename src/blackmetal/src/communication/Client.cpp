@@ -4,16 +4,21 @@
 #include "log.hpp"
 
 #include <arpa/inet.h>
+#include <future>
 #include <sys/socket.h>
+#include <thread>
 #include <unistd.h>
 
 #include <memory>
 #include <cstdio>
 #include <cstring>
 
+#define WAIT_TIME 200ms
+
 INIT_MODULE(Client);
 
 Client::Client(int port, const std::string &address)
+	: m_queue()
 {
 	start(port, address);
 }
@@ -107,7 +112,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 	return "Unknown bm::Command";
 }
 
-Client::ReturnStatus Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
+void Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
 {
 	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -122,44 +127,44 @@ Client::ReturnStatus Client::execute(bm::Command cmd, double rightWheel, double 
 
 	INFO("sending: " << message);
 
-	auto sendStatus = this->send(message);
-	if (sendStatus != bm::Status::OK) {
-		return ReturnStatus(sendStatus);
-	}
-
-	auto receiveStatus = receive(message);
-	if (receiveStatus != bm::Status::OK) {
-		return ReturnStatus(sendStatus);
-	}
-
-	return ReturnStatus(message);
+	m_queue.push(message);
 }
 
-bm::Status Client::request(double rightWheel, double leftWheel)
+void Client::request(double rightWheel, double leftWheel)
 {
-	auto buffer = execute(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
-	const bm::Status *tmp = std::get_if<bm::Status>(&buffer);
-	if (!tmp) {
-		return evalReturnState(std::get<std::string>(buffer));
-	}
-	return std::get<bm::Status>(buffer);
+	execute(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
+}
+
+void Client::enqueue(const std::string &msg)
+{
+	m_queue.push(msg);
+}
+
+std::string Client::robotVelocity()
+{
+	return m_odometryMessages.pop();
 }
 
 bm::Status Client::send(const std::string &msg)
 {
-	int numberOfBytes;
-	{
-		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-		numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
-	}
-	if (numberOfBytes < 0) {
-		FATAL("Could not send the command to server");
-		return bm::Status::SEND_ERROR;
-	}
-	else {
-		DBG("The client sent " << msg);
-	}
-	return bm::Status::OK;
+	auto sendFunction = [&] () {
+		int numberOfBytes;
+		{
+			std::lock_guard<std::mutex> lock(m_sendSynchronizer);
+			numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
+		}
+		if (numberOfBytes < 0) {
+			FATAL("Could not send the command to server");
+			return bm::Status::SEND_ERROR;
+		}
+		else {
+			DBG("The client sent " << msg);
+		}
+		return bm::Status::OK;
+	};
+
+	std::future<bm::Status> output = std::async(sendFunction);
+	std::future_status status = output.wait_for(200ms);
 }
 
 bm::Status Client::receive(std::string &msg)
@@ -199,10 +204,43 @@ bool Client::connected()
 
 void Client::workerThread()
 {
+	std::string message;
+	bool failed = false;
+	bool getSpeedCommand = false;
 	while (m_connected) {
-		std::string toSend = m_queue.pop();
-		send(toSend);
+		if (!failed) {
+			message = m_queue.pop();
+		}
+		if (message.find("Command\":6") != std::string::npos) {
+			getSpeedCommand = true;
+		}
 
+		auto sendStatus = this->send(message);
+		if (sendStatus != bm::Status::OK) {
+			FATAL("Could not send: " << message << ". Trying again...");
+			failed = true;
+			continue;
+		}
+
+		auto receiveStatus = receive(message);
+		if (receiveStatus != bm::Status::OK) {
+			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
+			failed = true;
+			continue;
+		}
+
+		if (getSpeedCommand) {
+			std::string wheelSpeed;
+			// We take a risk and do not check for an error. The connection is established at this point.
+			// May be changed in the future.
+			this->send("");
+			receive(wheelSpeed);
+			m_odometryMessages.push(wheelSpeed);
+		}
+
+		if (failed && sendStatus == bm::Status::OK && receiveStatus == bm::Status::OK) {
+			failed = false;
+		}
 	}
 }
 

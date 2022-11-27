@@ -61,12 +61,8 @@ public:
 	 * @param cmd @see Command which should the robot execute.
 	 * @param rightWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
 	 * @param leftWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
-	 * @return A variant containing either an error status 
-	 * 		   bm::Status::SEND_ERROR when the ::send function crashes,
-	 * 		   bm::Status::RECEIVE_ERROR when the ::read function crashes,
-	 * 		   returned std::string message otherwise.
 	 */
-	virtual ReturnStatus execute(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
+	virtual void execute(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
 
 	/**
 	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_VELOCITY.
@@ -75,11 +71,11 @@ public:
 	 *
 	 * @param rightWheel Right wheel speed.
 	 * @param leftWheel Right wheel speed.
-	 * @return bm::Status::SEND_ERROR when the ::send function crashes,
-	 * 		   bm::Status::RECEIVE_ERROR when the ::read function crashes,
-	 * 		   bm::Status::OK otherwise.
 	 */
-	bm::Status request(double rightWheel, double leftWheel);
+	void request(double rightWheel, double leftWheel);
+
+	void enqueue(const std::string &msg);
+	std::string robotVelocity();
 
 	/**
 	 * @brief Send a desired string message to the server.
@@ -116,7 +112,11 @@ public:
 	bool connected();
 private:
 
+	/**
+	 * @brief Method running in a different thread. Handles the requests pushed to the priority queue.
+	 */
 	void workerThread();
+
 	/**
 	 * @brief Function that evaluates the request status.
 	 *
@@ -142,5 +142,6 @@ private:
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
 	ts::Queue m_queue;
+	ts::Queue m_odometryMessages;
 };
 
