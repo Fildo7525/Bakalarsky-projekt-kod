@@ -179,7 +179,7 @@ bm::Status Client::receive(std::string &msg)
 	msg.clear();
 	msg = buffer;
 	DBG("The server send " << numberOfBytes);
-	return bm::Status::OK;
+	return evalReturnState(msg);
 }
 
 std::string Client::address()
