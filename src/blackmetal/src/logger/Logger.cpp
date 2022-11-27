@@ -4,10 +4,14 @@
 
 #include <chrono>
 #include <cstdio>
+#include <mutex>
 #include <ostream>
 #include <filesystem>
 
 #include <stdio.h>
+
+/// Mutex is locked on every writing to the file or on a screen.
+static std::mutex mut;
 
 const std::string currentDateTime() {
 	time_t now = time(0);
@@ -72,15 +76,20 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 
 	if (dbgLevel >= m_level) {
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
+			std::lock_guard<std::mutex> lk(mut);
 			std::fprintf(stderr, "%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		} else {
+			std::lock_guard<std::mutex> lk(mut);
 			std::printf("%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		}
 	}
 	if (!m_logFile.is_open()) {
 		return;
 	}
-	m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	{
+		std::lock_guard<std::mutex> lk(mut);
+		m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	}
 }
 
 dbg_level Logger::level()
