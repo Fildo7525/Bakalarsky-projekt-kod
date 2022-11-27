@@ -3,19 +3,18 @@
 #include "stopwatch/Stopwatch.hpp"
 #include "log.hpp"
 
-#include <arpa/inet.h>
 #include <chrono>
-#include <future>
-#include <sys/socket.h>
 #include <thread>
-#include <unistd.h>
 
+#include <arpa/inet.h>
+#include <asm-generic/errno.h>
 #include <memory>
 #include <cstdio>
 #include <cstring>
+#include <sys/socket.h>
+#include <unistd.h>
 
-#define WAIT_TIME 200ms
-#define CHECK_N_TIMES 10
+#define WAIT_TIME 200'000 // 200ms
 
 INIT_MODULE(Client);
 
@@ -66,6 +65,12 @@ void Client::start(int port, const std::string &address)
 	m_address = address;
 	m_port = port;
 	SUCCESS("Client connected to " << m_address << ':' << m_port);
+	struct timeval tv;
+	tv.tv_usec = WAIT_TIME;
+	// Set timeout for receive to WAIT_TIME.
+	setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+	// Set timeout for send to WAIT_TIME.
+	setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv, sizeof tv);
 }
 
 void Client::stop()
@@ -88,6 +93,8 @@ std::string Client::stringifyStatus(const bm::Status status)
 			return "bm::Status::SEND_ERROR";
 		case bm::Status::OK:
 			return "bm::Status::OK";
+		case bm::Status::TIMEOUT_ERROR:
+			return "bm::Status::TIMEOUT_ERROR";
 	}
 	return "Unknown bm::Status";
 }
@@ -150,81 +157,47 @@ std::string Client::robotVelocity()
 
 bm::Status Client::send(const std::string &msg)
 {
-	auto sendFunction = [&] () {
-		int numberOfBytes;
-		{
-			std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-			numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
-		}
-		if (numberOfBytes < 0) {
-			FATAL("Could not send the command to server");
-			return bm::Status::SEND_ERROR;
-		}
-		else {
-			DBG("The client sent " << msg);
-		}
-		return bm::Status::OK;
-	};
-
-	/// Execute the function in another thread while checking for its state.
-	std::future<bm::Status> output = std::async(std::launch::async, sendFunction);
-	int repeatings = CHECK_N_TIMES;
-	do
+	int numberOfBytes;
 	{
-		std::future_status status = output.wait_for(std::chrono::milliseconds(WAIT_TIME/CHECK_N_TIMES));
-		switch (status) {
-			case std::future_status::timeout:
-			case std::future_status::deferred:
-				DBG("Checking send the staus...");
-				continue;
-			case std::future_status::ready:
-				INFO("The sending is completed");
-				return output.get();
+		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
+		numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
+	}
+	if (numberOfBytes < 0) {
+		FATAL("Could not send the command to server");
+		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			return bm::Status::TIMEOUT_ERROR;
 		}
-		repeatings--;
-	} while(repeatings > 0);
-	return bm::Status::TIMEOUT_ERROR;
+		return bm::Status::SEND_ERROR;
+	}
+	else {
+		DBG("The client sent " << msg);
+	}
+	return bm::Status::OK;
+	// return bm::Status::TIMEOUT_ERROR;
 }
 
 bm::Status Client::receive(std::string &msg)
 {
-	auto receiveFunction = [&] () {
-		int numberOfBytes = 0;
-		char buffer[1024] = { 0 };
+	int numberOfBytes = 0;
+	char buffer[1024] = { 0 };
 
-		DBG("Receiving...");
-		{
-			std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-			numberOfBytes = ::read(m_socket, buffer, 1024);
-		}
-		if (numberOfBytes < 0) {
-			FATAL("The data could not be received");
-			return bm::Status::RECEIVE_ERROR;
-		}
-		msg.clear();
-		msg = buffer;
-		DBG("The server send " << numberOfBytes);
-		return evalReturnState(msg);
-	};
-
-	std::future<bm::Status> output = std::async(std::launch::async, receiveFunction);
-	int repeatings = CHECK_N_TIMES;
-	do
+	DBG("Receiving...");
 	{
-		std::future_status status = output.wait_for(std::chrono::milliseconds(WAIT_TIME/CHECK_N_TIMES));
-		switch (status) {
-			case std::future_status::timeout:
-			case std::future_status::deferred:
-				DBG("Checking the receive staus...");
-				continue;
-			case std::future_status::ready:
-				INFO("The received message is ready");
-				return output.get();
+		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
+		numberOfBytes = ::read(m_socket, buffer, 1024);
+	}
+	if (numberOfBytes < 0) {
+		FATAL("The data could not be received");
+		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			return bm::Status::TIMEOUT_ERROR;
 		}
-		repeatings--;
-	} while(repeatings > 0);
-
-	return bm::Status::TIMEOUT_ERROR;
+		return bm::Status::RECEIVE_ERROR;
+	}
+	msg.clear();
+	msg = buffer;
+	DBG("The server send " << numberOfBytes);
+	return evalReturnState(msg);
+	// return bm::Status::TIMEOUT_ERROR;
 }
 
 std::string Client::address()
