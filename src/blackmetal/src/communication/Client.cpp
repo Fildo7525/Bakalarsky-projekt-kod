@@ -4,6 +4,7 @@
 #include "log.hpp"
 
 #include <arpa/inet.h>
+#include <chrono>
 #include <future>
 #include <sys/socket.h>
 #include <thread>
@@ -186,22 +187,43 @@ bm::Status Client::send(const std::string &msg)
 
 bm::Status Client::receive(std::string &msg)
 {
-	int numberOfBytes = 0;
-	char buffer[1024] = { 0 };
+	auto receiveFunction = [&] () {
+		int numberOfBytes = 0;
+		char buffer[1024] = { 0 };
 
-	DBG("Receiving...");
+		DBG("Receiving...");
+		{
+			std::lock_guard<std::mutex> lock(m_sendSynchronizer);
+			numberOfBytes = ::read(m_socket, buffer, 1024);
+		}
+		if (numberOfBytes < 0) {
+			FATAL("The data could not be received");
+			return bm::Status::RECEIVE_ERROR;
+		}
+		msg.clear();
+		msg = buffer;
+		DBG("The server send " << numberOfBytes);
+		return evalReturnState(msg);
+	};
+
+	std::future<bm::Status> output = std::async(std::launch::async, receiveFunction);
+	int repeatings = CHECK_N_TIMES;
+	do
 	{
-		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-		numberOfBytes = ::read(m_socket, buffer, 1024);
-	}
-	if (numberOfBytes < 0) {
-		FATAL("The data could not be received");
-		return bm::Status::RECEIVE_ERROR;
-	}
-	msg.clear();
-	msg = buffer;
-	DBG("The server send " << numberOfBytes);
-	return evalReturnState(msg);
+		std::future_status status = output.wait_for(std::chrono::milliseconds(WAIT_TIME/CHECK_N_TIMES));
+		switch (status) {
+			case std::future_status::timeout:
+			case std::future_status::deferred:
+				DBG("Checking the receive staus...");
+				continue;
+			case std::future_status::ready:
+				INFO("The received message is ready");
+				return output.get();
+		}
+		repeatings--;
+	} while(repeatings > 0);
+
+	return bm::Status::TIMEOUT_ERROR;
 }
 
 std::string Client::address()
