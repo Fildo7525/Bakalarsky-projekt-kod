@@ -44,14 +44,14 @@ void Client::start(int port, const std::string &address)
 
 	// Convert IPv4 and IPv6 addresses from text to binary form
 	if (inet_pton(AF_INET, address.c_str(), &serv_addr.sin_addr) <= 0) {
-		FATAL("\nInvalid address Address: " << address << ", not supported \n");
+		FATAL("Invalid address Address: " << address << ", not supported \n");
 		return;
 	}
 
 	DBG("The address is valid and supported");
 
 	if ((m_clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
-		FATAL("\nConnection Failed: " << strerror(m_clientFD));
+		FATAL("Connection Failed: " << strerror(m_clientFD));
 		return;
 	}
 	m_connected = true;

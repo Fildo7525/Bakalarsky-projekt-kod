@@ -39,7 +39,7 @@ public:
 	void stop();
 
 	/**
-	 * @brief Get the string represnetation of the bm::Status code.
+	 * @brief Get the string representation of the bm::Status code.
 	 *
 	 * @param status Status to be transformed.
 	 */
@@ -55,8 +55,8 @@ public:
 	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.
 	 *
-	 * NOTE: The function does not need to be virutual, although if there was a case where the execute function
-	 * must be different for some case the class could be easily inheritted.
+	 * NOTE: The function does not need to be virtual, although if there was a case where the execute function
+	 * must be different for some case the class could be easily inherited.
 	 *
 	 * @param cmd @see Command which should the robot execute.
 	 * @param rightWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
@@ -117,22 +117,21 @@ public:
 private:
 
 	void workerThread();
-protected:
 	/**
 	 * @brief Function that evaluates the request status.
 	 *
-	 * The robot always returns a json that indicates if the request was successfull or the robot's buffer is full.
+	 * The robot always returns a json that indicates if the request was successful or the robot's buffer is full.
 	 *
 	 * @param returnJson Json string returned from the communication.
 	 */
 	bm::Status evalReturnState(const std::string &returnJson);
 
 private:
-	/// Ip addres to which we tried or are connected to.
+	/// IP address to which we tried or are connected to.
 	std::string m_address;
 	/// File descriptor of the communication.
 	int m_clientFD;
-	/// Flach chacking the client's connection.
+	/// Flag checking the client's connection.
 	bool m_connected;
 	/// Port to which is the client connected to.
 	int m_port;
