@@ -23,6 +23,7 @@ Client::Client(int port, const std::string &address)
 	: m_queue()
 {
 	start(port, address);
+	std::thread([this]{ workerThread(); }).detach();
 }
 
 Client::~Client()
