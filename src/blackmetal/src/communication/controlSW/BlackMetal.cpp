@@ -7,6 +7,8 @@
 #include <functional>
 
 #define PORT 665
+// The motor documentation states that the max RPM is 12 000.
+#define MAX_RPM 12000.
 
 INIT_MODULE(BlackMetal, dbg_level::DBG);
 
@@ -36,8 +38,8 @@ BlackMetal::BlackMetal()
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 {
 	DBG("Message geometry_msgs::msg::Twist: " << geometry_msgs::msg::to_yaml(msg));
-	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_odometry->getChassisLength() * msg.angular.z)/m_odometry->getWheelRadius() / 1000.;
-	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->getChassisLength() * msg.angular.z)/m_odometry->getWheelRadius() / 1000.;
+	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_odometry->getChassisLength() * msg.angular.z)/m_odometry->getWheelRadius() / MAX_RPM;
+	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->getChassisLength() * msg.angular.z)/m_odometry->getWheelRadius() / MAX_RPM;
 	INFO("Right wheel speed: " << m_rightWheelSpeed << " Left wheel speed: " << m_leftWheelSpeed);
 	m_controlClient->request(m_rightWheelSpeed, m_leftWheelSpeed);
 }
