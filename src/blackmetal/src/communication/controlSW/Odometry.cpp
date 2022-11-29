@@ -50,7 +50,7 @@ void Odometry::execute()
 	Speed wheels;
 
 	TIC;
-	m_controlClient->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
+	m_controlClient->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
 	wheelSpeed = m_controlClient->robotVelocity();
 
 	wheels = obtainWheelSpeeds(wheelSpeed);

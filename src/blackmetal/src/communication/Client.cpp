@@ -122,7 +122,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 	return "Unknown bm::Command";
 }
 
-void Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
+void Client::sendRequest(bm::Command cmd, double rightWheel, double leftWheel)
 {
 	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -142,7 +142,7 @@ void Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
 
 void Client::request(double rightWheel, double leftWheel)
 {
-	execute(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
+	sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
 }
 
 void Client::enqueue(const std::string &msg)

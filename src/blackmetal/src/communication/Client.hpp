@@ -62,7 +62,7 @@ public:
 	 * @param rightWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
 	 * @param leftWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
 	 */
-	virtual void execute(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
+	virtual void sendRequest(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
 
 	/**
 	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_VELOCITY.
