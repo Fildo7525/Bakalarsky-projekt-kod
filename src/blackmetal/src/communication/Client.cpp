@@ -18,8 +18,14 @@
 
 INIT_MODULE(Client);
 
+Client::Client()
+	: m_queue("m_queue")
+	, m_odometryMessages("m_odometryMessages")
+{
+}
+
 Client::Client(int port, const std::string &address)
-	: m_queue()
+	: Client()
 {
 	start(port, address);
 	std::thread([this]{ workerThread(); }).detach();

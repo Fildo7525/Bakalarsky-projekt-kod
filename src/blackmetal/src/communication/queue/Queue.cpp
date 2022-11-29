@@ -5,6 +5,10 @@
 #include <algorithm>
 
 bool readyToPush = true;
+ts::Queue::Queue(const std::string &name)
+	: m_queueName(name)
+{
+}
 
 bool ts::Queue::empty() const
 {

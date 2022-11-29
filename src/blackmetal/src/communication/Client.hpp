@@ -19,7 +19,7 @@ class Client
 public:
 	using ReturnStatus = std::variant<bm::Status, std::string>;
 	/// Default constructor
-	Client() = default;
+	Client();
 	/// Constructor
 	Client(int port, const std::string &address);
 	/// Destructor

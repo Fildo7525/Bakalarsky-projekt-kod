@@ -34,11 +34,12 @@ public:
 	/**
 	 * @brief Default constructor.
 	 */
-	Queue() = default;
+	explicit Queue(const std::string &name);
 
 	/**
 	 * @brief The class is not copyable.
 	 */
+	Queue() = delete;
 	Queue(const Queue &) = delete;
 	Queue& operator=(const Queue &) = delete;
  
