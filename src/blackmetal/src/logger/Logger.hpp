@@ -84,6 +84,8 @@ private:
 	const char *m_moduleName;
 	/// Stream of the logging file.
 	std::fstream m_logFile;
+	/// Stream to where everything is logged.
+	static std::fstream m_logAllFile;
 	/// Logging level for the module.
 	dbg_level m_level;
 };

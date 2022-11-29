@@ -32,6 +32,8 @@ std::string getLoggerPath(const std::string &module)
 	return name;
 }
 
+std::fstream Logger::m_logAllFile = std::fstream(getLoggerPath("all"));
+
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
 	, m_logFile()
@@ -90,9 +92,15 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	if (!m_logFile.is_open()) {
 		return;
 	}
+	std::stringstream ss;
+	ss << log_time << "\t[" << pid << ":" << s.str() << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+
 	{
 		std::lock_guard<std::mutex> lk(mut);
-		m_logFile << log_time << "\t[" << pid << ":" << s.str() << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+		// Log pre module.
+		m_logFile << ss.str();
+		// Log all together.
+		m_logAllFile << ss.str();
 	}
 }
 
