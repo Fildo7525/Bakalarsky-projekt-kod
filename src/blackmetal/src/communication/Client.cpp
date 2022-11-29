@@ -141,7 +141,7 @@ void Client::sendRequest(bm::Command cmd, double rightWheel, double leftWheel)
 		message += "}";
 	}
 
-	INFO("sending: " << message);
+	INFO("enqueue: " << message);
 
 	m_queue.push(message);
 }
@@ -212,7 +212,7 @@ bm::Status Client::receive(std::string &msg)
 	}
 	msg.clear();
 	msg = buffer;
-	SUCCESS("The client received " << numberOfBytes);
+	SUCCESS("The client received " << numberOfBytes << " bytes");
 	return evalReturnState(msg);
 	// return bm::Status::TIMEOUT_ERROR;
 }
@@ -261,6 +261,7 @@ void Client::workerThread()
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
 			receiveStatus = in(wheelSpeed);
+			WARN("Pushing data " << wheelSpeed << " to m_odometryMessages");
 			m_odometryMessages.push(wheelSpeed);
 		}
 

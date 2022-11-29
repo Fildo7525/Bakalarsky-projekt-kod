@@ -46,8 +46,9 @@ std::string ts::Queue::pop()
 		m_readyToPush = false;
 		WARN("LOCKING m_communicationMutex");
 		std::unique_lock<std::mutex> lk(m_communicationMutex);
-		WARN("The queue " << m_queueName << " will wait until the queue has any data to pop");
+		FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
 		m_cvPush.wait(lk, [this] { return this->m_readyToPush; });
+		SUCCESS("The wating was canceled in " << m_queueName);
 	}
 
 	{
@@ -67,11 +68,6 @@ std::string ts::Queue::pop()
 void ts::Queue::push(const std::string &item)
 {
 	// DBG("Push was invoked");
-	bool empty = false;
-	if (m_pqueue.size() == 0) {
-		WARN("The queue " << m_queueName << " is empty, thus the pop will be notified");
-		empty = true;
-	}
 
 	{
 		std::lock_guard<std::mutex> lock(m_qMutex);
@@ -79,14 +75,10 @@ void ts::Queue::push(const std::string &item)
 	}
 	INFO(item << " was pushed to queue " << m_queueName);
 
-	if (empty) {
-		WARN("LOCKING m_communicationMutex");
-		std::lock_guard<std::mutex> lk(m_communicationMutex);
-		m_readyToPush = true;
-		WARN("Notifying the pop function");
-		m_cvPush.notify_one();
-	} else {
-		WARN("The queue was not empty");
-	}
+	WARN("LOCKING m_communicationMutex");
+	std::lock_guard<std::mutex> lk(m_communicationMutex);
+	m_readyToPush = true;
+	WARN("Notifying the pop function");
+	m_cvPush.notify_all();
 }
 

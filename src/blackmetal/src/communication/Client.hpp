@@ -75,6 +75,7 @@ public:
 	void request(double rightWheel, double leftWheel);
 
 	void enqueue(const std::string &msg);
+
 	std::string robotVelocity();
 
 	/**
