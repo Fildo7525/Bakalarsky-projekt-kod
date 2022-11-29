@@ -155,51 +155,6 @@ std::string Client::robotVelocity()
 	return m_odometryMessages.pop();
 }
 
-bm::Status Client::send(const std::string &msg)
-{
-	int numberOfBytes;
-	{
-		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-		numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
-	}
-	if (numberOfBytes < 0) {
-		FATAL("Could not send the command to server");
-		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
-			return bm::Status::TIMEOUT_ERROR;
-		}
-		return bm::Status::SEND_ERROR;
-	}
-	else {
-		DBG("The client sent " << msg);
-	}
-	return bm::Status::OK;
-	// return bm::Status::TIMEOUT_ERROR;
-}
-
-bm::Status Client::receive(std::string &msg)
-{
-	int numberOfBytes = 0;
-	char buffer[1024] = { 0 };
-
-	DBG("Receiving...");
-	{
-		std::lock_guard<std::mutex> lock(m_sendSynchronizer);
-		numberOfBytes = ::read(m_socket, buffer, 1024);
-	}
-	if (numberOfBytes < 0) {
-		FATAL("The data could not be received");
-		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
-			return bm::Status::TIMEOUT_ERROR;
-		}
-		return bm::Status::RECEIVE_ERROR;
-	}
-	msg.clear();
-	msg = buffer;
-	DBG("The server send " << numberOfBytes);
-	return evalReturnState(msg);
-	// return bm::Status::TIMEOUT_ERROR;
-}
-
 std::string Client::address()
 {
 	return m_address;
@@ -213,6 +168,47 @@ int Client::socketFD()
 bool Client::connected()
 {
 	return m_connected;
+}
+
+bm::Status Client::send(const std::string &msg)
+{
+	int numberOfBytes;
+	numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
+
+	if (numberOfBytes < 0) {
+		FATAL("Could not send the command to server");
+		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			return bm::Status::TIMEOUT_ERROR;
+		}
+		return bm::Status::SEND_ERROR;
+	}
+	else {
+		SUCCESS("The client sent " << msg);
+	}
+	return bm::Status::OK;
+	// return bm::Status::TIMEOUT_ERROR;
+}
+
+bm::Status Client::receive(std::string &msg)
+{
+	int numberOfBytes = 0;
+	char buffer[1024] = { 0 };
+
+	DBG("Receiving...");
+	numberOfBytes = ::read(m_socket, buffer, 1024);
+
+	if (numberOfBytes < 0) {
+		FATAL("The data could not be received");
+		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			return bm::Status::TIMEOUT_ERROR;
+		}
+		return bm::Status::RECEIVE_ERROR;
+	}
+	msg.clear();
+	msg = buffer;
+	SUCCESS("The client received " << numberOfBytes);
+	return evalReturnState(msg);
+	// return bm::Status::TIMEOUT_ERROR;
 }
 
 void Client::workerThread()

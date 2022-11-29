@@ -78,6 +78,22 @@ public:
 	std::string robotVelocity();
 
 	/**
+	 * @brief Returns the address with which was the start method called with.
+	 */
+	std::string address();
+
+	/**
+	 * @brief Returns a copy of socket file descriptor.
+	 */
+	int socketFD();
+
+	/**
+	 * @brief Indicates if we are or are not connected.
+	 */
+	bool connected();
+protected:
+
+	/**
 	 * @brief Send a desired string message to the server.
 	 *
 	 * @param msg message to be send.
@@ -95,21 +111,6 @@ public:
 	 * @return bm::Status::RECEIVE_ERROR when the ::read function crashes, bm::Status::OK otherwise.
 	 */
 	bm::Status receive(std::string &msg);
-
-	/**
-	 * @brief Returns the address with which was the start method called with.
-	 */
-	std::string address();
-
-	/**
-	 * @brief Returns a copy of socket file descriptor.
-	 */
-	int socketFD();
-
-	/**
-	 * @brief Indicates if we are or are not connected.
-	 */
-	bool connected();
 private:
 
 	/**
