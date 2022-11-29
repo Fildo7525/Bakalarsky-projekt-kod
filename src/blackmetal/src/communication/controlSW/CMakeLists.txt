@@ -19,6 +19,7 @@ PUBLIC
 target_link_libraries(bm_controlSW
 	logger
 	stopwatch
+	threadSafeQ
 )
 
 ament_target_dependencies(bm_controlSW
