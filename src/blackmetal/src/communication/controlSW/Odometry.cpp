@@ -19,7 +19,7 @@
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
-// TIP: The 3 second interval is just for debugging
+// TIP: The 2 second interval is just for debugging
 constexpr std::chrono::milliseconds g_pollTime(2'000);
 
 using namespace std::placeholders;

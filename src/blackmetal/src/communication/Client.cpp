@@ -19,7 +19,11 @@
 INIT_MODULE(Client);
 
 Client::Client()
-	: m_queue("m_queue")
+	: m_clientFD()
+	, m_connected(false)
+	, m_port()
+	, m_socket()
+	, m_queue("m_queue")
 	, m_odometryMessages("m_odometryMessages")
 {
 }

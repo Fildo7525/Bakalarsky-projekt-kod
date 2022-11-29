@@ -52,6 +52,7 @@ private:
 	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
+	/// Shared pointer to client handling the send and received messages from and to the server.
 	std::shared_ptr<Client> m_controlClient;
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;

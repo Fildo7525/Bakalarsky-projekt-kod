@@ -81,18 +81,31 @@ public:
 	 */
 	long rightWheelSpeed() const;
 
-	void setChassisLength(double chassisLength);
-	void setWheelRadius(double wheelRadius);
-	const double &getChassisLength();
-	const double &getWheelRadius();
-private:
 	/**
-	 * @brief Evaluates the received message.
+	 * @brief Sets the chassis length of the controlled mobot.
 	 *
-	 * @param returnJson Json containing whether the server could parse the received string.
+	 * @param chassisLength Length of the chassis.
 	 */
-	bm::Status evalReturnState(const std::string &returnJson);
+	void setChassisLength(double chassisLength);
 
+	/**
+	 * @brief Sets the radius of the wheels of the controlled mobot.
+	 *
+	 * @param wheelRadius Radius of the wheels.
+	 */
+	void setWheelRadius(double wheelRadius);
+
+	/**
+	 * @brief Returns the length of the chassis of the controlled movable robot.
+	 */
+	const double &getChassisLength();
+
+	/**
+	 * @brief Returns the radius of the wheels of the controlled movable robot.
+	 */
+	const double &getWheelRadius();
+
+private:
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
 	 *
@@ -115,9 +128,11 @@ private:
 	/// Thread that polls the server at a certain frequency for the wheels velocity.
 	std::thread m_robotSpeedReceiver;
 
-	// The speeds in the blackmetal code are defined as longs.
+	/// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;
+	/// Length of the chassis.
 	double m_chassisLength;
+	/// The left and right wheel radius.
 	double m_wheelRadius;
 };
 

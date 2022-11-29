@@ -15,8 +15,8 @@ namespace ts
 /**
  * @class Queue
  * @brief Thread safe dynamic priority queue storing json strings
- * that are to be send to the desired IP address. The preferred strings
- * are those that are setting the robot left and right wheel speed.
+ * that are to be sent to the desired IP address. The preferred strings
+ * are those that are setting the robot's left and right wheel speed.
  * The ordering is done using the callable object std::greater<std::string>()
  */
 class Queue {
@@ -56,7 +56,7 @@ public:
 	/**
 	 * @brief Add a new element to the priority queue.
 	 *
-	 * Inserts the element to the queue. If the inserted item @param item 
+	 * Inserts the element to the queue. If the inserted item
 	 * is sending request for setting the left and right wheel speed
 	 * prioritize this request.
 	 *
@@ -71,8 +71,9 @@ private:
 	mutable std::mutex m_qMutex;
 	/// Condition variable ensuring the pop method will wait for an element if the queue is empty.
 	std::condition_variable m_cvPush;
+	// The name of the queue used for debugging.
 	const std::string m_queueName;
 };
 
-} // thread safe
+} // thread safe namespace
 
