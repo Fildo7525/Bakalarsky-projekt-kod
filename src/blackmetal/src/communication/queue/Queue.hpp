@@ -69,8 +69,6 @@ private:
 	std::priority_queue<std::string, std::vector<std::string>, std::greater<std::string>> m_pqueue;
 	/// The queue mutex.
 	mutable std::mutex m_qMutex;
-	/// Mutex activated in the communication methods.
-	mutable std::mutex m_communicationMutex;
 	/// Condition variable ensuring the pop method will wait for an element if the queue is empty.
 	std::condition_variable m_cvPush;
 	const std::string m_queueName;

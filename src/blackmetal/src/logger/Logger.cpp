@@ -82,10 +82,10 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 
 	if (dbgLevel >= m_level) {
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
-			std::lock_guard<std::mutex> lk(mut);
+			std::scoped_lock<std::mutex> lk(mut);
 			std::fprintf(stderr, "%s%s: [%d:%s] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, s.str().c_str(), m_moduleName, codePath, message);
 		} else {
-			std::lock_guard<std::mutex> lk(mut);
+			std::scoped_lock<std::mutex> lk(mut);
 			std::printf("%s%s: [%d:%s] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, s.str().c_str(), m_moduleName, codePath, message);
 		}
 	}
@@ -96,7 +96,7 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	ss << log_time << "\t[" << pid << ":" << s.str() << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
 
 	{
-		std::lock_guard<std::mutex> lk(mut);
+		std::scoped_lock<std::mutex> lk(mut);
 		// Log pre module.
 		m_logFile << ss.str();
 		// Log all together.

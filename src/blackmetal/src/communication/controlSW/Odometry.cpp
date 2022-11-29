@@ -62,7 +62,7 @@ void Odometry::execute()
 	}
 
 	{
-		std::lock_guard<std::mutex> lock(g_odometryMutex);
+		std::scoped_lock<std::mutex> lock(g_odometryMutex);
 		m_velocity.leftWheel = wheels.leftWheel;
 		m_velocity.rightWheel = wheels.rightWheel;
 	}
@@ -100,37 +100,37 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 
 long Odometry::leftWheelSpeed() const
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	std::scoped_lock<std::mutex> lock(g_odometryMutex);
 	return m_velocity.leftWheel;
 }
 
 long Odometry::rightWheelSpeed() const
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	std::scoped_lock<std::mutex> lock(g_odometryMutex);
 	return m_velocity.rightWheel;
 }
 
 void Odometry::setChassisLength(double chassisLength)
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	std::scoped_lock<std::mutex> lock(g_odometryMutex);
 	m_chassisLength = chassisLength;
 }
 
 void Odometry::setWheelRadius(double wheelRadius)
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	std::scoped_lock<std::mutex> lock(g_odometryMutex);
 	m_wheelRadius = wheelRadius;
 }
 
 const double &Odometry::getChassisLength()
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	std::scoped_lock<std::mutex> lock(g_odometryMutex);
 	return m_chassisLength;
 }
 
 const double &Odometry::getWheelRadius()
 {
-	std::lock_guard<std::mutex> lock(g_odometryMutex);
+	std::scoped_lock<std::mutex> lock(g_odometryMutex);
 	return m_wheelRadius;
 }
 
@@ -148,7 +148,7 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	double vx;
 	double vy;
 	{
-		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
+		std::scoped_lock<std::mutex> lock(g_robotLocationMutex);
 		vx = speedInCenterOfGravity * std::cos(m_coordination.angle);
 		vy = speedInCenterOfGravity * std::sin(m_coordination.angle);
 	}
@@ -161,7 +161,7 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	DBG("angle change: " << changeOfAngleInTime);
 
 	{
-		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
+		std::scoped_lock<std::mutex> lock(g_robotLocationMutex);
 		m_coordination.x += dxt;
 		m_coordination.y += dyt;
 		m_coordination.angle += changeOfAngleInTime;

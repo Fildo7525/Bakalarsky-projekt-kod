@@ -17,13 +17,13 @@ ts::Queue::Queue(const std::string &name)
 
 bool ts::Queue::empty() const
 {
-	std::lock_guard<std::mutex> lock(m_qMutex);
+	std::scoped_lock<std::mutex> lock(m_qMutex);
 	return m_pqueue.empty();
 }
 
 unsigned long ts::Queue::size() const
 {
-	std::lock_guard<std::mutex> lock(m_qMutex);
+	std::scoped_lock<std::mutex> lock(m_qMutex);
 	return m_pqueue.size();
 }
 
@@ -44,7 +44,7 @@ std::string ts::Queue::pop()
 
 void ts::Queue::push(const std::string &item)
 {
-	std::lock_guard<std::mutex> lock(m_qMutex);
+	std::scoped_lock<std::mutex> lock(m_qMutex);
 	m_pqueue.push(item);
 	INFO(item << " was pushed to queue " << m_queueName);
 	m_cvPush.notify_one();
