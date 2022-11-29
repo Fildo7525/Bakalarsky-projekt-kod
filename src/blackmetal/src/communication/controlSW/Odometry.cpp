@@ -20,7 +20,7 @@
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
 // TIP: The 3 second interval is just for debugging
-constexpr std::chrono::milliseconds g_pollTime(300);
+constexpr std::chrono::milliseconds g_pollTime(2'000);
 
 using namespace std::placeholders;
 
@@ -36,6 +36,7 @@ Odometry::Odometry(std::shared_ptr<Client> controlSoftware)
 		[this] () {
 			while (true) {
 				std::this_thread::sleep_for(g_pollTime);
+				INFO("Calling execute");
 				execute();
 			}
 		}
@@ -86,7 +87,8 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 		auto rws_end = jsonMessage.find_last_of('}');
 		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 	} catch (std::exception &e) {
-		ERR(e.what());
+		// This error is invoked on
+		ERR(e.what() << ". The returned json is \"" << jsonMessage << "\". Returning zero speeds");
 		return {0,0};
 	}
 

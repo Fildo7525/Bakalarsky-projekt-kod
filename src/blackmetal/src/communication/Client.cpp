@@ -14,7 +14,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define WAIT_TIME 200'000 // 200ms
+#define WAIT_TIME 5'000'000 // 200ms
 
 INIT_MODULE(Client);
 
@@ -219,37 +219,48 @@ bm::Status Client::receive(std::string &msg)
 
 void Client::workerThread()
 {
+
 	std::string message;
 	bool failed = false;
 	bool getSpeedCommand = false;
+
+	auto in = [this, &failed] (std::string &message) -> bm::Status {
+		auto receiveStatus = receive(message);
+		if (receiveStatus != bm::Status::OK) {
+			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
+			failed = true;
+		}
+		return receiveStatus;
+	};
+
+	auto out = [this, &failed] (const std::string &message) -> bm::Status {
+		auto sendStatus = this->send(message);
+		if (sendStatus != bm::Status::OK) {
+			FATAL("Could not send: " << message << ". Trying again...");
+			failed = true;
+		}
+		return sendStatus;
+	};
+
 	while (m_connected) {
 		if (!failed) {
 			message = m_queue.pop();
 		}
 		if (message.find("Command\":6") != std::string::npos) {
+			SUCCESS("sending: " << message);
 			getSpeedCommand = true;
+		} else {
+			INFO("sending: " << message);
 		}
 
-		auto sendStatus = this->send(message);
-		if (sendStatus != bm::Status::OK) {
-			FATAL("Could not send: " << message << ". Trying again...");
-			failed = true;
-			continue;
-		}
+		bm::Status sendStatus = out(message);
+		bm::Status receiveStatus = in(message);
 
-		auto receiveStatus = receive(message);
-		if (receiveStatus != bm::Status::OK) {
-			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
-			failed = true;
-			continue;
-		}
-
-		if (getSpeedCommand) {
+		if (getSpeedCommand && !failed) {
 			std::string wheelSpeed;
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
-			this->send("");
-			receive(wheelSpeed);
+			receiveStatus = in(wheelSpeed);
 			m_odometryMessages.push(wheelSpeed);
 		}
 
@@ -261,7 +272,10 @@ void Client::workerThread()
 
 bm::Status Client::evalReturnState(const std::string &returnJson)
 {
-	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
+	if (returnJson.find("LeftWheelSpeed") != std::string::npos) {
+		SUCCESS("The data speeds " << returnJson);
+		return bm::Status::OK;
+	} else if (returnJson.find("RECIEVE_OK") == std::string::npos) {
 		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
 		return bm::Status::FULL_BUFFER;
 	}
