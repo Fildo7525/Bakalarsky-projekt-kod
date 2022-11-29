@@ -73,7 +73,6 @@ private:
 	mutable std::mutex m_communicationMutex;
 	/// Condition variable ensuring the pop method will wait for an element if the queue is empty.
 	std::condition_variable m_cvPush;
-	bool m_readyToPush = true;
 	const std::string m_queueName;
 };
 

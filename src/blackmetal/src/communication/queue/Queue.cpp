@@ -17,68 +17,37 @@ ts::Queue::Queue(const std::string &name)
 
 bool ts::Queue::empty() const
 {
-	// INFO("The queue is empty " << m_pqueue.empty());
-	WARN("LOCKING m_qMutex");
 	std::lock_guard<std::mutex> lock(m_qMutex);
 	return m_pqueue.empty();
 }
 
 unsigned long ts::Queue::size() const
 {
-	WARN("LOCKING m_qMutex");
 	std::lock_guard<std::mutex> lock(m_qMutex);
-	// INFO("The queue has size " << m_pqueue.size());
 	return m_pqueue.size();
 }
 
 std::string ts::Queue::pop()
 {
 	// DBG("Pop was invoked");
-	std::string tmp("");
-	bool empty;
-	{
-		WARN("LOCKING m_qMutex");
-		std::lock_guard<std::mutex> lock(m_qMutex);
-		empty = m_pqueue.empty();
-	}
+	std::string tmp;
 
-	if (empty) {
-		m_readyToPush = false;
-		WARN("LOCKING m_communicationMutex");
-		std::unique_lock<std::mutex> lk(m_communicationMutex);
-		FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
-		m_cvPush.wait(lk, [this] { return this->m_readyToPush; });
-		SUCCESS("The wating was canceled in " << m_queueName);
-	}
+	std::unique_lock<std::mutex> lk(m_qMutex);
+	FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
+	m_cvPush.wait(lk, [this] { return this->m_pqueue.empty(); });
+	SUCCESS("The wating was canceled in " << m_queueName);
 
-	{
-		WARN("LOCKING m_qMutex");
-		std::lock_guard<std::mutex> lock(m_qMutex);
-		tmp = m_pqueue.top();
-	}
-	// INFO("Returning " << tmp);
-	{
-		WARN("LOCKING m_qMutex");
-		std::lock_guard<std::mutex> lock(m_qMutex);
-		m_pqueue.pop();
-	}
+	tmp = m_pqueue.top();
+	m_pqueue.pop();
 	return tmp;
 }
 
 void ts::Queue::push(const std::string &item)
 {
-	// DBG("Push was invoked");
-
-	{
-		std::lock_guard<std::mutex> lock(m_qMutex);
-		m_pqueue.push(item);
-	}
+	std::lock_guard<std::mutex> lock(m_qMutex);
+	m_pqueue.push(item);
 	INFO(item << " was pushed to queue " << m_queueName);
-
-	WARN("LOCKING m_communicationMutex");
-	std::lock_guard<std::mutex> lk(m_communicationMutex);
-	m_readyToPush = true;
+	m_cvPush.notify_one();
 	WARN("Notifying the pop function");
-	m_cvPush.notify_all();
 }
 
