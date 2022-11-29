@@ -137,10 +137,6 @@ private:
 	bool m_connected;
 	/// Port to which is the client connected to.
 	int m_port;
-	/// Synchronizes threads on receiving a request to server.
-	std::mutex m_receiveSynchronizer;
-	/// Synchronizes threads on sending a request to server.
-	std::mutex m_sendSynchronizer;
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
 	ts::Queue m_queue;
