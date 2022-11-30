@@ -178,7 +178,8 @@ private:
 	int m_socket;
 	/// Thread safe priority queue managing the json string that are to be sent to the robot.
 	ts::Queue m_queue;
+	mutable std::mutex m_mutex;
 	/// Thread safe queue containing the returned left and right wheel velocity.
-	ts::Queue m_odometryMessages;
+	std::queue<std::string> m_odometryMessages;
 };
 

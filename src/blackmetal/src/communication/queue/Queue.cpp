@@ -41,15 +41,14 @@ std::string ts::Queue::pop()
 	// DBG("Pop was invoked");
 	std::string tmp;
 
-	if (empty()) {
-		std::unique_lock<std::mutex> lk(m_cvMutex);
+	WARN("Locking m_qMutex");
+	std::unique_lock<std::mutex> lk(m_qMutex);
+	while (m_pqueue.empty()) {
 		FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
-		m_cvPush.wait(lk, [this] { return !this->empty(); });
+		m_cvPush.wait(lk);
 		SUCCESS("The wating was canceled in " << m_queueName);
 	}
 
-	WARN("Locking qMutex in " << m_queueName);
-	std::unique_lock<std::mutex> lk(m_qMutex);
 	INFO("popping from " << m_queueName);
 	INFO("Size of " << m_queueName << " is " << m_pqueue.size());
 	SUCCESS("The contents of " << m_queueName << " are: " << m_pqueue);
@@ -62,15 +61,11 @@ std::string ts::Queue::pop()
 void ts::Queue::push(const std::string &item)
 {
 	WARN("Locking the qMutex in " << m_queueName);
-	std::scoped_lock<std::mutex> lock(m_qMutex);
-	INFO("pushing data to " << m_queueName);
+	std::lock_guard<std::mutex> lock(m_qMutex);
+	INFO("pushing " << item << " to " << m_queueName);
 	m_pqueue.push(item);
-	INFO(item << " was pushed to queue " << m_queueName);
-	{
-		std::scoped_lock<std::mutex> lk(m_cvMutex);
-		SUCCESS("The contents of " << m_queueName << " are: " << m_pqueue);
-		m_cvPush.notify_one();
-	}
+	m_cvPush.notify_one();
+	SUCCESS("The contents of " << m_queueName << " are:\n\t" << m_pqueue);
 	WARN("Notifying the pop function");
 }
 

@@ -4,6 +4,7 @@
 #include "log.hpp"
 
 #include <chrono>
+#include <mutex>
 #include <thread>
 
 #include <arpa/inet.h>
@@ -24,7 +25,7 @@ Client::Client()
 	, m_port()
 	, m_socket()
 	, m_queue("m_queue")
-	, m_odometryMessages("m_odometryMessages")
+	, m_odometryMessages()
 {
 }
 
@@ -137,7 +138,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 
 void Client::sendRequest(bm::Command cmd, double rightWheel, double leftWheel)
 {
-	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
+	DBG("Composing command: " << stringifyCommand(cmd));
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
@@ -165,7 +166,13 @@ void Client::enqueue(const std::string &msg)
 
 std::string Client::robotVelocity()
 {
-	return m_odometryMessages.pop();
+	while (m_odometryMessages.empty()) {
+		std::this_thread::sleep_for(500ms);
+	}
+	std::lock_guard<std::mutex> lk(m_mutex);
+	auto front = m_odometryMessages.front();
+	m_odometryMessages.pop();
+	return front;
 }
 
 std::string Client::address()
@@ -236,6 +243,8 @@ void Client::workerThread()
 		if (receiveStatus != bm::Status::OK) {
 			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
 			failed = true;
+		} else {
+			DBG("The data were received");
 		}
 		return receiveStatus;
 	};
@@ -245,12 +254,15 @@ void Client::workerThread()
 		if (sendStatus != bm::Status::OK) {
 			FATAL("Could not send: " << message << ". Trying again...");
 			failed = true;
+		} else {
+			DBG("The data were send");
 		}
 		return sendStatus;
 	};
 
 	while (m_connected) {
 		if (!failed) {
+			INFO("Getting data from the queue");
 			message = m_queue.pop();
 		}
 		if (message.find("Command\":6") != std::string::npos) {
@@ -267,8 +279,10 @@ void Client::workerThread()
 			std::string wheelSpeed;
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
+			INFO("Wate for the velocity");
 			receiveStatus = in(wheelSpeed);
 			WARN("Pushing data " << wheelSpeed << " to m_odometryMessages");
+			std::lock_guard<std::mutex> lk(m_mutex);
 			m_odometryMessages.push(wheelSpeed);
 		}
 
