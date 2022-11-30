@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <iterator>
 #include <condition_variable>
 #include <queue>
 #include <string>
@@ -11,6 +13,16 @@
  */
 namespace ts
 {
+
+class my_queue
+	: public std::priority_queue<std::string, std::vector<std::string>, std::greater<std::string>>
+{
+public:
+
+	friend std::ostream &operator<<(std::ostream &os, const my_queue &queue);
+};
+
+std::ostream &operator<<(std::ostream &os, const my_queue &queue);
 
 /**
  * @class Queue
@@ -66,9 +78,10 @@ public:
 
 private:
 	/// Priority queue containing the requests to be send.
-	std::priority_queue<std::string, std::vector<std::string>, std::greater<std::string>> m_pqueue;
+	my_queue m_pqueue;
 	/// The queue mutex.
 	mutable std::mutex m_qMutex;
+	mutable std::mutex m_cvMutex;
 	/// Condition variable ensuring the pop method will wait for an element if the queue is empty.
 	std::condition_variable m_cvPush;
 	// The name of the queue used for debugging.

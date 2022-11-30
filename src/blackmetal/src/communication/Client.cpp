@@ -16,7 +16,7 @@
 
 #define WAIT_TIME 5'000'000 // 200ms
 
-INIT_MODULE(Client);
+INIT_MODULE(Client, dbg_level::DBG);
 
 Client::Client()
 	: m_clientFD()
@@ -32,7 +32,10 @@ Client::Client(int port, const std::string &address)
 	: Client()
 {
 	start(port, address);
-	std::thread([this]{ workerThread(); }).detach();
+	std::thread([this]{
+		sleep(1);
+		workerThread();
+	}).detach();
 }
 
 Client::~Client()

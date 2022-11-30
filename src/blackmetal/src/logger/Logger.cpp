@@ -32,7 +32,7 @@ std::string getLoggerPath(const std::string &module)
 	return name;
 }
 
-std::fstream Logger::m_logAllFile = std::fstream(getLoggerPath("all"));
+std::fstream Logger::m_logAllFile = std::fstream(getLoggerPath("all"), std::ios::out);
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
@@ -48,6 +48,7 @@ Logger::Logger(const char *module, dbg_level lvl)
 	if (!m_logFile.is_open()) {
 		std::cerr << "The log file " << getLoggerPath(m_moduleName) << " could not be opened. The logs will only be visible on the screen.\n";
 	}
+	std::cout << "All log file is " << getLoggerPath("all") << " and is opened " << m_logAllFile.is_open() << '\n';
 }
 
 const char* Logger::dbgLevelToString(const dbg_level level)
