@@ -21,9 +21,11 @@
 /// Writes the supplied message with the log level to log file based on the module and on the stdout/stderr stream.
 #define LOG(msg, color, log_level) \
 	do { \
-		std::stringstream ss; \
-		ss << msg; \
-		lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
+		if (lg.level() != dbg_level::OFF) { \
+			std::stringstream ss; \
+			ss << msg; \
+			lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
+		} \
 	} while(false)
 
 /// Passes a debug log message to the registered logger. Works only in debug build.

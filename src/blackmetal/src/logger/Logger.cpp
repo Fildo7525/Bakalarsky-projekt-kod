@@ -1,5 +1,6 @@
 #include "Logger.hpp"
 
+#include <mutex>
 #include <unistd.h>
 
 #include <chrono>
@@ -8,6 +9,8 @@
 #include <filesystem>
 
 #include <stdio.h>
+
+static std::mutex mut;
 
 const std::string currentDateTime() {
 	time_t now = time(0);
@@ -26,6 +29,8 @@ std::string getLoggerPath(const std::string &module)
 	std::string name = getenv("PWD") + std::string("/log/run-") + currentDateTime() + '/' + module + '-' + currentDateTime() + ".log";
 	return name;
 }
+
+std::fstream Logger::m_logAllFile = std::fstream(getLoggerPath("all"), std::ios::out);
 
 Logger::Logger(const char *module, dbg_level lvl)
 	: m_moduleName(module)
@@ -71,6 +76,7 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	log_time.pop_back();
 
 	if (dbgLevel >= m_level) {
+		std::scoped_lock<std::mutex> lk(mut);
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
 			std::fprintf(stderr, "%s%s: [%d] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, m_moduleName, codePath, message);
 		} else {
@@ -80,7 +86,14 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	if (!m_logFile.is_open()) {
 		return;
 	}
-	m_logFile << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	std::stringstream ss;
+	ss << log_time << "\t[" << pid << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+	{
+		std::scoped_lock<std::mutex> lk(mut);
+		m_logFile << ss.str();
+		m_logAllFile << ss.str();
+	}
+
 }
 
 dbg_level Logger::level()
@@ -98,4 +111,5 @@ Logger::~Logger()
 	std::flush(m_logFile);
 	m_logFile.close();
 }
+
 
