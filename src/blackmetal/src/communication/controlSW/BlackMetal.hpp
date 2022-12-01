@@ -47,7 +47,10 @@ public:
 	const double &wheelRadius();
 
 private:
+	/// Client for sending requests to robot.
 	std::shared_ptr<Client> m_controlClient;
+	/// Object handling the odometry of the robot.
+	std::shared_ptr<Odometry> m_odometry;
 
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
@@ -56,8 +59,5 @@ private:
 
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
-
-	/// Object handling the odometry of the robot.
-	std::shared_ptr<Odometry> m_odometry;
 };
 
