@@ -82,9 +82,28 @@ public:
 	 */
 	long rightWheelSpeed() const;
 
+	/**
+	 * @brief Sets the length of the robot chassis.
+	 *
+	 * @param chassisLength  value to be set.
+	 */
 	void setChassisLength(double chassisLength);
+
+	/**
+	 * @brief Sets the radius of left and right wheel speed.
+	 *
+	 * @param wheelRadius value to be set.
+	 */
 	void setWheelRadius(double wheelRadius);
+
+	/**
+	 * @brief Returns the lenth of the chassis.
+	 */
 	const double &getChassisLength();
+
+	/**
+	 * @brief Returns the radius of the wheels.
+	 */
 	const double &getWheelRadius();
 private:
 	/**
@@ -118,7 +137,9 @@ private:
 
 	// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;
+	/// The length of the robot chassis.
 	double m_chassisLength;
+	/// The left and right wheel radius.
 	double m_wheelRadius;
 };
 
