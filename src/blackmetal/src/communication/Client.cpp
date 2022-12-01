@@ -59,6 +59,12 @@ void Client::start(int port, const std::string &address)
 	m_address = address;
 	m_port = port;
 	SUCCESS("Client connected to " << m_address << ':' << m_port);
+	struct timeval tv;
+	tv.tv_usec = WAIT_TIME;
+	// Set timeout for receive to WAIT_TIME.
+	setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+	// Set timeout for send to WAIT_TIME.
+	setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv, sizeof tv);
 }
 
 void Client::stop()
