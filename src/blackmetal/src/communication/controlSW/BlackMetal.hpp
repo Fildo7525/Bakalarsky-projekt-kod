@@ -48,17 +48,6 @@ public:
 	const double &wheelRadius();
 
 private:
-
-	/**
-	 * @brief Overridden function from the Client base class.
-	 *
-	 * The function parses the received json string and converts the result to bm::Status.
-	 *
-	 * @param returnJson Returned Json string from the server.
-	 */
-	bm::Status evalReturnState(const std::string &returnJson) override;
-
-private:
 	double m_chassisLength;
 	double m_wheelRadius;
 

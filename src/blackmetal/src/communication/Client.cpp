@@ -199,7 +199,12 @@ bool Client::connected()
 
 bm::Status Client::evalReturnState(const std::string &returnJson)
 {
-	(void) returnJson;
+	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
+		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
+		return bm::Status::FULL_BUFFER;
+	}
+
+	SUCCESS(returnJson);
 	return bm::Status::OK;
 }
 
