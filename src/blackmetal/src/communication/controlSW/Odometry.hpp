@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <thread>
 class Odometry;
 #include "controlSW/BlackMetal.hpp"
@@ -49,7 +50,7 @@ public:
 	 *
 	 * @param controlSoftware Reference to the control software connected to the robot.
 	 */
-	explicit Odometry(BlackMetal &controlSoftware);
+	explicit Odometry(std::shared_ptr<Client> &controlClient);
 
 	/**
 	 * @brief Function polling the robot for its left and right wheel speed.
@@ -80,6 +81,11 @@ public:
 	 * Thus you can use this variable in non thread safe functions.
 	 */
 	long rightWheelSpeed() const;
+
+	void setChassisLength(double chassisLength);
+	void setWheelRadius(double wheelRadius);
+	const double &getChassisLength();
+	const double &getWheelRadius();
 private:
 	/**
 	 * @brief Evaluates the received message.
@@ -102,7 +108,7 @@ private:
 
 private:
 	/// Instance of the control software client.
-	BlackMetal &m_controlSoftware;
+	std::shared_ptr<Client> m_controlClient;
 	/// Timer invoking the execute function.
 	rclcpp::TimerBase::SharedPtr m_timer;
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
@@ -112,5 +118,7 @@ private:
 
 	// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;
+	double m_chassisLength;
+	double m_wheelRadius;
 };
 

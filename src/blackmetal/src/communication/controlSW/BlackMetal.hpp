@@ -22,7 +22,6 @@ class BlackMetal;
  */
 class BlackMetal
 	: public rclcpp::Node
-	, public Client
 {
 public:
 	/// Constructor.
@@ -48,8 +47,7 @@ public:
 	const double &wheelRadius();
 
 private:
-	double m_chassisLength;
-	double m_wheelRadius;
+	std::shared_ptr<Client> m_controlClient;
 
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;

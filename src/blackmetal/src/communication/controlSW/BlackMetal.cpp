@@ -12,15 +12,15 @@ INIT_MODULE(BlackMetal, dbg_level::DBG);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, Client(PORT, "192.168.1.3")
-	, m_odometry(new Odometry(*this))
+	, m_controlClient(new Client(PORT, "192.168.1.3"))
+	, m_odometry(new Odometry(m_controlClient))
 {
-	m_chassisLength = declare_parameter<double>("chasis", 1);
-	m_wheelRadius = declare_parameter<double>("wheelRadius", 0.2);
+	m_odometry->setChassisLength(declare_parameter<double>("chasis", 1));
+	m_odometry->setWheelRadius(declare_parameter<double>("wheelRadius", 0.2));
 
-	DBG("Chasis has lenght " << m_chassisLength << " m");
-	DBG("Wheel has radius " << m_wheelRadius << " m");
-	DBG("Address set to " << address() << ":" << PORT);
+	DBG("Chasis has lenght " << m_odometry->getChassisLength() << " m");
+	DBG("Wheel has radius " << m_odometry->getWheelRadius() << " m");
+	DBG("Address set to " << m_controlClient->address() << ":" << PORT);
 
 	m_twistSubscriber
 		= this->create_subscription<geometry_msgs::msg::Twist>(
@@ -36,19 +36,19 @@ BlackMetal::BlackMetal()
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 {
 	DBG("Message geometry_msgs::msg::Twist: " << geometry_msgs::msg::to_yaml(msg));
-	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_chassisLength * msg.angular.z)/m_wheelRadius / 1000.;
-	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_chassisLength * msg.angular.z)/m_wheelRadius / 1000.;
+	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / 1000.;
+	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / 1000.;
 	INFO("Right wheel speed: " << m_rightWheelSpeed << " Left wheel speed: " << m_leftWheelSpeed);
-	request(m_rightWheelSpeed, m_leftWheelSpeed);
+	m_controlClient->request(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
 const double& BlackMetal::chassisLength()
 {
-	return m_chassisLength;
+	return m_odometry->getChassisLength();
 }
 
 const double& BlackMetal::wheelRadius()
 {
-	return m_wheelRadius;
+	return m_odometry->getWheelRadius();
 }
 
