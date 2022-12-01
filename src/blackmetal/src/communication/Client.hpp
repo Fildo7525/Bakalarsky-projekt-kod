@@ -6,6 +6,9 @@
 #include <variant>
 #include <mutex>
 
+// wate for 200ms
+#define WAIT_TIME 200'000
+
 /**
  * @class Client
  * @brief Base class handling TCP/IP connections
