@@ -2,11 +2,13 @@
 
 #include "log.hpp"
 
+#include <chrono>
 #include <mutex>
 #include <queue>
 #include <iterator>
 #include <algorithm>
 
+using namespace std::chrono_literals;
 
 INIT_MODULE(Queue, dbg_level::DBG);
 
@@ -45,7 +47,11 @@ std::string ts::Queue::pop()
 	std::unique_lock<std::mutex> lk(m_qMutex);
 	while (m_pqueue.empty()) {
 		FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
-		m_cvPush.wait(lk);
+		auto ret = m_cvPush.wait_for(lk, 300ms);
+		if (ret == std::cv_status::timeout && m_pqueue.empty()) {
+			FATAL("The queue was locked for long time and is still empty. Releasing and sending an empty string");
+			return "";
+		}
 		SUCCESS("The wating was canceled in " << m_queueName);
 	}
 
@@ -61,11 +67,12 @@ std::string ts::Queue::pop()
 void ts::Queue::push(const std::string &item)
 {
 	WARN("Locking the qMutex in " << m_queueName);
-	std::lock_guard<std::mutex> lock(m_qMutex);
+	std::unique_lock<std::mutex> lock(m_qMutex);
 	INFO("pushing " << item << " to " << m_queueName);
 	m_pqueue.push(item);
+	INFO("The contents of " << m_queueName << " are:\n\t" << m_pqueue);
+	lock.unlock();
 	m_cvPush.notify_one();
-	SUCCESS("The contents of " << m_queueName << " are:\n\t" << m_pqueue);
-	WARN("Notifying the pop function");
+	SUCCESS("Notifying the pop function");
 }
 

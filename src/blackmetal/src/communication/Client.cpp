@@ -261,28 +261,29 @@ void Client::workerThread()
 	};
 
 	while (m_connected) {
-		if (!failed) {
-			INFO("Getting data from the queue");
-			message = m_queue.pop();
-		}
+		message = m_queue.pop();
+
 		if (message.find("Command\":6") != std::string::npos) {
 			SUCCESS("sending: " << message);
 			getSpeedCommand = true;
-		} else {
+		} else if (message.find("Command") != std::string::npos) {
 			INFO("sending: " << message);
+		} else {
+			WARN("Scipping this call");
 		}
 
 		bm::Status sendStatus = out(message);
 		bm::Status receiveStatus = in(message);
 
-		if (getSpeedCommand && !failed) {
+		if (getSpeedCommand) {
+			getSpeedCommand = false;
 			std::string wheelSpeed;
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
 			INFO("Wate for the velocity");
 			receiveStatus = in(wheelSpeed);
 			WARN("Pushing data " << wheelSpeed << " to m_odometryMessages");
-			std::lock_guard<std::mutex> lk(m_mutex);
+			std::unique_lock<std::mutex> lk(m_mutex);
 			m_odometryMessages.push(wheelSpeed);
 		}
 
