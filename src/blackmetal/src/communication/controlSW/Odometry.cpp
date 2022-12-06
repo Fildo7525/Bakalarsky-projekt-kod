@@ -49,7 +49,7 @@ void Odometry::execute()
 	std::variant<bm::Status, std::string> temp;
 	{
 		std::lock_guard<std::mutex> lock(g_odometryMutex);
-		temp = m_controlClient->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
+		temp = m_controlClient->sendRequest(bm::Command::GET_LR_WHEEL_POSITION);
 	}
 
 	std::string wheelSpeed;
@@ -61,6 +61,7 @@ void Odometry::execute()
 
 	Speed wheels;
 	TIC;
+
 	// The send and receive methos are thread safe.
 	m_controlClient->send("");
 	m_controlClient->receive(wheelSpeed);

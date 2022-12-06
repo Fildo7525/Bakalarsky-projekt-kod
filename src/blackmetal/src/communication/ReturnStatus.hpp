@@ -19,14 +19,16 @@ enum class Command {
 	/// Sets Left and right wheel velocity.
 	/// The velocities are required for this command.
 	SET_LR_WHEEL_VELOCITY,
-	/// Not implemented.
-	NONE_4,
+	/// Set the position to which should the wheels turn to.
+	SET_LR_WHEEL_POSITION,
 	/// Not implemented.
 	NONE_5,
-	/// Get left and right wheel velocities.
+	/// Get left and right wheel actual velocities.
 	GET_LR_WHEEL_VELOCITY,
 	/// Prepare the controller of left and right wheel.
 	PREPARE_WHEEL_CONTROLLER,
+	/// Get left and right wheel actual positions from robot.
+	GET_LR_WHEEL_POSITION,
 };
 
 /**
