@@ -64,7 +64,7 @@ public:
 	 * 		   bm::Status::RECEIVE_ERROR when the ::read function crashes,
 	 * 		   returned std::string message otherwise.
 	 */
-	virtual std::variant<bm::Status, std::string> execute(bm::Command cmd, double rightWheel = 0, double leftWheel = 0);
+	virtual bm::Status sendRequest(bm::Command cmd, WheelValueT rightWheel = 0, WheelValueT leftWheel = 0);
 
 	/**
 	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_VELOCITY.
@@ -77,7 +77,7 @@ public:
 	 * 		   bm::Status::RECEIVE_ERROR when the ::read function crashes,
 	 * 		   bm::Status::OK otherwise.
 	 */
-	bm::Status request(double rightWheel, double leftWheel);
+	bm::Status requestSpeed(double rightWheel, double leftWheel);
 
 	/**
 	 * @brief Send a desired string message to the server.

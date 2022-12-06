@@ -114,7 +114,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 	return "Unknown bm::Command";
 }
 
-std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, double rightWheel, double leftWheel)
+bm::Status Client::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelValueT leftWheel)
 {
 	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
@@ -129,10 +129,22 @@ std::variant<bm::Status, std::string> Client::execute(bm::Command cmd, double ri
 
 	INFO("sending: " << message);
 
-	this->send(message);
-	receive(message);
+	bm::Status s = this->send(message);
+	if (s != bm::Status::OK) {
+		FATAL("Sending failed with status: " << stringifyStatus(s));
+		return s;
+	}
+	s = receive(message);
+	if (s != bm::Status::OK) {
+		FATAL("Sending failed with status: " << stringifyStatus(s));
+		return s;
+	}
+	return bm::Status::OK;
+}
 
-	return message;
+bm::Status Client::requestSpeed(double rightWheel, double leftWheel)
+{
+	sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
 }
 
 bm::Status Client::request(double rightWheel, double leftWheel)
@@ -179,7 +191,7 @@ bm::Status Client::receive(std::string &msg)
 	msg.clear();
 	msg = buffer;
 	DBG("The server send " << numberOfBytes);
-	return bm::Status::OK;
+	return evalReturnState(msg);
 }
 
 std::string Client::address()
