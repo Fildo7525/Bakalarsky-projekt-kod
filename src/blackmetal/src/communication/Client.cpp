@@ -94,38 +94,41 @@ std::string Client::stringifyStatus(const bm::Status status)
 std::string Client::stringifyCommand(const bm::Command command)
 {
 	switch (command) {
-		case bm::Command::PREPARE_WHEEL_CONTROLLER:
-			return "bm::Command::PREPARE_WHEEL_CONTROLLER";
-		case bm::Command::GET_LR_WHEEL_VELOCITY:
-			return "bm::Command::GET_LR_WHEEL_VELOCITY";
-		case bm::Command::SET_LR_WHEEL_VELOCITY:
-			return "bm::Command::SET_LR_WHEEL_VELOCITY";
-		case bm::Command::EMG_STOP:
-			return "bm::Command::EMG_STOP";
 		case bm::Command::EMPTY:
 			return "bm::Command::EMPTY";
-		case bm::Command::NONE_4:
-			return "bm::Command::NONE_4";
-		case bm::Command::NONE_5:
-			return "bm::Command::NONE_5";
+		case bm::Command::EMG_STOP:
+			return "bm::Command::EMG_STOP";
 		case bm::Command::NORMAL_STOP:
 			return "bm::Command::NORMAL_STOP";
+		case bm::Command::SET_LR_WHEEL_VELOCITY:
+			return "bm::Command::SET_LR_WHEEL_VELOCITY";
+		case bm::Command::SET_LR_WHEEL_POSITION:
+			return "bm::Command::SET_LR_WHEEL_POSITION";
+		case bm::Command::NONE_5:
+			return "bm::Command::NONE_5";
+		case bm::Command::GET_LR_WHEEL_VELOCITY:
+			return "bm::Command::GET_LR_WHEEL_VELOCITY";
+		case bm::Command::PREPARE_WHEEL_CONTROLLER:
+			return "bm::Command::PREPARE_WHEEL_CONTROLLER";
+		case bm::Command::GET_LR_WHEEL_POSITION:
+			return "bm::Command::GET_LR_WHEEL_POSITION";
 	}
-	return "Unknown bm::Command";
 }
 
 bm::Status Client::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelValueT leftWheel)
 {
-	DBG("Executing command: " << stringifyCommand(cmd) << " on " << m_address << ':' << m_port);
-	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
+	DBG("Composing command: " << stringifyCommand(cmd));
+	// Example: "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":0.1,\"LeftWheelSpeed\":0.1,\"RightWheelPosition\":0.1,\"LeftWheelPosition\":0.1}";
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
 	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
-		message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
-					",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
-	} else {
-		message += "}";
+		message += ",\"RightWheelSpeed\":" + std::to_string(std::get<double>(rightWheel)) +
+					",\"LeftWheelSpeed\":" + std::to_string(std::get<double>(leftWheel));
+	} else if (cmd == bm::Command::SET_LR_WHEEL_POSITION) {
+		message += ",\"RightWheelPosition\":" + std::to_string(std::get<long>(rightWheel)) +
+					",\"LeftWheelPosition\":" + std::to_string(std::get<long>(leftWheel));
 	}
+	message += "}";
 
 	INFO("sending: " << message);
 
@@ -147,14 +150,9 @@ bm::Status Client::requestSpeed(double rightWheel, double leftWheel)
 	sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
 }
 
-bm::Status Client::request(double rightWheel, double leftWheel)
+bm::Status Client::requestPosition(long rightWheel, long leftWheel)
 {
-	auto buffer = execute(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
-	const bm::Status *tmp = std::get_if<bm::Status>(&buffer);
-	if (!tmp) {
-		return evalReturnState(std::get<std::string>(buffer));
-	}
-	return std::get<bm::Status>(buffer);
+	sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
 }
 
 bm::Status Client::send(const std::string &msg)

@@ -19,6 +19,11 @@
 class Client
 {
 public:
+	/// The sendRequest function takes arguments for left and right wheel
+	/// for setting position and velocity. The velocity is set with double
+	/// and the position is set with long. This is the generic solution for this issue.
+	using WheelValueT = std::variant<long, double>;
+
 	/// Default constructor
 	Client() = default;
 	/// Constructor
@@ -56,13 +61,19 @@ public:
 	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.
 	 *
-	 * @param cmd @see Command which should the robot execute.
-	 * @param rightWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
-	 * @param leftWheel Right wheel speed. This parameter is needed only in bm::Command::SET_LR_WHEEL_VELOCITY.
-	 * @return A variant containing either an error status 
-	 * 		   bm::Status::SEND_ERROR when the ::send function crashes,
-	 * 		   bm::Status::RECEIVE_ERROR when the ::read function crashes,
-	 * 		   returned std::string message otherwise.
+	 * @see bm::Command The enum class of possible request commands.
+	 *
+	 * The request consists of either double or long parameters. The double parameters
+	 * are used in set velocity request. The long parameters are used in the set position request.
+	 *
+	 * @see WheelValueT The variant parameter of the request.
+	 * @see request The function for setting the robot speed.
+	 *
+	 * @param cmd Command which should the robot execute.
+	 * @param rightWheel Right wheel speed or position. This parameter is needed only in
+	 * bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
+	 * @param leftWheel Right wheel speed or position. This parameter is needed only in
+	 * bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
 	 */
 	virtual bm::Status sendRequest(bm::Command cmd, WheelValueT rightWheel = 0, WheelValueT leftWheel = 0);
 
@@ -78,6 +89,18 @@ public:
 	 * 		   bm::Status::OK otherwise.
 	 */
 	bm::Status requestSpeed(double rightWheel, double leftWheel);
+
+	/**
+	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_POSITION.
+	 *
+	 * The return status is than evaluated in evalReturnState.
+	 *
+	 * @see evalReturnState Evaluation method for the confirmation of request.
+	 *
+	 * @param rightWheel Right wheel whished position.
+	 * @param leftWheel Right wheel whished position.
+	 */
+	bm::Status requestPosition(long rightWheel, long leftWheel);
 
 	/**
 	 * @brief Send a desired string message to the server.
