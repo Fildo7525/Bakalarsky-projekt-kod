@@ -113,6 +113,7 @@ std::string Client::stringifyCommand(const bm::Command command)
 		case bm::Command::GET_LR_WHEEL_POSITION:
 			return "bm::Command::GET_LR_WHEEL_POSITION";
 	}
+	return "bm::Command Unknown";
 }
 
 bm::Status Client::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelValueT leftWheel)
@@ -147,12 +148,12 @@ bm::Status Client::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelVal
 
 bm::Status Client::requestSpeed(double rightWheel, double leftWheel)
 {
-	sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
+	return sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
 }
 
 bm::Status Client::requestPosition(long rightWheel, long leftWheel)
 {
-	sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
+	return sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
 }
 
 bm::Status Client::send(const std::string &msg)

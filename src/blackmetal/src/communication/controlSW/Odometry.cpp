@@ -92,11 +92,11 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 	long lws, rws;
 	try {
 		DBG("Next attempt: " << jsonMessage);
-		auto lws_start = jsonMessage.find_first_of('=') + 1;
+		auto lws_start = jsonMessage.find_first_of(':') + 1;
 		auto lws_end = jsonMessage.find_first_of(' ');
 		lws = std::stol(jsonMessage.substr(lws_start, lws_end));
 
-		auto rws_start = jsonMessage.find_last_of('=') + 1;
+		auto rws_start = jsonMessage.find_last_of(':') + 1;
 		auto rws_end = jsonMessage.find_last_of('}');
 		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 	} catch (std::out_of_range &e) {
@@ -105,7 +105,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) cons
 		m_controlClient->receive(nextAttempt);
 		return obtainWheelSpeeds(nextAttempt);
 	} catch (std::exception &e) {
-		ERR(e.what());
+		ERR(e.what() << " with string " << jsonMessage);
 		return {0,0};
 	}
 
