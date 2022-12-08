@@ -4,6 +4,8 @@ add_library(bm_controlSW
 	BlackMetal.hpp
 	../Client.hpp
 	../Client.cpp
+	Odometry.cpp
+	Odometry.hpp
 )
 
 find_package(ament_cmake REQUIRED)
@@ -16,13 +18,9 @@ PUBLIC
 )
 target_link_libraries(bm_controlSW
 	logger
+	stopwatch
+	threadSafeQ
 )
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	target_link_libraries(bm_controlSW
-		stopwatch
-	)
-endif()
 
 ament_target_dependencies(bm_controlSW
 	"rclcpp"

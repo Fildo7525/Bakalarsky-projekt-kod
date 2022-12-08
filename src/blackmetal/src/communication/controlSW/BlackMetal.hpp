@@ -2,11 +2,15 @@
 
 #include "Client.hpp"
 
+class BlackMetal;
+#include "controlSW/Odometry.hpp"
+
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
-#include <string>
 #include <memory>
+#include <string>
+#include <thread>
 
 /**
  * @class BlackMetal
@@ -18,7 +22,6 @@
  */
 class BlackMetal
 	: public rclcpp::Node
-	, private Client
 {
 public:
 	/// Constructor.
@@ -34,29 +37,27 @@ public:
 	 */
 	void onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg);
 
-private:
-
 	/**
-	 * @brief Overridden function from the Client base class.
-	 *
-	 * The function parses the received json string and converts the result to bm::Status.
-	 *
-	 * @param returnJson Returned Json string from the server.
+	 * @brief Retrieve the chassis length set in the config file.
 	 */
-	bm::Status evalReturnState(const std::string &returnJson) override;
+	const double &chassisLength();
+	/**
+	 * @brief Retrieve the wheel radius set from the config file.
+	 */
+	const double &wheelRadius();
 
 private:
-	// TODO: Find out what is the chasis length.
-	double m_chassisLength;
-	// TODO: Find out what is the wheel radius.
-	double m_wheelRadius;
-
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
 	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
+	/// Shared pointer to client handling the send and received messages from and to the server.
+	std::shared_ptr<Client> m_controlClient;
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
+
+	/// Object handling the odometry of the robot.
+	std::shared_ptr<Odometry> m_odometry;
 };
 

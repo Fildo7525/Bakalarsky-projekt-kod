@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $# == 0 ]]; then
+	echo -e "Usage: mergeLogFiles ./log/first.log ./log/second.log"
+	echo -e "\tWill merge the two log files to one log file based on the log time of the logging message"
+	echo -e "\tThe output will be saved to current cirectory to file merged.log"
+	exit 0;
+fi
+
+cat "$@" | sort -n > "merged.log"
+

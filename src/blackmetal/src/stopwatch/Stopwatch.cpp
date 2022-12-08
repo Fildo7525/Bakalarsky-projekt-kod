@@ -1,4 +1,5 @@
 #include "Stopwatch.hpp"
+
 #include <chrono>
 #include <mutex>
 
@@ -16,14 +17,14 @@ Stopwatch::~Stopwatch()
 	auto diff = std::chrono::high_resolution_clock::now() - m_start;
 	double diffMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(diff).count();
 	{
-		std::lock_guard<std::mutex> lock(mut);
+		std::scoped_lock<std::mutex> lock(mut);
 		stoppedTimes.push_back(diffMiliseconds);
 	}
 }
 
 const double &Stopwatch::lastStoppedTime()
 {
-	std::lock_guard<std::mutex>lock(mut);
+	std::scoped_lock<std::mutex>lock(mut);
 	return stoppedTimes.back();
 }
 
@@ -33,7 +34,7 @@ const double &Stopwatch::stoppedTimeAt(const std::vector<double>::size_type inde
 		return lastStoppedTime();
 	}
 	{
-		std::lock_guard<std::mutex> lock(mut);
+		std::scoped_lock<std::mutex> lock(mut);
 		return stoppedTimes.at(index);
 	}
 }

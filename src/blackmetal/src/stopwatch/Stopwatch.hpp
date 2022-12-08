@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <vector>
+
 using namespace std::chrono_literals;
 
 /**
@@ -37,6 +38,7 @@ public:
 
 	/**
 	 * @brief Access a specified stopped time in the vector.
+	 * If the index parameter is bigger than the size of the vector the last stopped time is returned.
 	 *
 	 * @param index Index of the timestamp to access.
 	 * @return The const double reference to the timestamp.
@@ -46,13 +48,12 @@ public:
 	/**
 	 * @brief Get the const double reference to all the timestamps.
 	 */
+	[[deprecated("getStoppedTimes is not thread safe. Use stoppedTimeAt instead.")]]
 	static const std::vector<double> &getStoppedTimes();
 private:
 	/// Starting timestamp.
 	std::chrono::system_clock::time_point m_start;
 };
-
-#ifndef NDEBUG
 
 #define TIC \
 	{ \
@@ -61,9 +62,3 @@ private:
 #define TOC \
 	} \
 
-#else
-
-#define TIC ;
-#define TOC ;
-
-#endif // NDEBUG

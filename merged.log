@@ -1,0 +1,1162 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+angular:
+Tue Nov 22 16:23:31 2022	[6303] DBG: BlackMetal => BlackMetal: Address set to 192.168.1.3:665
+Tue Nov 22 16:23:31 2022	[6303] DBG: BlackMetal => BlackMetal: Chasis has lenght 0.56 m
+Tue Nov 22 16:23:31 2022	[6303] DBG: BlackMetal => BlackMetal: Wheel has radius 0.08 m
+Tue Nov 22 16:23:31 2022	[6303] DBG: Client => start: Socket created
+Tue Nov 22 16:23:31 2022	[6303] DBG: Client => start: The address is valid and supported
+Tue Nov 22 16:23:31 2022	[6303] SUCCESS: Client => start: Client connected to 192.168.1.3:665
+Tue Nov 22 16:23:31 2022	[6303] WARN: BlackMetal => BlackMetal: Odometry created
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:34 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02754
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:34 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:34 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:34 2022	[6303] INFO: Odometry => execute: Obtained speeds are 0 and 0
+Tue Nov 22 16:23:34 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:37 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03011
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:37 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:37 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:37 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:39 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:39 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:39 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:39 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:39 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:39 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:39 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:39 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:40 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:40 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02618
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:40 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:40 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:40 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:40 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:40 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:40 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:41 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:41 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:41 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:41 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:41 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:41 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:41 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:41 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:42 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:42 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:42 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:42 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:42 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:42 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:42 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:42 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:43 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:43 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.07344
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:43 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:43 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:43 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:43 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:43 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:43 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:44 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:44 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:44 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:44 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:44 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:44 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:44 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:44 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:45 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:45 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:45 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:45 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:45 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:45 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:45 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:45 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:46 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:46 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02644
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:46 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:46 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:46 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:46 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:46 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:46 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:47 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:47 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:47 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:47 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:47 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:47 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:47 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:47 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:48 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:48 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:48 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:48 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:48 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:48 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:48 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:48 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:49 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:49 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03024
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:49 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:49 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:49 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:49 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:49 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:49 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:50 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:50 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:50 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:50 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:50 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:50 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:50 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:50 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:51 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:51 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:51 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:51 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:51 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:51 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:51 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:51 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:52 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:52 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02428
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:52 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:52 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:52 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:52 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:52 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:52 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:53 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:53 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:53 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:53 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:53 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:53 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:53 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:53 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:54 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:54 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:54 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:54 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:54 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:54 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:54 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:54 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:55 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:55 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.07131
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:55 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:55 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:55 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:55 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:55 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:55 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:56 2022	[6303] DBG: BlackMetal => onTwistRecievedSendJson: Message geometry_msgs::msg::Twist: linear:
+Tue Nov 22 16:23:56 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:56 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:56 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:56 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:56 2022	[6303] INFO: BlackMetal => onTwistRecievedSendJson: Right wheel speed: 1.25 Left wheel speed: 1.25
+Tue Nov 22 16:23:56 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:56 2022	[6303] SUCCESS: BlackMetal => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:57 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:57 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:57 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:57 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:57 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:57 2022Tue Nov 22 16:23:31 2022	[6303] DBG: Client => start: The client is not initialized. Connecting to 192.168.1.3:0
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:58 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.07494
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:58 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:23:58 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:58 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:23:58 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:23:59 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:23:59 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:23:59 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:23:59 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:23:59 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:00 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:00 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:00 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:00 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:00 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:01 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.06898
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:01 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:01 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:01 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:01 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:02 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:02 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:02 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:02 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:02 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:03 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:03 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:03 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:03 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:03 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:04 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04447
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:04 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:04 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:04 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:04 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:07 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03459
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:07 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:07 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:07 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:10 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:10 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:10 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:10 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:11 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:11 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:11 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:11 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02777
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:11 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:11 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:12 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:12 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:12 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:12 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:12 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:13 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:13 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:13 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:13 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:13 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:14 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.0273
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:14 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201405 "RightWheelSpeed"=8589934467}
+Tue Nov 22 16:24:14 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:14 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:14 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:15 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:15 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:15 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:15 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:15 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.125000,"LeftWheelSpeed":0.125000}
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:17 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03251
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:17 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201405 "RightWheelSpeed"=8589934467}
+Tue Nov 22 16:24:17 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:17 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:20 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03621
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:20 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201405 "RightWheelSpeed"=8589934467}
+Tue Nov 22 16:24:20 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:20 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:21 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:21 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:21 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:21 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:21 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:22 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:22 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:22 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:22 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:22 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":1.250000,"LeftWheelSpeed":1.250000}
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:23 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03413
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:23 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201405 "RightWheelSpeed"=8589934467}
+Tue Nov 22 16:24:23 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:23 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:26 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.0369
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:26 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201405 "RightWheelSpeed"=8589934467}
+Tue Nov 22 16:24:26 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:26 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.500000,"LeftWheelSpeed":0.500000}
+Tue Nov 22 16:24:29 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03214
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:29 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201405 "RightWheelSpeed"=8589934467}
+Tue Nov 22 16:24:29 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.500000,"LeftWheelSpeed":0.500000}
+Tue Nov 22 16:24:29 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:29 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:30 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:30 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:30 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:30 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.500000,"LeftWheelSpeed":0.500000}
+Tue Nov 22 16:24:30 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.500000,"LeftWheelSpeed":0.500000}
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:32 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.0278
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:32 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201780 "RightWheelSpeed"=8589934092}
+Tue Nov 22 16:24:32 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:32 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.000000,"LeftWheelSpeed":0.000000}
+Tue Nov 22 16:24:35 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04492
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:35 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201780 "RightWheelSpeed"=8589934092}
+Tue Nov 22 16:24:35 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.000000,"LeftWheelSpeed":0.000000}
+Tue Nov 22 16:24:35 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:35 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:36 2022	[6303] DBG: Client => execute: Executing command: bm::Command::SET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:36 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:36 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:36 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":3,"RightWheelSpeed":0.000000,"LeftWheelSpeed":0.000000}
+Tue Nov 22 16:24:36 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":3,"RightWheelSpeed":0.000000,"LeftWheelSpeed":0.000000}
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:38 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04347
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:38 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:38 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:38 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:41 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02668
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:41 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:41 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:41 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:44 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04083
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:44 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:44 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:44 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:47 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03735
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:47 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:47 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:47 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:50 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03134
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:50 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:50 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:50 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:53 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04383
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:53 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:53 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:53 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:56 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02862
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:56 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:56 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:56 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:24:59 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03274
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:24:59 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:24:59 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:24:59 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:02 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03698
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:02 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:02 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:02 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:05 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04014
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:05 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:05 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:05 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:08 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03448
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:08 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:08 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:08 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:11 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.04162
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:11 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:11 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:11 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:14 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03612
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:14 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:14 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:14 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:17 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03974
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:17 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:17 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:17 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:20 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:20 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:20 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:20 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:20 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:20 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:20 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:20 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:20 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:21 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.02695
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:21 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:24 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => changeRobotLocation: angle change: 0
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03183
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:24 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:24 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:24 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:27 2022
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:27 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => changeRobotLocation: Angular velocity: 0
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => changeRobotLocation: CoG velocity: 0
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => changeRobotLocation: dt: 3.03712
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => changeRobotLocation: x change: 0
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => changeRobotLocation: y change: 0
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => execute: Message received: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:27 2022	[6303] DBG: Odometry => obtainWheelSpeeds: Next attempt: {"LeftWheelSpeed"=236223201280 "RightWheelSpeed"=4294967296}
+Tue Nov 22 16:25:27 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:27 2022	[6303] SUCCESS: Odometry => evalReturnState: {"MessageStatus":"RECIEVE_OK"}
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:30 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:30 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:33 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:33 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:36 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:36 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => receive: Receiving...
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => receive: The server send 31
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => receive: The server send 60
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => send: The client sent 
+Tue Nov 22 16:25:39 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}
+Tue Nov 22 16:25:39 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+Tue Nov 22 16:25:42 2022	[6303] DBG: Client => execute: Executing command: bm::Command::GET_LR_WHEEL_VELOCITY on 192.168.1.3:665
+Tue Nov 22 16:25:42 2022	[6303] DBG: Client => send: The client sent {"UserID":1,"Command":6}Tue Nov 22 16:23:31 2022	[6303] INFO: Odometry => Odometry: Timer initialized
+Tue Nov 22 16:25:42 2022	[6303] INFO: Client => execute: sending: {"UserID":1,"Command":6}
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 0.00000
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  x: 1000.00
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  y: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000
+  z: 0.00000

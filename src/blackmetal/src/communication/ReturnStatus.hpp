@@ -45,6 +45,8 @@ enum class Status {
 	SEND_ERROR,
 	/// The response could not be received.
 	RECEIVE_ERROR,
+	/// Error emitted on timeout while receiving or sending.
+	TIMEOUT_ERROR,
 };
 
 } // namespace bm

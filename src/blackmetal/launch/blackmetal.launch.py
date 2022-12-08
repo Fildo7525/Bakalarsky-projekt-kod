@@ -22,12 +22,11 @@ def generate_launch_description():
 			parameters = [config_blackmetal],
 			emulate_tty=True
 		),
-		Node(
-			package='blackmetal',
-			executable='bm_logger',
-			output='screen',
-			parameters = [config_log],
-			emulate_tty=True
-		)
+		# Node(
+		# 	package='blackmetal',
+		# 	executable='log_server',
+		# 	output='screen',
+		# 	emulate_tty=True
+		# )
 	])
 

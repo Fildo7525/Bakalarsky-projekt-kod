@@ -1,9 +1,9 @@
 #pragma once
 
+#include <unistd.h>
+
 #include <fstream>
 #include <iostream>
-
-#include <unistd.h>
 
 /**
  * @brief Logging levels ordered from the most verbose to the least verbose.
@@ -14,7 +14,8 @@ enum class dbg_level {
 	WARN,
 	ERR,
 	FATAL,
-	SUCCESS
+	SUCCESS,
+	OFF
 };
 
 /**
@@ -84,6 +85,8 @@ private:
 	const char *m_moduleName;
 	/// Stream of the logging file.
 	std::fstream m_logFile;
+	/// Stream to where everything is logged.
+	static std::fstream m_logAllFile;
 	/// Logging level for the module.
 	dbg_level m_level;
 };
