@@ -56,6 +56,7 @@ public:
 	 * multiple threads writing to the standard output and to the same file. Thus the 
 	 * printing is guarded with scoped mutex.
 	 *
+	 * @param dbgLevel Level of the log that is to be printed.
 	 * @param codePath Function name where the logging message is supported.
 	 * @param pid Process printing the message.
 	 * @param message Message to be printed.

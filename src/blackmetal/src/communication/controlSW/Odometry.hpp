@@ -48,7 +48,7 @@ public:
 	 * @brief Creates an odometry object. This object polls the server for its velocity.
 	 * Therefor the object should call the execute function in different thread.
 	 *
-	 * @param controlSoftware Reference to the control software connected to the robot.
+	 * @param controlClient Reference to the control software connected to the robot.
 	 */
 	explicit Odometry(std::shared_ptr<Client> &controlClient);
 
