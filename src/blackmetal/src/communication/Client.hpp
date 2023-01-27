@@ -6,7 +6,7 @@
 #include <variant>
 #include <mutex>
 
-// wate for 200ms
+// wait for 200ms
 #define WAIT_TIME 200'000
 
 /**
@@ -19,7 +19,6 @@
 class Client
 {
 public:
-
 	/**
 	 * The sendRequest function takes arguments for left and right wheel
 	 * for setting position and velocity. The velocity is set with double
@@ -27,12 +26,13 @@ public:
 	 */
 	using WheelValueT = std::variant<long, double>;
 
-	/// Default constructor
+	/**
+	 * @brief Default constructor
+	 */
 	Client() = default;
 
 	/**
-	 * @brief Constructs and initalizes the client for communication
-	 * @see start
+	 * @brief Constructs and initializes the client for communication
 	 *
 	 * @param port On which to start the communication. 
 	 * @param address Address of the server.
@@ -56,7 +56,7 @@ public:
 	void stop();
 
 	/**
-	 * @brief Get the string represnetation of the bm::Status code.
+	 * @brief Get the string representation of the bm::Status code.
 	 *
 	 * @param status Status to be transformed.
 	 */
@@ -72,11 +72,10 @@ public:
 	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.
 	 *
-	 * @see bm::Command The enum class of possible request commands.
-	 *
 	 * The request consists of either double or long parameters. The double parameters
 	 * are used in set velocity request. The long parameters are used in the set position request.
 	 *
+	 * @see bm::Command The enumeration class of possible request commands.
 	 * @see WheelValueT The variant parameter of the request.
 	 * @see request The function for setting the robot speed.
 	 *
@@ -156,13 +155,13 @@ protected:
 	virtual bm::Status evalReturnState(const std::string &returnJson);
 
 private:
-	/// Ip addres to which we tried or are connected to.
+	/// IP address to which we tried or are connected to.
 	std::string m_address;
 
 	/// File descriptor of the communication.
 	int m_clientFD;
 
-	/// Flach chacking the client's connection.
+	/// Flag checking the client's connection.
 	bool m_connected;
 
 	/// Port to which is the client connected to.
