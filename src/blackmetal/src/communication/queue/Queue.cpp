@@ -48,8 +48,13 @@ std::string ts::Queue::pop()
 	while (m_pqueue.empty()) {
 		FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
 		auto ret = m_cvPush.wait_for(lk, 300ms);
-		if (ret == std::cv_status::timeout && m_pqueue.empty()) {
-			FATAL("The queue was locked for long time and is still empty. Releasing and sending an empty string");
+		if (ret == std::cv_status::timeout) {
+			if (m_pqueue.empty()) {
+				FATAL("Releasing lock. The queue is empty");
+			}
+			else {
+				FATAL("The queue is NOT empty. Releasing and sending an empty string");
+			}
 			return "";
 		}
 		SUCCESS("The wating was canceled in " << m_queueName);

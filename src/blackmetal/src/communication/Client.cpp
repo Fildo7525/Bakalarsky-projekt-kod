@@ -270,6 +270,7 @@ void Client::workerThread()
 			INFO("sending: " << message);
 		} else {
 			WARN("Scipping this call");
+			continue;
 		}
 
 		bm::Status sendStatus = out(message);
