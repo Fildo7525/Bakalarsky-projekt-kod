@@ -13,25 +13,6 @@
 
 /// Mutex is locked on every writing to the file or on a screen.
 static std::mutex mut;
-
-const std::string currentDateTime() {
-	time_t now = time(0);
-	struct tm  tstruct;
-	char buf[80];
-	tstruct = *localtime(&now);
-	// Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
-	// for more information about date/time format
-	strftime(buf, sizeof(buf), "%Y-%m-%d-%X", &tstruct);
-
-	return buf;
-}
-
-std::string getLoggerPath(const std::string &module)
-{
-	std::string name = getenv("PWD") + std::string("/log/run-") + currentDateTime() + '/' + module + '-' + currentDateTime() + ".log";
-	return name;
-}
-
 std::fstream Logger::m_logAllFile = std::fstream(getLoggerPath("all"), std::ios::out);
 
 Logger::Logger(const char *module, dbg_level lvl)
@@ -119,5 +100,24 @@ Logger::~Logger()
 {
 	std::flush(m_logFile);
 	m_logFile.close();
+}
+
+const std::string Logger::currentDateTime()
+{
+	time_t now = time(0);
+	struct tm  tstruct;
+	char buf[80];
+	tstruct = *localtime(&now);
+	// Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+	// for more information about date/time format
+	strftime(buf, sizeof(buf), "%Y-%m-%d-%X", &tstruct);
+
+	return buf;
+}
+
+std::string Logger::getLoggerPath(const std::string &module)
+{
+	std::string name = getenv("PWD") + std::string("/log/run-") + currentDateTime() + '/' + module + ".log";
+	return name;
 }
 

@@ -37,7 +37,12 @@ enum class dbg_level {
 class Logger
 {
 public:
-	/// Constructor
+	/**
+	 * @brief Construct Logger with a defined module name and log level.
+	 *
+	 * @param module Name of the module.
+	 * @param lvl Level with which will the logger log messages.
+	 */
 	explicit Logger(const char *module, dbg_level lvl = dbg_level::INFO);
 
 	/**
@@ -81,12 +86,28 @@ public:
 	~Logger();
 
 private:
+	/**
+	 * @brief Get the absolute path to logger file generated based on the time, when was the program run.
+	 *
+	 * @param module Name of the file to be created.
+	 */
+	static std::string getLoggerPath(const std::string &module);
+
+	/**
+	 * @brief Returns a string containing time, when was the program run.
+	 */
+	static const std::string currentDateTime();
+
+private:
 	/// Name of the module. This name is the name of the logging file, too.
 	const char *m_moduleName;
+
 	/// Stream of the logging file.
 	std::fstream m_logFile;
+
 	/// Stream to where everything is logged.
 	static std::fstream m_logAllFile;
+
 	/// Logging level for the module.
 	dbg_level m_level;
 };
