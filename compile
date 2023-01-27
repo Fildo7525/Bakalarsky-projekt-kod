@@ -4,3 +4,8 @@ cd ~/Bakalarka/code/
 colcon build
 source ./install/setup.bash
 
+echo "Generating documentation"
+cd doc
+doxygen config &> /dev/null
+cd ..
+
