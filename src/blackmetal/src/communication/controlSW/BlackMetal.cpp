@@ -40,16 +40,8 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / 1000.;
 	INFO("Right wheel speed: " << m_rightWheelSpeed << " Left wheel speed: " << m_leftWheelSpeed);
 
-	if (m_rightWheelSpeed > 1) {
-		m_rightWheelSpeed = 1;
-	} else if (m_rightWheelSpeed < -1) {
-		m_rightWheelSpeed = -1;
-	}
-	if (m_leftWheelSpeed > 1) {
-		m_leftWheelSpeed = 1;
-	} else if (m_leftWheelSpeed < -1) {
-		m_leftWheelSpeed = -1;
-	}
+	checkWheelSpeed(m_rightWheelSpeed);
+	checkWheelSpeed(m_leftWheelSpeed);
 
 	m_controlClient->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
 }
@@ -62,5 +54,15 @@ const double& BlackMetal::chassisLength()
 const double& BlackMetal::wheelRadius()
 {
 	return m_odometry->getWheelRadius();
+}
+
+void BlackMetal::checkWheelSpeed(double &wheelSpeed)
+{
+	if (wheelSpeed > 1) {
+		wheelSpeed = 1;
+	}
+	else if (wheelSpeed < -1) {
+		wheelSpeed = -1;
+	}
 }
 

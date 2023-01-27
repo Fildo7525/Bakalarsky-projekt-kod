@@ -47,6 +47,14 @@ public:
 	const double &wheelRadius();
 
 private:
+	/**
+	 * @brief Checks if the wheel speed is in bounds. That is in interval [-1, 1].
+	 *
+	 * @param wheelSpeed The speed to be checked.
+	 */
+	void checkWheelSpeed(double &wheelSpeed);
+
+private:
 	/// Client for sending requests to robot.
 	std::shared_ptr<Client> m_controlClient;
 	/// Object handling the odometry of the robot.
