@@ -33,7 +33,7 @@ Client::Client(int port, const std::string &address)
 	: Client()
 {
 	start(port, address);
-	std::thread([this]{
+	std::thread([=] {
 		sleep(1);
 		workerThread();
 	}).detach();
@@ -142,6 +142,7 @@ void Client::sendRequest(bm::Command cmd, double rightWheel, double leftWheel)
 	// std::string hello = "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":1,\"LeftWheelSpeed\":1}";
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
+
 	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
 		message += ",\"RightWheelSpeed\":" + std::to_string(rightWheel) +
 					",\"LeftWheelSpeed\":" + std::to_string(leftWheel) + "}";
@@ -150,7 +151,6 @@ void Client::sendRequest(bm::Command cmd, double rightWheel, double leftWheel)
 	}
 
 	INFO("enqueue: " << message);
-
 	m_queue.push(message);
 }
 
@@ -233,6 +233,7 @@ void Client::workerThread()
 	bool failed = false;
 	bool getSpeedCommand = false;
 
+	// Lambda function used for receiving messages from the server.
 	auto in = [this, &failed] (std::string &message) -> bm::Status {
 		auto receiveStatus = receive(message);
 		if (receiveStatus != bm::Status::OK) {
@@ -244,6 +245,7 @@ void Client::workerThread()
 		return receiveStatus;
 	};
 
+	// Lamnbda function used for sending messages to the server.
 	auto out = [this, &failed] (const std::string &message) -> bm::Status {
 		auto sendStatus = this->send(message);
 		if (sendStatus != bm::Status::OK) {
