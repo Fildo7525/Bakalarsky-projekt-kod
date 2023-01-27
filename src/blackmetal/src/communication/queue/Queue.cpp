@@ -20,19 +20,18 @@ std::ostream& ts::operator<<(std::ostream &os, const ts::my_queue &queue)
 	return os;
 }
 
-
 ts::Queue::Queue(const std::string &name)
 	: m_queueName(name)
 {
 }
 
-bool ts::Queue::empty() const
+bool ts::Queue::empty()
 {
 	std::scoped_lock<std::mutex> lock(m_qMutex);
 	return m_pqueue.empty();
 }
 
-unsigned long ts::Queue::size() const
+unsigned long ts::Queue::size()
 {
 	std::scoped_lock<std::mutex> lock(m_qMutex);
 	return m_pqueue.size();

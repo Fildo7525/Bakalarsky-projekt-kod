@@ -40,7 +40,7 @@ class Queue {
 	 *
 	 * @return true if the queue is empty, false otherwise.
 	 */
-	bool empty() const;
+	bool empty();
 
 public:
 	/**
@@ -58,7 +58,7 @@ public:
 	/**
 	 * @brief Returns the size of the priority queue.
 	 */
-	unsigned long size() const;
+	unsigned long size();
 
 	/**
 	 * @brief Returns the top element in the priority queue.
