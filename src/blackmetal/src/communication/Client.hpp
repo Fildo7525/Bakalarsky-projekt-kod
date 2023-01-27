@@ -19,15 +19,26 @@
 class Client
 {
 public:
-	/// The sendRequest function takes arguments for left and right wheel
-	/// for setting position and velocity. The velocity is set with double
-	/// and the position is set with long. This is the generic solution for this issue.
+
+	/**
+	 * The sendRequest function takes arguments for left and right wheel
+	 * for setting position and velocity. The velocity is set with double
+	 * and the position is set with long. This is the generic solution for this issue.
+	 */
 	using WheelValueT = std::variant<long, double>;
 
 	/// Default constructor
 	Client() = default;
-	/// Constructor
+
+	/**
+	 * @brief Constructs and initalizes the client for communication
+	 * @see start
+	 *
+	 * @param port On which to start the communication. 
+	 * @param address Address of the server.
+	 */
 	Client(int port, const std::string &address);
+
 	/// Destructor
 	virtual ~Client();
 
@@ -135,6 +146,7 @@ public:
 	 * @brief Indicates if we are or are not connected.
 	 */
 	bool connected();
+
 protected:
 	/**
 	 * @brief Virtual function that evaluates the request status.
@@ -146,16 +158,22 @@ protected:
 private:
 	/// Ip addres to which we tried or are connected to.
 	std::string m_address;
+
 	/// File descriptor of the communication.
 	int m_clientFD;
+
 	/// Flach chacking the client's connection.
 	bool m_connected;
+
 	/// Port to which is the client connected to.
 	int m_port;
+
 	/// Synchronizes threads on receiving a request to server.
 	std::mutex m_receiveSynchronizer;
+
 	/// Synchronizes threads on sending a request to server.
 	std::mutex m_sendSynchronizer;
+
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
 };
