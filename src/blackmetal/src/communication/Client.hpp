@@ -168,18 +168,23 @@ private:
 private:
 	/// IP address to which we tried or are connected to.
 	std::string m_address;
+
 	/// File descriptor of the communication.
 	int m_clientFD;
+
 	/// Flag checking the client's connection.
 	bool m_connected;
+
 	/// Port to which is the client connected to.
 	int m_port;
+
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
+
 	/// Thread safe priority queue managing the json string that are to be sent to the robot.
 	ts::Queue m_queue;
-	mutable std::mutex m_mutex;
+
 	/// Thread safe queue containing the returned left and right wheel velocity.
-	std::queue<std::string> m_odometryMessages;
+	ts::Queue m_odometryMessages;
 };
 

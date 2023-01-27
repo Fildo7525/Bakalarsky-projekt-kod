@@ -24,8 +24,8 @@ Client::Client()
 	, m_connected(false)
 	, m_port()
 	, m_socket()
-	, m_queue("m_queue")
-	, m_odometryMessages()
+	, m_queue("m_clientQueue")
+	, m_odometryMessages("m_odometryQueu")
 {
 }
 
@@ -166,12 +166,7 @@ void Client::enqueue(const std::string &msg)
 
 std::string Client::robotVelocity()
 {
-	while (m_odometryMessages.empty()) {
-		std::this_thread::sleep_for(500ms);
-	}
-	std::lock_guard<std::mutex> lk(m_mutex);
-	auto front = m_odometryMessages.front();
-	m_odometryMessages.pop();
+	auto front = m_odometryMessages.pop();
 	return front;
 }
 
@@ -284,7 +279,6 @@ void Client::workerThread()
 			INFO("Wate for the velocity");
 			receiveStatus = in(wheelSpeed);
 			WARN("Pushing data " << wheelSpeed << " to m_odometryMessages");
-			std::unique_lock<std::mutex> lk(m_mutex);
 			m_odometryMessages.push(wheelSpeed);
 		}
 
@@ -299,7 +293,8 @@ bm::Status Client::evalReturnState(const std::string &returnJson)
 	if (returnJson.find("LeftWheelSpeed") != std::string::npos) {
 		SUCCESS("The data speeds " << returnJson);
 		return bm::Status::OK;
-	} else if (returnJson.find("RECIEVE_OK") == std::string::npos) {
+	}
+	else if (returnJson.find("RECIEVE_OK") == std::string::npos) {
 		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
 		return bm::Status::FULL_BUFFER;
 	}

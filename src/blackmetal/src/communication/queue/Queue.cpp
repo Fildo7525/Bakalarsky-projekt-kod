@@ -44,9 +44,11 @@ std::string ts::Queue::pop()
 
 	WARN("Locking m_qMutex");
 	std::unique_lock<std::mutex> lk(m_qMutex);
+
 	while (m_pqueue.empty()) {
 		FATAL("The queue " << m_queueName << " will wait until the queue has any data to pop");
 		auto ret = m_cvPush.wait_for(lk, 300ms);
+
 		if (ret == std::cv_status::timeout) {
 			if (m_pqueue.empty()) {
 				FATAL("Releasing lock. The queue is empty");

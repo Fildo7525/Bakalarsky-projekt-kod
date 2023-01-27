@@ -80,8 +80,7 @@ private:
 	/// Priority queue containing the requests to be send.
 	my_queue m_pqueue;
 	/// The queue mutex.
-	mutable std::mutex m_qMutex;
-	mutable std::mutex m_cvMutex;
+	std::mutex m_qMutex;
 	/// Condition variable ensuring the pop method will wait for an element if the queue is empty.
 	std::condition_variable m_cvPush;
 	// The name of the queue used for debugging.
