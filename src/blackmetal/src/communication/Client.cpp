@@ -13,6 +13,9 @@
 
 INIT_MODULE(Client);
 
+// wait for 200ms
+#define WAIT_TIME 200'000
+
 Client::Client(int port, const std::string &address)
 {
 	start(port, address);
@@ -32,7 +35,6 @@ void Client::start(int port, const std::string &address)
 
 	DBG("The client is not initialized. Connecting to " << address << ':' << m_port);
 	struct sockaddr_in serv_addr;
-	int clientFD;
 	if ((m_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		FATAL("\n Socket creation error \n");
 		return;
@@ -51,15 +53,19 @@ void Client::start(int port, const std::string &address)
 
 	DBG("The address is valid and supported");
 
+	int clientFD;
 	if ((clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
 		FATAL("\nConnection Failed: " << strerror(clientFD));
 		return;
 	}
+
 	m_connected = true;
 	m_address = address;
 	m_port = port;
 	SUCCESS("Client connected to " << m_address << ':' << m_port);
+
 	struct timeval tv;
+	tv.tv_sec = 0;
 	tv.tv_usec = WAIT_TIME;
 	// Set timeout for receive to WAIT_TIME.
 	setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
@@ -73,7 +79,6 @@ void Client::stop()
 	m_connected = false;
 	INFO("Closing connection with " << m_address << ':' <<  m_port);
 	close(m_socket);
-	close(m_clientFD);
 }
 
 std::string Client::stringifyStatus(const bm::Status status)
