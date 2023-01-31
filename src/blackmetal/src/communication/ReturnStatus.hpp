@@ -1,3 +1,5 @@
+#pragma once
+
 /**
  * @namespace bm
  * @brief namespace containing the enums for blackmetal constants.
