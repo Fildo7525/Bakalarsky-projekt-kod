@@ -6,15 +6,17 @@
 #include <variant>
 #include <mutex>
 
-// wait for 200ms
-#define WAIT_TIME 200'000
-
 /**
  * @class Client
  * @brief Base class handling TCP/IP connections
  *
  * The classes inputs are port and address of the desired server.
- * This class than offers multiple methods of communication.
+ * This class than offers multiple methods of communication with
+ * the mobile robot. The communication is handled by json strings.
+ *
+ * NOTE:
+ * The strings cannot be passed to parser, because the messages we
+ * receive are no according to the standard. We have to do it manually.
  */
 class Client
 {
@@ -77,7 +79,7 @@ public:
 	 *
 	 * @see bm::Command The enumeration class of possible request commands.
 	 * @see WheelValueT The variant parameter of the request.
-	 * @see request The function for setting the robot speed.
+	 * @see requestSpeed The function for setting the robot speed.
 	 *
 	 * @param cmd Command which should the robot execute.
 	 * @param rightWheel Right wheel speed or position. This parameter is needed only in
@@ -150,6 +152,9 @@ protected:
 	/**
 	 * @brief Virtual function that evaluates the request status.
 	 *
+	 * This function is called in case that all the communication
+	 * was successful and we received data from the server.
+	 *
 	 * @param returnJson Json string returned from the communication.
 	 */
 	virtual bm::Status evalReturnState(const std::string &returnJson);
@@ -157,9 +162,6 @@ protected:
 private:
 	/// IP address to which we tried or are connected to.
 	std::string m_address;
-
-	/// File descriptor of the communication.
-	int m_clientFD;
 
 	/// Flag checking the client's connection.
 	bool m_connected;
