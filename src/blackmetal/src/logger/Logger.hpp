@@ -84,9 +84,13 @@ public:
 private:
 	/// Name of the module. This name is the name of the logging file, too.
 	const char *m_moduleName;
+
 	/// Stream of the logging file.
 	std::fstream m_logFile;
+
+	/// File where everything is logged.
 	static std::fstream m_logAllFile;
+
 	/// Logging level for the module.
 	dbg_level m_level;
 };
