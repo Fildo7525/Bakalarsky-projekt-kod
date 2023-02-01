@@ -22,13 +22,12 @@ BlackMetal::BlackMetal()
 	DBG("Wheel has radius " << m_odometry->getWheelRadius() << " m");
 	DBG("Address set to " << m_controlClient->address() << ":" << PORT);
 
-	m_twistSubscriber
-		= this->create_subscription<geometry_msgs::msg::Twist>(
-			"cmd_vel",
-			1,
-			[this] (const geometry_msgs::msg::Twist &msg) {
-				this->onTwistRecievedSendJson(msg);
-			}
+	m_twistSubscriber = this->create_subscription<geometry_msgs::msg::Twist>(
+		"cmd_vel",
+		1,
+		[this] (const geometry_msgs::msg::Twist &msg) {
+			this->onTwistRecievedSendJson(msg);
+		}
 	);
 	WARN("Odometry created");
 }

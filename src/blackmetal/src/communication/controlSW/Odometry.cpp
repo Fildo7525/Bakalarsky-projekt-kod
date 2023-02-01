@@ -19,7 +19,7 @@
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
-// TIP: The 3 second interval is just for debugging
+// WARN: The 3 second interval is just for debugging
 constexpr std::chrono::milliseconds g_pollTime(3000);
 
 using namespace std::placeholders;
@@ -34,7 +34,7 @@ Odometry::Odometry(std::shared_ptr<Client> &controlClient)
 {
 	m_robotSpeedReceiver = std::thread(
 		[this] () {
-			while (true) {
+			while (m_controlClient->connected()) {
 				std::this_thread::sleep_for(g_pollTime);
 				execute();
 			}
@@ -84,7 +84,7 @@ void Odometry::execute()
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
-Odometry::Speed Odometry::obtainWheelSpeeds(const std::string &jsonMessage) const
+Odometry::Speed Odometry::obtainWheelSpeeds(const std::string jsonMessage) const
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
