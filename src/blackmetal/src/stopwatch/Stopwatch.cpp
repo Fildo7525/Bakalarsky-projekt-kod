@@ -37,13 +37,12 @@ double Stopwatch::lastStoppedTime()
 
 double Stopwatch::stoppedTimeAt(const std::vector<double>::size_type index)
 {
-	if (index > stoppedTimes.size()) {
+	if (index >= stoppedTimes.size()) {
 		return lastStoppedTime();
 	}
-	{
-		std::lock_guard<std::mutex> lock(mut);
-		return stoppedTimes.at(index);
-	}
+
+	std::lock_guard<std::mutex> lock(mut);
+	return stoppedTimes.at(index);
 }
 
 std::vector<double> Stopwatch::getStoppedTimes()
