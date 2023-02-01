@@ -36,7 +36,7 @@ public:
 	 *
 	 * @return Const double reference to the last stopped time.
 	 */
-	static const double &lastStoppedTime();
+	static double lastStoppedTime();
 
 	/**
 	 * @brief Access a specified stopped time in the vector.
@@ -45,7 +45,7 @@ public:
 	 * @param index Index of the timestamp to access.
 	 * @return The const double reference to the timestamp.
 	 */
-	static const double &stoppedTimeAt(const std::vector<double>::size_type index);
+	static double stoppedTimeAt(const std::vector<double>::size_type index);
 
 	/**
 	 * @brief Get the copy of all the stopped times. The vector capturing them 

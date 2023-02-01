@@ -8,6 +8,7 @@
 #include <cmath>
 #include <exception>
 #include <functional>
+#include <iomanip>
 #include <limits>
 #include <mutex>
 #include <stdexcept>
@@ -33,9 +34,18 @@ Odometry::Odometry(std::shared_ptr<Client> &controlClient)
 	, m_wheelRadius(0)
 {
 	m_robotSpeedReceiver = std::thread(
-		[this] () {
+		[this] {
 			while (m_controlClient->connected()) {
-				std::this_thread::sleep_for(g_pollTime);
+				std::chrono::duration<double, std::milli> milliseconds{ Stopwatch::lastStoppedTime() };
+				auto time = ((g_pollTime - milliseconds) <= 0ms ? 0ms : g_pollTime - milliseconds);
+
+				if (time > 0ms) {
+					DBG("Sleeping for " << time.count());
+					std::this_thread::sleep_for(time);
+				}
+				else {
+					WARN("The loop time was longer than expected " << (-1*time).count() << "ms");
+				}
 				execute();
 			}
 		}
@@ -100,10 +110,10 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string jsonMessage) const
 		auto rws_end = jsonMessage.find_last_of('}');
 		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 	} catch (std::out_of_range &e) {
-		DBG("Attempting to receive the json on next read");
+		DBG("Attempting to receive the json on next read, current: " << std::quoted(jsonMessage));
 		std::string nextAttempt;
-		m_controlClient->receive(nextAttempt);
-		return obtainWheelSpeeds(nextAttempt);
+		nextAttempt = m_controlClient->robotVelocity();
+		return obtainWheelSpeeds(std::move(nextAttempt));
 	} catch (std::exception &e) {
 		ERR(e.what() << " with string " << std::quoted(jsonMessage));
 		return {0,0};
