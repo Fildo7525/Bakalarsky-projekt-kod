@@ -2,8 +2,6 @@
 add_library(bm_controlSW
 	BlackMetal.cpp
 	BlackMetal.hpp
-	../Client.hpp
-	../Client.cpp
 	Odometry.cpp
 	Odometry.hpp
 )
@@ -19,6 +17,7 @@ PUBLIC
 target_link_libraries(bm_controlSW
 	logger
 	stopwatch
+	client
 )
 
 ament_target_dependencies(bm_controlSW

@@ -105,7 +105,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(const std::string jsonMessage) const
 		m_controlClient->receive(nextAttempt);
 		return obtainWheelSpeeds(nextAttempt);
 	} catch (std::exception &e) {
-		ERR(e.what() << " with string " << jsonMessage);
+		ERR(e.what() << " with string " << std::quoted(jsonMessage));
 		return {0,0};
 	}
 

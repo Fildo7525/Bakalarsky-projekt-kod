@@ -19,6 +19,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+add_subdirectory(src/communication/client)
 add_subdirectory(src/communication/controlSW)
 add_subdirectory(src/communication/logSW)
 add_subdirectory(src/logger)
