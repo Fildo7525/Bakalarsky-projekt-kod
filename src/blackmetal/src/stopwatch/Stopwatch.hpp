@@ -20,8 +20,10 @@ class Stopwatch
 public:
 	/**
 	 * @brief Constructor saves a starting timestamp.
+	 *
+	 * @param maxLength The maximal number of timestamps this instance will allow.
 	 */
-	Stopwatch();
+	Stopwatch(size_t maxLength = 100);
 
 	/**
 	 * @brief Destructor calculates the time of its life and saves the time in microseconds (double)
@@ -46,13 +48,17 @@ public:
 	static const double &stoppedTimeAt(const std::vector<double>::size_type index);
 
 	/**
-	 * @brief Get the const double reference to all the timestamps.
+	 * @brief Get the copy of all the stopped times. The vector capturing them 
+	 * is cleared.
 	 */
-	[[deprecated("getStoppedTimes is not thread safe. Use stoppedTimeAt instead.")]]
-	static const std::vector<double> &getStoppedTimes();
+	static std::vector<double> getStoppedTimes();
+
 private:
 	/// Starting timestamp.
 	std::chrono::system_clock::time_point m_start;
+
+	/// Maximal number of timestamps that this instance will allow.
+	size_t m_maxLength;
 };
 
 #define TIC \
