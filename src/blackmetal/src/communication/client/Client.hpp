@@ -58,20 +58,6 @@ public:
 	void stop();
 
 	/**
-	 * @brief Get the string representation of the bm::Status code.
-	 *
-	 * @param status Status to be transformed.
-	 */
-	static std::string stringifyStatus(const bm::Status status);
-
-	/**
-	 * @brief Get the string representation of the bm::Command code.
-	 *
-	 * @param command Status to be transformed.
-	 */
-	static std::string stringifyCommand(const bm::Command command);
-
-	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.
 	 *
 	 * The request consists of either double or long parameters. The double parameters

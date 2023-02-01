@@ -2,8 +2,6 @@
 add_library(bm_logSW
 	BMLogger.cpp
 	BMLogger.hpp
-	../Client.hpp
-	../Client.cpp
 )
 
 target_include_directories(
@@ -16,6 +14,7 @@ PUBLIC
 target_link_libraries(bm_logSW
 	logger
 	stopwatch
+	client
 )
 
 ament_target_dependencies(bm_logSW

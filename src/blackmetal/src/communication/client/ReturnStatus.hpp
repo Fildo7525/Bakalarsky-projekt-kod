@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 /**
  * @namespace bm
  * @brief namespace containing the enums for blackmetal constants.
@@ -34,6 +36,13 @@ enum class Command {
 };
 
 /**
+ * @brief Get the string representation of the bm::Command code.
+ *
+ * @param command Status to be transformed.
+ */
+std::string stringifyCommand(const bm::Command command);
+
+/**
  * @enum Status
  * @brief return status of the server.
  *
@@ -50,6 +59,13 @@ enum class Status {
 	/// The response could not be received.
 	RECEIVE_ERROR,
 };
+
+/**
+ * @brief Get the string representation of the bm::Status code.
+ *
+ * @param status Status to be transformed.
+ */
+std::string stringifyStatus(const bm::Status status);
 
 } // namespace bm
 
