@@ -26,8 +26,10 @@ public:
 	struct Coord {
 		/// The x coordinate of the robot in Cartesian plain.
 		double x;
+
 		/// The y coordinate of the robot in Cartesian plain.
 		double y;
+
 		/// The angle of the robot with the x axis in Cartesian plain.
 		double angle;
 	};
@@ -40,6 +42,7 @@ public:
 	{
 		/// The velocity of left wheel.
 		long leftWheel;
+
 		/// The velocity of right wheel.
 		long rightWheel;
 	};
@@ -128,17 +131,22 @@ private:
 private:
 	/// Instance of the control software client.
 	std::shared_ptr<Client> m_controlClient;
+
 	/// Timer invoking the execute function.
 	rclcpp::TimerBase::SharedPtr m_timer;
+
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
 	Coord m_coordination;
+
 	/// Thread that polls the server at a certain frequency for the wheels velocity.
 	std::thread m_robotSpeedReceiver;
 
 	// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;
+
 	/// The length of the robot chassis.
 	double m_chassisLength;
+
 	/// The left and right wheel radius.
 	double m_wheelRadius;
 };

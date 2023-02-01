@@ -26,13 +26,16 @@ Stopwatch::~Stopwatch()
 	}
 }
 
-const double &Stopwatch::lastStoppedTime()
+double Stopwatch::lastStoppedTime()
 {
 	std::lock_guard<std::mutex>lock(mut);
+	if (stoppedTimes.empty()) {
+		return -1.0;
+	}
 	return stoppedTimes.back();
 }
 
-const double &Stopwatch::stoppedTimeAt(const std::vector<double>::size_type index)
+double Stopwatch::stoppedTimeAt(const std::vector<double>::size_type index)
 {
 	if (index > stoppedTimes.size()) {
 		return lastStoppedTime();
