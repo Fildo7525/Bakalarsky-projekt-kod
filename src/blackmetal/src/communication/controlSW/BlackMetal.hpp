@@ -2,7 +2,6 @@
 
 #include "Client.hpp"
 
-class BlackMetal;
 #include "controlSW/Odometry.hpp"
 
 #include <rclcpp/rclcpp.hpp>

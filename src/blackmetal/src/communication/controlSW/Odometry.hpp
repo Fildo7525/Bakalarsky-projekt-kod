@@ -2,8 +2,7 @@
 
 #include <memory>
 #include <thread>
-class Odometry;
-#include "controlSW/BlackMetal.hpp"
+#include "Client.hpp"
 
 #include <rclcpp/timer.hpp>
 
