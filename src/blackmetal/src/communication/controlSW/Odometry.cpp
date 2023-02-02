@@ -86,26 +86,16 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-	// TODO: check if the try-catch block is necessary
 	long lws, rws;
-	try {
-		DBG("Next attempt: " << jsonMessage);
-		auto lws_start = jsonMessage.find_first_of(':') + 1;
-		auto lws_end = jsonMessage.find_first_of(' ');
-		lws = std::stol(jsonMessage.substr(lws_start, lws_end));
 
-		auto rws_start = jsonMessage.find_last_of(':') + 1;
-		auto rws_end = jsonMessage.find_last_of('}');
-		rws = std::stol(jsonMessage.substr(rws_start, rws_end));
-	} catch (std::out_of_range &e) {
-		DBG("Attempting to receive the json on next read, current: " << std::quoted(jsonMessage));
-		std::string nextAttempt;
-		nextAttempt = m_controlClient->robotVelocity();
-		return obtainWheelSpeeds(std::move(nextAttempt));
-	} catch (std::exception &e) {
-		ERR(e.what() << " with string " << std::quoted(jsonMessage));
-		return {0,0};
-	}
+	DBG("Next attempt: " << jsonMessage);
+	auto lws_start = jsonMessage.find_first_of(':') + 1;
+	auto lws_end = jsonMessage.find_first_of(' ');
+	lws = std::stol(jsonMessage.substr(lws_start, lws_end));
+
+	auto rws_start = jsonMessage.find_last_of(':') + 1;
+	auto rws_end = jsonMessage.find_last_of('}');
+	rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 
 	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
 	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
