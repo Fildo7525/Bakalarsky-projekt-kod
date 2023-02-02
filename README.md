@@ -8,19 +8,20 @@ ID študenta: 111124<br />
 
 ## Kód
 
-Pre jednoduchosť zaobchádzania z packagom sú priložené štyri súbory:
+Pre jednoduchosť zaobchádzania sú s packagom priložené tri súbory:
   - compile
-  - cmpRun
+  - run
   - clearLogs
-  - mergeLogFiles
 
-Ako vyplýva z názvu. Súbor ```compile``` kompiluje kód pomocou komandu ```colcon build```. ```cmpRun``` tento kód
+Ako vyplýva z názvu. Súbor ```compile``` kompiluje kód pomocou komandu ```colcon build```. ```run``` tento kód
 skompiluje a spustí pomocou súboru ```blackmetal.launch.py```, ktorý sa nachádza v projekte.
-Súbor ```clearLogs``` vymaže súbory a priečinky v priečinku log.<br />
-Posledný súbor spojí nami vybrané logovacie súbory do jedného. Logy sa usporiadajú podľa času legovania správ.
-Výsledný súbor so spojenými logovacími spravami sa vytvori v aktuálnom priečinku s názvom ```merged.log```
+Súbor ```clearLogs``` presunie súbory z priečinkov log do backupLogs.
+
+Celý projekt je stavaný okolo TCP/IP klienta. Ten komunikuje s robotom pomocou sprav typu JSON. Komunikácia prebieha z nasej strany
+vo viacerých vrstvách. Keď pošleme nejaký request robotu, ten sa najprv uloží do rady. Z nej si náš klient vyťahuje správy
+a následne ich posiela. Potom príjme odpoveď od robota. Ak správa, ktorý sme poslali je typu requestu na získanie rýchlostí kolies,
+príjme túto správu a uloží ju do ďalšej rady. Z nej si ju vyťahuje objekt odometry. Následne ju spracováva.
 
 ## Referencie
 
 [Bakalárka](https://www.github.com/Fildo7525/Bakalarsky-projekt)
-
