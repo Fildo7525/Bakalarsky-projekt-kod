@@ -20,7 +20,7 @@ enum class dbg_level {
 
 /**
  * @class Logger
- * @brief Class handling all the debugging from the macros in @file log.hpp
+ * @brief Class handling all the debugging from the macros in log.hpp
  *
  * The ros2 logger does not support the functionality that is in this file.
  * The builtin logger does not define modules but writes all the logs to the same file.
