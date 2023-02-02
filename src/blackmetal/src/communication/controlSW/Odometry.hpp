@@ -13,7 +13,6 @@
  * With a set frequency sends requests to server and evaluates the position, of where it is located
  * in the Cartesian plain. The beginning position after turning on 
  * the robot is [0, 0, 0]. The coordinates are represented as [x, y, angle].
- *
  */
 class Odometry
 {

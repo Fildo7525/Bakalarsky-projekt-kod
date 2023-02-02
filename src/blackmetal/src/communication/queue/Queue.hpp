@@ -14,11 +14,32 @@
 namespace ts
 {
 
+/**
+ * @class my_queue
+ * @brief Class accessing private members of std::priority_queue. NOT thread safe.
+ *
+ * This class defines operator<< for logging the contents of the queue. At the same time
+ * we define a way to sort the received context in correct order. Meaning, that the request containing
+ * the velocity requests are placed on first position with the highest priority.
+ *
+ * WARN:
+ * We use this type to define ts::Queue::m_pqueue. Printing the contents
+ * of this class must be handled with locked mutex.
+ */
 class my_queue
 	: public std::priority_queue<std::string, std::vector<std::string>, std::greater<std::string>>
 {
 public:
 
+	/**
+	 * @brief Copies the contents of implementing structure to the std::ostream.
+	 *
+	 * The implementing structure is in our case std::vector. This allows us to copy
+	 * all the contents to the std::ostream.
+	 *
+	 * @param os Output stream to which will the context be printed.
+	 * @param queue Queue to be printed.
+	 */
 	friend std::ostream &operator<<(std::ostream &os, const my_queue &queue);
 };
 

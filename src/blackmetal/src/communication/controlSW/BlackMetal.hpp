@@ -49,11 +49,13 @@ public:
 private:
 	/// Client for sending requests to robot.
 	std::shared_ptr<Client> m_controlClient;
+
 	/// Object handling the odometry of the robot.
 	std::shared_ptr<Odometry> m_odometry;
 
 	/// The angular velocity of left wheel.
 	double m_leftWheelSpeed;
+
 	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
