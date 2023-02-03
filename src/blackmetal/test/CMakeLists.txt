@@ -15,7 +15,10 @@ set(ament_cmake_cpplint_FOUND TRUE)
 ament_lint_auto_find_test_dependencies()
 
 ament_add_gtest(${PROJECT_NAME}_test ${TEST_FILES})
-target_link_libraries(${PROJECT_NAME}_test stopwatch)
+
+target_link_libraries(${PROJECT_NAME}_test
+	stopwatch
+)
 
 install(TARGETS
 	${PROJECT_NAME}_test
