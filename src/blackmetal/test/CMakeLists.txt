@@ -1,6 +1,7 @@
 set(TEST_FILES
 	main.cpp
 	stopwatch/testStopwatch.cpp
+	communication/queue/testQueue.cpp
 )
 
 find_package(ament_lint_auto REQUIRED)
@@ -18,6 +19,7 @@ ament_add_gtest(${PROJECT_NAME}_test ${TEST_FILES})
 
 target_link_libraries(${PROJECT_NAME}_test
 	stopwatch
+	threadSafeQ
 )
 
 install(TARGETS
