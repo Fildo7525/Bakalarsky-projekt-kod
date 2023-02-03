@@ -1,5 +1,6 @@
 #include "Logger.hpp"
 
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <unistd.h>
