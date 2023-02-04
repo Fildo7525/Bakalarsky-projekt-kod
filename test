@@ -1,0 +1,37 @@
+#!/bin/bash
+
+help() {
+	echo "Use this command to run the tests"
+	echo "Usage:"
+	echo "	./test [-v/--verbose] [-h/--help]"
+	echo
+	echo "	-v/--verbose	Show all the detailes about the tests."
+	echo
+
+	exit 1
+}
+
+declare -i verbose=0
+
+case "$1" in
+	"--verbose") verbose=1 ;;
+	"-v") verbose=1 ;;
+	"--help") help ;;
+	"-h") help ;;
+	*) verbose=0 ;;
+esac
+
+./compile
+ret=$?
+
+if [[ $ret -ne 0 ]]; then
+	echo "Exiting test with $ret"
+	exit $ret
+fi
+
+if [[ $verbose -eq 1 ]]; then
+	colcon test --event-handler=console_direct+ # & colcon test-result --all --verbose
+else
+	colcon test & colcon test-result
+fi
+
