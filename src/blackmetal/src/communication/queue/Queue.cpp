@@ -3,6 +3,7 @@
 #include "log.hpp"
 
 #include <chrono>
+#include <iomanip>
 #include <mutex>
 #include <queue>
 #include <iterator>
@@ -53,11 +54,24 @@ std::string ts::Queue::pop()
 	return tmp;
 }
 
+std::string ts::Queue::peek()
+{
+	std::string tmp;
+
+	WARN(m_queueName << ": Locking m_qMutex");
+	std::unique_lock<std::mutex> lk(m_qMutex);
+	m_cvPush.wait(lk, [this] { return !m_pqueue.empty(); });
+
+	SUCCESS("The contents of " << m_queueName << " are:\n\t" << m_pqueue);
+	tmp = m_pqueue.top();
+	return tmp;
+}
+
 void ts::Queue::push(const std::string &item)
 {
 	WARN("Locking the qMutex in " << m_queueName);
 	std::unique_lock<std::mutex> lock(m_qMutex);
-	INFO("pushing " << item << " to " << m_queueName);
+	INFO("pushing " << std::quoted(item) << " to " << m_queueName);
 	m_pqueue.push(item);
 	INFO("The contents of " << m_queueName << " are:\n\t" << m_pqueue);
 	m_cvPush.notify_one();

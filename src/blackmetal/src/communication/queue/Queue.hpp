@@ -82,9 +82,15 @@ public:
 	unsigned long size();
 
 	/**
-	 * @brief Returns the top element in the priority queue.
+	 * @brief Returns the top element in the priority queue and removes
+	 * it from the internal structure.
 	 */
 	std::string pop();
+
+	/**
+	 * @brief Returns the copy of the top element in the priority queue.
+	 */
+	std::string peek();
 
 	/**
 	 * @brief Add a new element to the priority queue.
