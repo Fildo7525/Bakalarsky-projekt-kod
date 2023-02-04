@@ -1,11 +1,18 @@
 set(TEST_FILES
 	main.cpp
-	stopwatch/testStopwatch.cpp
-	communication/controlSW/testOdometry.cpp
-)
 
-add_subdirectory(communication)
-add_subdirectory(stopwatch)
+	./communication/client/dummyServer.cpp
+	./communication/client/dummyServer.hpp
+	./communication/client/Process.hpp
+	./communication/client/Pipe.hpp
+	./communication/client/testClient.cpp
+
+	./communication/controlSW/testOdometry.cpp
+
+	./communication/queue/testQueue.cpp
+
+	./stopwatch/testStopwatch.cpp
+)
 
 find_package(ament_lint_auto REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
@@ -23,8 +30,9 @@ ament_add_gtest(${PROJECT_NAME}_test ${TEST_FILES})
 target_link_libraries(${PROJECT_NAME}_test
 	stopwatch
 	bm_controlSW
-	testClient
-	testQueue
+	client
+	threadSafeQ
+	logger
 )
 
 install(TARGETS
