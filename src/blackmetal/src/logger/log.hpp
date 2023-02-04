@@ -5,8 +5,6 @@
 
 #include <sstream>
 
-#ifndef NDEBUG
-
 #define LOG_DEFAULT_LEVEL(MODULE)             static Logger lg(#MODULE);
 #define LOG_CUSTOM_LEVEL(MODULE, LOG_LEVEL)   static Logger lg(#MODULE, LOG_LEVEL);
 
@@ -41,22 +39,3 @@
 /// Passes a success log message to the registered logger. Works only in debug build.
 #define SUCCESS(msg) LOG(msg, BOLD_GREEN, dbg_level::SUCCESS)
 
-#else
-
-/// Macro is defined only in debug mode.
-#define INIT_MODULE(...) ;
-
-/// Macro is defined only in debug mode.
-#define DBG(msg)  ;
-/// Macro is defined only in debug mode.
-#define INFO(msg) ;
-/// Macro is defined only in debug mode.
-#define WARN(msg) ;
-/// Macro is defined only in debug mode.
-#define ERR(msg)  ;
-/// Macro is defined only in debug mode.
-#define FATAL(msg) ;
-/// Macro is defined only in debug mode.
-#define SUCCESS(msg) ;
-
-#endif
