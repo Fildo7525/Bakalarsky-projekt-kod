@@ -89,11 +89,11 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 	long lws, rws;
 
 	DBG("Next attempt: " << jsonMessage);
-	auto lws_start = jsonMessage.find_first_of(':') + 1;
+	auto lws_start = jsonMessage.find_first_of('=') + 1;
 	auto lws_end = jsonMessage.find_first_of(' ');
 	lws = std::stol(jsonMessage.substr(lws_start, lws_end));
 
-	auto rws_start = jsonMessage.find_last_of(':') + 1;
+	auto rws_start = jsonMessage.find_last_of('=') + 1;
 	auto rws_end = jsonMessage.find_last_of('}');
 	rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 
