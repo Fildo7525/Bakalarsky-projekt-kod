@@ -1,9 +1,12 @@
 #include "Client.hpp"
 
+#include "ReturnStatus.hpp"
 #include "stopwatch/Stopwatch.hpp"
 #include "log.hpp"
 
+#include <algorithm>
 #include <arpa/inet.h>
+#include <iomanip>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -12,7 +15,7 @@
 #include <memory>
 #include <thread>
 
-INIT_MODULE(Client);
+INIT_MODULE(Client, dbg_level::DBG);
 
 // wait for 200ms
 #define WAIT_TIME 200'000
@@ -149,8 +152,6 @@ bool Client::connected()
 
 bm::Status Client::evalReturnState(const std::string &returnJson)
 {
-	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
-		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
 	if (returnJson.find("FULL_BUFFER") != std::string::npos) {
 		WARN("The robot buffer is full. The send data will not be used: " << std::quoted(returnJson));
 		return bm::Status::FULL_BUFFER;
@@ -160,7 +161,6 @@ bm::Status Client::evalReturnState(const std::string &returnJson)
 		return bm::Status::ODOMETRY_SPEED_DATA;
 	}
 
-	SUCCESS(returnJson);
 	return bm::Status::OK;
 }
 
@@ -170,14 +170,15 @@ bm::Status Client::send(const std::string &msg)
 	numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
 
 	if (numberOfBytes < 0) {
-		FATAL("Could not send the command to server");
 		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+			FATAL("TIMEOUT_ERROR: Could not send the command to server");
 			return bm::Status::TIMEOUT_ERROR;
 		}
+		FATAL("SEND_ERRROR: Could not send the command to server");
 		return bm::Status::SEND_ERROR;
 	}
 
-	DBG("The client sent " << msg);
+	INFO("The client sent " << msg);
 	return bm::Status::OK;
 }
 
@@ -190,10 +191,11 @@ bm::Status Client::receive(std::string &msg)
 	numberOfBytes = ::read(m_socket, buffer, 1024);
 
 	if (numberOfBytes < 0) {
-		FATAL("The data could not be received");
-		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+		if (errno == EAGAIN || errno == EWOULDBLOCK) {
+			FATAL("TIMEOUT_ERROR: The data could not be received");
 			return bm::Status::TIMEOUT_ERROR;
 		}
+		FATAL("RECEIVE_ERROR: The data could not be received");
 		return bm::Status::RECEIVE_ERROR;
 	}
 
@@ -229,9 +231,13 @@ void Client::workerThread()
 	// Lambda function used for receiving messages from the server.
 	auto _receive = [this] (std::string &message) -> bm::Status {
 		auto receiveStatus = receive(message);
-		if (receiveStatus != bm::Status::OK) {
+		if (receiveStatus == bm::Status::MULTIPLE_RECEIVE) {
+			WARN("Multiple responses read at once skipping second read");
+		}
+		else if (receiveStatus != bm::Status::OK) {
 			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
-		} else {
+		}
+		else {
 			message = "";
 			DBG("The data were received");
 		}
@@ -242,9 +248,10 @@ void Client::workerThread()
 	auto _send = [this] (const std::string &message) -> bm::Status {
 		auto sendStatus = this->send(message);
 		if (sendStatus != bm::Status::OK) {
-			FATAL("Could not send: " << message << ". Trying again...");
-		} else {
-			DBG("The data were send");
+			FATAL("Could not send: " << message << ".");
+		}
+		else {
+			DBG("The data were sent");
 		}
 		return sendStatus;
 	};
@@ -253,12 +260,12 @@ void Client::workerThread()
 		message = m_queue->pop();
 
 		if (message.find("Command\":6") != std::string::npos) {
-			SUCCESS("sending: " << message);
 			getSpeedCommand = true;
-		} else if (message.find("Command") != std::string::npos) {
-			INFO("sending: " << message);
+		}
+		else if (message.find("Command") != std::string::npos) {
 		}
 
+		INFO("sending: " << message);
 		_send(message);
 		if (_receive(message) == bm::Status::MULTIPLE_RECEIVE) {
 			continue;

@@ -41,7 +41,7 @@ Odometry::Odometry(std::shared_ptr<Client> &controlClient)
 				auto time = ((g_pollTime - milliseconds) <= 0ms ? 0ms : g_pollTime - milliseconds);
 
 				if (time > 0ms) {
-					DBG("Sleeping for " << time.count());
+					FATAL("Sleeping for " << time.count()/1'000. << " seconds");
 					std::this_thread::sleep_for(time);
 				}
 				else {
@@ -63,6 +63,7 @@ void Odometry::execute()
 
 	m_controlClient->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
 	std::string wheelSpeed = m_controlClient->robotVelocity();
+	INFO("Odometry has received a message from robot");
 	wheels = obtainWheelSpeeds(std::move(wheelSpeed));
 
 	if (wheels.leftWheel != lastValue.leftWheel || wheels.rightWheel != lastValue.rightWheel) {
@@ -88,7 +89,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
 	long lws, rws;
 
-	DBG("Next attempt: " << jsonMessage);
+	DBG("Received message: " << jsonMessage);
 	auto lws_start = jsonMessage.find_first_of('=') + 1;
 	auto lws_end = jsonMessage.find_first_of(' ');
 	lws = std::stol(jsonMessage.substr(lws_start, lws_end));
@@ -168,8 +169,11 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	{
 		std::lock_guard<std::mutex> lock(g_robotLocationMutex);
 		m_coordination.x += dxt;
+		SUCCESS("X: " << m_coordination.x);
 		m_coordination.y += dyt;
+		SUCCESS("Y: " << m_coordination.y);
 		m_coordination.angle += changeOfAngleInTime;
+		SUCCESS("Angle: " << m_coordination.angle);
 	}
 }
 
