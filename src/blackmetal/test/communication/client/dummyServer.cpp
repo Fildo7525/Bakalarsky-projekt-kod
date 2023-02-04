@@ -64,7 +64,7 @@ Server::Server(int port)
 
 		clearBff(buffer, 1024);
 		read(m_socket, buffer, 1024);
-		printf("%s\n", buffer);
+		printf("READ: %s\n", buffer);
 
 		send(m_socket, hello, strlen(hello), 0);
 		INFO("OK status send\n");
@@ -72,7 +72,7 @@ Server::Server(int port)
 		auto tmp = handleMessage(std::string(buffer));
 		if (tmp != "") {
 			INFO("Sending the speed");
-			send(m_socket, tmp.c_str(), tmp.size(), 0);
+			send(m_socket, "{\"LeftWheelSpeed\"=150,\"RightWheelSpeed\"=150}", 44, 0);
 			INFO("send: " << tmp);
 		}
 		INFO("");
@@ -92,9 +92,11 @@ std::string Server::handleMessage(const std::string &msg)
 {
 	INFO("message: " << msg);
 	if (msg.find("\"Command\":8") != std::string::npos || msg.find("\"Command\":6") != std::string::npos) {
+		std::cout << "Returning speeds" << std::endl;
 		// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
 		return "{\"LeftWheelSpeed\"=150,\"RightWheelSpeed\"=150}";
 	}
+	std::cout << "Returning empty string" << std::endl;
 	return "";
 }
 

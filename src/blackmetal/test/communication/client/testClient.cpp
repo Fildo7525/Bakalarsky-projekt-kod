@@ -18,6 +18,7 @@ INIT_MODULE(TestClient, dbg_level::DBG);
 using namespace std::chrono_literals;
 std::string myIP;
 
+// These tests sometimes work and sometimes don't.
 TEST(ClientTest, connect) {
 
 	Process<int> process([&] { Server s(PORT); });
@@ -40,17 +41,25 @@ TEST(ClientTest, connect) {
 
 TEST(ClientTest, sendRequest) {
 	Process<int> process([&] { Server s(PORT); });
-	Client client(PORT, myIP);
 
-	client.sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, 0.1, 0.1);
-	client.sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
-	auto velocity = client.robotVelocity();
-	std::string received = "{\"LeftWheelSpeed\"=150,\"RightWheelSpeed\"=150}";
+	system("hostname -I > /tmp/ip");
+	std::ifstream file("/tmp/ip");
+	file >> myIP;
+	file.close();
+	system("rm -rf /tmp/ip");
+
+	Client client(PORT, myIP, 200'000);
+
+	client.send("");
+	std::string velocity;
+	auto status = client.receive(velocity);
+	std::string received = "{\"status\":\"RECIEVE_OK\"}";
 	auto eq = velocity == received;
 
 	client.stop();
 	process.kill();
 
+	ASSERT_EQ(status, bm::Status::OK);
 	EXPECT_TRUE(eq);
 }
 

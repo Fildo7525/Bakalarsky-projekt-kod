@@ -1,18 +1,11 @@
 set(TEST_FILES
 	main.cpp
-
-	./communication/client/dummyServer.cpp
-	./communication/client/dummyServer.hpp
-	./communication/client/Process.hpp
-	./communication/client/Pipe.hpp
-	./communication/client/testClient.cpp
-
-	./communication/controlSW/testOdometry.cpp
-
-	./communication/queue/testQueue.cpp
-
 	./stopwatch/testStopwatch.cpp
+	./communication/queue/testQueue.cpp
+	./communication/client/testClient.cpp
 )
+
+add_subdirectory(communication/client)
 
 find_package(ament_lint_auto REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
@@ -33,6 +26,7 @@ target_link_libraries(${PROJECT_NAME}_test
 	client
 	threadSafeQ
 	logger
+	dummyServer
 )
 
 install(TARGETS
