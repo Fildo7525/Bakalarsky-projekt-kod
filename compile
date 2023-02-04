@@ -1,5 +1,7 @@
 #!/bin/bash
 
+let numberOfCores=$(cat /proc/cpuinfo | grep "processor" | wc -l)*2
+
 cd ~/Bakalarka/code/
 colcon build --event-handlers console_direct+ --parallel-workers $numberOfCores
 ret=$?

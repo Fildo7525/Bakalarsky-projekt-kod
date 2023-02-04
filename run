@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./compile
+./compile --doc
 source ./install/setup.bash
 
 ros2 launch blackmetal blackmetal.launch.py
