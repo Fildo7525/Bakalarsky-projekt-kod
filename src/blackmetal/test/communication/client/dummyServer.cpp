@@ -92,7 +92,8 @@ std::string Server::handleMessage(const std::string &msg)
 {
 	INFO("message: " << msg);
 	if (msg.find("\"Command\":8") != std::string::npos || msg.find("\"Command\":6") != std::string::npos) {
-		return "{\"LeftWheelSpeed\"=0.1,\"RightWheelSpeed\":0.1}";
+		// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
+		return "{\"LeftWheelSpeed\"=150,\"RightWheelSpeed\"=150}";
 	}
 	return "";
 }

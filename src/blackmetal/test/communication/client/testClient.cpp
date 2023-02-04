@@ -38,3 +38,19 @@ TEST(ClientTest, connect) {
 	EXPECT_TRUE(connected);
 }
 
+TEST(ClientTest, sendRequest) {
+	Process<int> process([&] { Server s(PORT); });
+	Client client(PORT, myIP);
+
+	client.sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, 0.1, 0.1);
+	client.sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
+	auto velocity = client.robotVelocity();
+	std::string received = "{\"LeftWheelSpeed\"=150,\"RightWheelSpeed\"=150}";
+	auto eq = velocity == received;
+
+	client.stop();
+	process.kill();
+
+	EXPECT_TRUE(eq);
+}
+
