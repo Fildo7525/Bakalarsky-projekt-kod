@@ -18,7 +18,8 @@ INIT_MODULE(Client);
 #define WAIT_TIME 200'000
 
 Client::Client(int port, const std::string &address)
-	: m_queue(new ts::Queue("m_clientQueue"))
+	: m_connected(false)
+	, m_queue(new ts::Queue("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue("m_odometryQueue"))
 {
 	start(port, address);
