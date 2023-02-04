@@ -4,14 +4,15 @@
 #include "stopwatch/Stopwatch.hpp"
 #include "log.hpp"
 
-#include <algorithm>
+#include <errno.h>
 #include <arpa/inet.h>
-#include <iomanip>
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <iomanip>
 #include <memory>
 #include <thread>
 
@@ -76,6 +77,7 @@ void Client::start(int port, const std::string &address)
 	SUCCESS("Client connected to " << m_address << ':' << m_port);
 
 	struct timeval tv;
+	// This may be the case when the connection fails.
 	tv.tv_sec = 0;
 	tv.tv_usec = WAIT_TIME;
 	// Set timeout for receive to WAIT_TIME.
@@ -170,7 +172,7 @@ bm::Status Client::send(const std::string &msg)
 	numberOfBytes = ::send(m_socket, msg.c_str(), msg.size(), 0);
 
 	if (numberOfBytes < 0) {
-		if (numberOfBytes == EAGAIN || numberOfBytes == EWOULDBLOCK) {
+		if (errno == EAGAIN || errno == EWOULDBLOCK) {
 			FATAL("TIMEOUT_ERROR: Could not send the command to server");
 			return bm::Status::TIMEOUT_ERROR;
 		}
