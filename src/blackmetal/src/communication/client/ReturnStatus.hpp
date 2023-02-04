@@ -60,6 +60,10 @@ enum class Status {
 	RECEIVE_ERROR,
 	/// Error emitted on timeout while receiving or sending.
 	TIMEOUT_ERROR,
+	/// Special case when we receive multiple responses on one receive.
+	MULTIPLE_RECEIVE,
+	/// This flag represents whether the received data are meant for odometry or not.
+	ODOMETRY_SPEED_DATA,
 };
 
 /**

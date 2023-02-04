@@ -150,7 +150,13 @@ bm::Status Client::evalReturnState(const std::string &returnJson)
 {
 	if (returnJson.find("RECIEVE_OK") == std::string::npos) {
 		WARN("The robot buffer is full. The send data will not be used: " << returnJson);
+	if (returnJson.find("FULL_BUFFER") != std::string::npos) {
+		WARN("The robot buffer is full. The send data will not be used: " << std::quoted(returnJson));
 		return bm::Status::FULL_BUFFER;
+	}
+	else if (returnJson.find("LeftWheelSpeed") != std::string::npos) {
+		DBG("Received data are meant for Odometry class");
+		return bm::Status::ODOMETRY_SPEED_DATA;
 	}
 
 	SUCCESS(returnJson);
@@ -192,8 +198,26 @@ bm::Status Client::receive(std::string &msg)
 
 	msg.clear();
 	msg = buffer;
-	DBG("The client send " << numberOfBytes);
-	return evalReturnState(msg);
+
+	auto responses = validateResponse(msg);
+
+	// There may be a situation that the server will send more than one string before we read it.
+	// Therefore we will read more strings at once and the odometry will crush.
+	INFO("The client received " << numberOfBytes << " bytes");
+	for(auto response : responses) {
+		auto status = evalReturnState(response);
+		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
+			INFO("Passing " << std::quoted(response) << " to odometry");
+			m_odometryMessages->push(response);
+		}
+	}
+	
+	bm::Status status = bm::Status::OK;
+	if (responses.size() > 1) {
+		status = bm::Status::MULTIPLE_RECEIVE;
+	}
+
+	return status;
 }
 
 void Client::workerThread()
@@ -235,18 +259,36 @@ void Client::workerThread()
 		}
 
 		_send(message);
-		_receive(message);
+		if (_receive(message) == bm::Status::MULTIPLE_RECEIVE) {
+			continue;
+		}
 
 		if (getSpeedCommand) {
 			getSpeedCommand = false;
 			std::string wheelSpeed;
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
-			INFO("Waite for the velocity");
 			receive(wheelSpeed);
-			WARN("Pushing data " << wheelSpeed << " to m_odometryMessages");
-			m_odometryMessages->push(wheelSpeed);
+			INFO("Pushing data " << wheelSpeed << " to m_odometryMessages");
 		}
 	}
+}
+
+std::vector<std::string> Client::validateResponse(const std::string &msg)
+{
+	INFO("Received message " << msg);
+	size_t numberOfReceivedMsgs = std::count_if(msg.cbegin(), msg.cend(), [] (char c) { return c == '}'; });
+	std::vector<std::string> receivedStrings(numberOfReceivedMsgs);
+
+	auto start = 0;
+	auto endOfJson = msg.find_first_of('}') + 1;
+	for (size_t i = 0; i < numberOfReceivedMsgs; i++) {
+		receivedStrings[i] = (msg.substr(start, endOfJson));
+		DBG("Message received: " << receivedStrings[i]);
+		start = endOfJson;
+		endOfJson = msg.find_first_of('}', start);
+	}
+
+	return receivedStrings;
 }
 

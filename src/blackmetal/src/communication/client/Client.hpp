@@ -173,6 +173,17 @@ private:
 	 */
 	void workerThread();
 
+	/**
+	 * @brief Check if the read did not read two messags at the same time.
+	 *
+	 * There may happen that the robot will send us two messages faster than
+	 * we can read. In that case parse the received string and split the responses.
+	 * Validate both of them.
+	 *
+	 * @param msg received message from the robot.
+	 */
+	std::vector<std::string> validateResponse(const std::string &msg);
+
 private:
 	/// IP address to which we tried or are connected to.
 	std::string m_address;

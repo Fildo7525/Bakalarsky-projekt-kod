@@ -3,16 +3,20 @@
 std::string bm::stringifyStatus(const bm::Status status)
 {
 	switch (status) {
-		case bm::Status::TIMEOUT_ERROR:
-			return "bm::Status::TIMEOUT_ERROR";
-		case bm::Status::FULL_BUFFER:
-			return "bm::Status::FULL_BUFFER";
-		case bm::Status::RECEIVE_ERROR:
-			return "bm::Status::RECEIVE_ERROR";
-		case bm::Status::SEND_ERROR:
-			return "bm::Status::SEND_ERROR";
 		case bm::Status::OK:
 			return "bm::Status::OK";
+		case bm::Status::FULL_BUFFER:
+			return "bm::Status::FULL_BUFFER";
+		case bm::Status::SEND_ERROR:
+			return "bm::Status::SEND_ERROR";
+		case bm::Status::RECEIVE_ERROR:
+			return "bm::Status::RECEIVE_ERROR";
+		case bm::Status::TIMEOUT_ERROR:
+			return "bm::Status::TIMEOUT_ERROR";
+		case bm::Status::MULTIPLE_RECEIVE:
+			return "bm::Status::MULTIPLE_RECEIVE";
+		case bm::Status::ODOMETRY_SPEED_DATA:
+			return "bm::Status::ODOMETRY_SPEED_DATA";
 	}
 	return "Unknown bm::Status";
 }
