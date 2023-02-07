@@ -20,7 +20,7 @@ bm::BlackMetal::~BlackMetal()
 	close(m_clientFD);
 }
 
-bm::BlackMetal::Status bm::BlackMetal::execute(Command cmd, const int leftWheelVelocity, const int rightWheelVelocity)
+Speed bm::BlackMetal::execute(Command cmd, const double leftWheelVelocity, const double rightWheelVelocity)
 {
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(cmd));
@@ -30,9 +30,16 @@ bm::BlackMetal::Status bm::BlackMetal::execute(Command cmd, const int leftWheelV
 
 	send(m_socket, message.c_str(), message.size(), 0);
 	if (read(m_socket, buffer, 1024) < 0) {
-		return Status::RECIEVE_ERROR;
+		return {};
 	}
-	return evalReturnState(buffer);
+	if (cmd == bm::Command::GET_LR_WHEEL_VELOCITY) {
+		char buf[1024] = { 0 };
+		if (read(m_socket, buf, 1024) < 0) {
+			return {};
+		}
+		return parseData(buf);
+	}
+	return {};
 }
 
 bm::BlackMetal::BlackMetal()
@@ -59,11 +66,26 @@ bm::BlackMetal::BlackMetal()
 	}
 }
 
+Speed bm::BlackMetal::parseData(std::string jsonMessage)
+{
+	long lws, rws;
+
+	auto lws_start = jsonMessage.find_first_of('=') + 1;
+	auto lws_end = jsonMessage.find_first_of(' ');
+	lws = std::stol(jsonMessage.substr(lws_start, lws_end));
+
+	auto rws_start = jsonMessage.find_last_of('=') + 1;
+	auto rws_end = jsonMessage.find_last_of('}');
+	rws = std::stol(jsonMessage.substr(rws_start, rws_end));
+
+	return {lws, -rws};
+}
+
 bm::BlackMetal::Status bm::BlackMetal::evalReturnState(const char *returnJson)
 {
 	std::string msg(returnJson);
 	std::string tmp(msg.begin()+18,msg.begin()+27);
-	std::cout << tmp;
+	// std::cout << tmp;
 
 	if (tmp == "RECIEVE_OK") {
 		return Status::OK;

@@ -7,6 +7,12 @@
 #include <memory>
 #define PORT 665
 
+struct Speed
+{
+	long lws;
+	long rws;
+};
+
 namespace bm
 {
 
@@ -33,11 +39,13 @@ public:
 	static std::shared_ptr<BlackMetal> instance();
 
 	~BlackMetal();
-	Status execute(Command cmd, const int leftWheelVelocity = 0, const int rightWheelVelocity = 0);
+	Speed execute(Command cmd, const double leftWheelVelocity = 0, const double rightWheelVelocity = 0);
 private:
 	BlackMetal();
 	BlackMetal(const BlackMetal &) = delete;
 	BlackMetal(BlackMetal &&) = delete;
+
+	Speed parseData(std::string jsonMessage);
 
 	Status evalReturnState(const char *returnJson);
 
