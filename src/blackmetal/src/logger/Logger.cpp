@@ -27,7 +27,7 @@ const std::string currentDateTime() {
 
 std::string getLoggerPath(const std::string &module)
 {
-	std::string name = getenv("PWD") + std::string("/log/run-") + currentDateTime() + '/' + module + '-' + currentDateTime() + ".log";
+	std::string name = getenv("PWD") + std::string("/log/run-") + currentDateTime() + '/' + module + ".log";
 	return name;
 }
 
@@ -82,9 +82,9 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	if (dbgLevel >= m_level) {
 		std::scoped_lock<std::mutex> lk(mut);
 		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
-			std::fprintf(stderr, "%s%s: [%d:%s] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, threadID.str().c_str(), m_moduleName, codePath, message);
+			std::fprintf(stderr, "[%d:%s] %s%s: %s => %s: %s\033[0;0m\n", pid, dbgLevelToString(dbgLevel), color, threadID.str().c_str(), m_moduleName, codePath, message);
 		} else {
-			std::printf("%s%s: [%d:%s] %s => %s: %s\033[0;0m\n", dbgLevelToString(dbgLevel), color, pid, threadID.str().c_str(), m_moduleName, codePath, message);
+			std::printf("[%d:%s] %s%s: %s => %s: %s\033[0;0m\n", pid, dbgLevelToString(dbgLevel), color, threadID.str().c_str(), m_moduleName, codePath, message);
 		}
 	}
 	if (!m_logFile.is_open()) {
