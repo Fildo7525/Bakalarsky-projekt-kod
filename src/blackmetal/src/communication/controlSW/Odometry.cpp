@@ -101,7 +101,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
 	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
 
-	return {lws, rws};
+	return {lws, -rws};
 }
 
 long Odometry::leftWheelSpeed() const
