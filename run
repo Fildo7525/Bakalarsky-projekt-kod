@@ -1,6 +1,18 @@
 #!/bin/bash
 
-./compile --doc
+declare -i doc=0
+
+case "$1" in
+	"--doc") doc=1 ;;
+	"-d") doc=1 ;;
+	*) doc=0 ;;
+esac
+
+if [[ $doc -eq 1 ]]; then
+	./compile --doc
+else
+	./compile
+fi
 source ./install/setup.bash
 
 ros2 launch blackmetal blackmetal.launch.py
