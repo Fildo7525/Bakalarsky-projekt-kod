@@ -21,7 +21,8 @@ public:
 	 * @class Coord
 	 * @brief Specifies the coordinates and angle of rotation of the robot.
 	 */
-	struct Coord {
+	struct Coord
+	{
 		/// The x coordinate of the robot in Cartesian plain.
 		double x;
 
