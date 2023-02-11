@@ -4,6 +4,8 @@ add_library(client
 	Client.cpp
 	ReturnStatus.cpp
 	ReturnStatus.hpp
+	RobotDataReceiver.hpp
+	RobotDataReceiver.cpp
 )
 
 target_include_directories(
