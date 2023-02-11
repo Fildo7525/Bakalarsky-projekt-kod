@@ -30,15 +30,15 @@ using namespace std::placeholders;
 
 INIT_MODULE(Odometry, dbg_level::DBG);
 
-Odometry::Odometry(std::shared_ptr<Client> &controlClient)
-	: m_controlClient(controlClient)
+Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
+	: m_robotDataReceiver(robotDataReceiver)
 	, m_coordination({0, 0, 0})
 	, m_chassisLength(std::numeric_limits<double>::max())
 	, m_wheelRadius(0)
 {
 	m_robotSpeedReceiver = std::thread(
 		[this] {
-			while (m_controlClient->connected()) {
+			while (m_robotDataReceiver->connected()) {
 				std::chrono::duration<double, std::milli> milliseconds{ Stopwatch::lastStoppedTime() };
 				auto time = ((g_pollTime - milliseconds) <= 0ms ? 0ms : g_pollTime - milliseconds);
 
@@ -63,8 +63,8 @@ void Odometry::execute()
 
 	TIC;
 
-	m_controlClient->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
-	std::string wheelSpeed = m_controlClient->robotVelocity();
+	m_robotDataReceiver->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
+	std::string wheelSpeed = m_robotDataReceiver->robotVelocity();
 	INFO("Odometry has received a message from robot");
 	wheels = obtainWheelSpeeds(std::move(wheelSpeed));
 

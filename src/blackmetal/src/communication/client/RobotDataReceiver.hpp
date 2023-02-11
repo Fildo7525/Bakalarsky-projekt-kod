@@ -2,10 +2,29 @@
 
 #include "Client.hpp"
 
+/**
+ * @class RobotDataReceiver
+ * @brief Child class implementing Client class and operating with robot messages.
+ *
+ * This class send json requests via the Client's send method. The parameters to send are supplied
+ * in method sendRequest. Method receive receives data from robot. Evaluetes the data and pushes them
+ * to separate ts::Queue so that Odometry class could take them. If the received data consist of multiple
+ * messages the message is split and every resonse is evaluated separatly. All this takes place
+ * in separate thread.
+ *
+ * @see Client class used for communication with the robot.
+ */
 class RobotDataReceiver
 	: public Client
 {
 public:
+	/**
+	 * The sendRequest function takes arguments for left and right wheel
+	 * for setting position and velocity. The velocity is set with double
+	 * and the position is set with long. This is the generic solution for this issue.
+	 */
+	using WheelValueT = std::variant<long, double>;
+
 	/**
 	 * @brief Constructor implementing Client constructor.
 	 *

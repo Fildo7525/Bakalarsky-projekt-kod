@@ -81,29 +81,13 @@ std::string RobotDataReceiver::robotVelocity()
 
 bm::Status RobotDataReceiver::receive(std::string &msg)
 {
-	int numberOfBytes = 0;
-	char buffer[1024] = { 0 };
-
-	DBG("Receiving...");
-	numberOfBytes = ::read(m_socket, buffer, 1024);
-
-	if (numberOfBytes < 0) {
-		if (errno == EAGAIN || errno == EWOULDBLOCK) {
-			FATAL("TIMEOUT_ERROR: The data could not be received");
-			return bm::Status::TIMEOUT_ERROR;
-		}
-		FATAL("RECEIVE_ERROR: The data could not be received");
-		return bm::Status::RECEIVE_ERROR;
-	}
-
-	msg.clear();
-	msg = buffer;
+	this->Client::receive(msg);
 
 	auto responses = validateResponse(msg);
 
 	// There may be a situation that the server will send more than one string before we read it.
 	// Therefore we will read more strings at once and the odometry will crush.
-	INFO("The client received " << numberOfBytes << " bytes");
+	INFO("The client received " << msg.size() << " bytes");
 	for(auto response : responses) {
 		auto status = evalReturnState(response);
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
@@ -111,8 +95,8 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 			m_odometryMessages->push(response);
 		}
 	}
-	
-	bm::Status status = bm::Status::OK;
+
+	auto status = bm::Status::OK;
 	if (responses.size() > 1) {
 		status = bm::Status::MULTIPLE_RECEIVE;
 	}

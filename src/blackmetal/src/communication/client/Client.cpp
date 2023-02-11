@@ -23,14 +23,8 @@ INIT_MODULE(Client, dbg_level::DBG);
 
 Client::Client(int port, const std::string &address)
 	: m_connected(false)
-	, m_queue(new ts::Queue("m_clientQueue"))
-	, m_odometryMessages(new ts::Queue("m_odometryQueue"))
 {
 	start(port, address);
-	std::thread([=] {
-		sleep(1);
-		workerThread();
-	}).detach();
 }
 
 Client::~Client()
@@ -94,78 +88,6 @@ void Client::stop()
 	close(m_socket);
 }
 
-bm::Status Client::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelValueT leftWheel)
-{
-	DBG("Composing command: " << bm::stringifyCommand(cmd));
-	// Example: "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":0.1,\"LeftWheelSpeed\":0.1,\"RightWheelPosition\":0.1,\"LeftWheelPosition\":0.1}";
-	std::string message = "{\"UserID\":1,\"Command\":";
-	message += std::to_string(int(cmd));
-	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
-		message += ",\"RightWheelSpeed\":" + std::to_string(std::get<double>(rightWheel)) +
-					",\"LeftWheelSpeed\":" + std::to_string(std::get<double>(leftWheel));
-	} else if (cmd == bm::Command::SET_LR_WHEEL_POSITION) {
-		message += ",\"RightWheelPosition\":" + std::to_string(std::get<long>(rightWheel)) +
-					",\"LeftWheelPosition\":" + std::to_string(std::get<long>(leftWheel));
-	}
-	message += "}";
-
-	INFO("sending: " << message);
-
-	this->enqueue(message);
-
-	return bm::Status::OK;
-}
-
-bm::Status Client::requestSpeed(double rightWheel, double leftWheel)
-{
-	return sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
-}
-
-bm::Status Client::requestPosition(long rightWheel, long leftWheel)
-{
-	return sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
-}
-
-void Client::enqueue(const std::string &msg)
-{
-	m_queue->push(msg);
-}
-
-std::string Client::robotVelocity()
-{
-	DBG("Getting robot velocity");
-	auto front = m_odometryMessages->pop();
-	return front;
-}
-std::string Client::address()
-{
-	return m_address;
-}
-
-int Client::socketFD()
-{
-	return m_socket;
-}
-
-bool Client::connected()
-{
-	return m_connected;
-}
-
-bm::Status Client::evalReturnState(const std::string &returnJson)
-{
-	if (returnJson.find("FULL_BUFFER") != std::string::npos) {
-		WARN("The robot buffer is full. The send data will not be used: " << std::quoted(returnJson));
-		return bm::Status::FULL_BUFFER;
-	}
-	else if (returnJson.find("LeftWheelSpeed") != std::string::npos) {
-		DBG("Received data are meant for Odometry class");
-		return bm::Status::ODOMETRY_SPEED_DATA;
-	}
-
-	return bm::Status::OK;
-}
-
 bm::Status Client::send(const std::string &msg)
 {
 	int numberOfBytes;
@@ -204,101 +126,35 @@ bm::Status Client::receive(std::string &msg)
 	msg.clear();
 	msg = buffer;
 
-	auto responses = validateResponse(msg);
-
-	// There may be a situation that the server will send more than one string before we read it.
-	// Therefore we will read more strings at once and the odometry will crush.
-	INFO("The client received " << numberOfBytes << " bytes");
-	for(auto response : responses) {
-		auto status = evalReturnState(response);
-		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
-			INFO("Passing " << std::quoted(response) << " to odometry");
-			m_odometryMessages->push(response);
-		}
-	}
-	
-	bm::Status status = bm::Status::OK;
-	if (responses.size() > 1) {
-		status = bm::Status::MULTIPLE_RECEIVE;
-	}
-
-	return status;
+	return bm::Status::OK;
 }
 
-void Client::workerThread()
+std::string Client::address()
 {
-	std::string message;
-	bool getSpeedCommand = false;
-
-	// Lambda function used for receiving messages from the server.
-	auto _receive = [this] (std::string &message) -> bm::Status {
-		auto receiveStatus = receive(message);
-		if (receiveStatus == bm::Status::MULTIPLE_RECEIVE) {
-			WARN("Multiple responses read at once skipping second read");
-		}
-		else if (receiveStatus != bm::Status::OK) {
-			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
-		}
-		else {
-			message = "";
-			DBG("The data were received");
-		}
-		return receiveStatus;
-	};
-
-	// Lambda function used for sending messages to the server.
-	auto _send = [this] (const std::string &message) -> bm::Status {
-		auto sendStatus = this->send(message);
-		if (sendStatus != bm::Status::OK) {
-			FATAL("Could not send: " << message << ".");
-		}
-		else {
-			DBG("The data were sent");
-		}
-		return sendStatus;
-	};
-
-	while (m_connected) {
-		message = m_queue->pop();
-
-		if (message.find("Command\":6") != std::string::npos) {
-			getSpeedCommand = true;
-		}
-		else if (message.find("Command") != std::string::npos) {
-		}
-
-		INFO("sending: " << message);
-		_send(message);
-		if (_receive(message) == bm::Status::MULTIPLE_RECEIVE) {
-			continue;
-		}
-
-		if (getSpeedCommand) {
-			getSpeedCommand = false;
-			std::string wheelSpeed;
-			// We take a risk and do not check for an error. The connection is established at this point.
-			// May be changed in the future.
-			receive(wheelSpeed);
-			INFO("Pushing data " << wheelSpeed << " to m_odometryMessages");
-		}
-	}
+	return m_address;
 }
 
-std::vector<std::string> Client::validateResponse(const std::string &msg)
+int Client::socketFD()
 {
-	INFO("Received message " << msg);
-	size_t numberOfReceivedMsgs = std::count_if(msg.cbegin(), msg.cend(), [] (char c) { return c == '}'; });
-	std::vector<std::string> receivedStrings(numberOfReceivedMsgs);
+	return m_socket;
+}
 
-	auto start = 0;
-	auto endOfJson = msg.find_first_of('}') + 1;
-	for (size_t i = 0; i < numberOfReceivedMsgs; i++) {
-		receivedStrings[i] = (msg.substr(start, endOfJson));
-		DBG("Message received: " << receivedStrings[i]);
-		start = endOfJson;
-		endOfJson = msg.find_first_of('}', start);
+bool Client::connected()
+{
+	return m_connected;
+}
+
+bm::Status Client::evalReturnState(const std::string &returnJson)
+{
+	if (returnJson.find("FULL_BUFFER") != std::string::npos) {
+		WARN("The robot buffer is full. The send data will not be used: " << std::quoted(returnJson));
+		return bm::Status::FULL_BUFFER;
+	}
+	else if (returnJson.find("LeftWheelSpeed") != std::string::npos) {
+		DBG("Received data are meant for Odometry class");
+		return bm::Status::ODOMETRY_SPEED_DATA;
 	}
 
-	return receivedStrings;
+	return bm::Status::OK;
 }
 

@@ -2,6 +2,7 @@
 
 #include "Client.hpp"
 
+#include <memory>
 #include <rclcpp/rclcpp.hpp>
 
 /**
@@ -29,7 +30,6 @@
  */
 class BMLogger
 	: public rclcpp::Node
-	, private Client
 {
 public:
 	/// Constructor.
@@ -48,5 +48,8 @@ public:
 private:
 	/// Timer calling the defined callback function.
 	rclcpp::TimerBase::SharedPtr m_timer;
+	
+	/// Client communicating with the logging server of the robot.
+	std::shared_ptr<Client> m_client;
 };
 

@@ -13,15 +13,15 @@ INIT_MODULE(BlackMetal, dbg_level::DBG);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, m_controlClient(new Client(PORT, "192.168.1.3"))
-	, m_odometry(new Odometry(m_controlClient))
+	, m_robotDataReceiver(new RobotDataReceiver(PORT, "192.168.1.3"))
+	, m_odometry(new Odometry(m_robotDataReceiver))
 {
 	m_odometry->setChassisLength(declare_parameter<double>("chasis", 1));
 	m_odometry->setWheelRadius(declare_parameter<double>("wheelRadius", 0.2));
 
 	DBG("Chasis has lenght " << m_odometry->getChassisLength() << " m");
 	DBG("Wheel has radius " << m_odometry->getWheelRadius() << " m");
-	DBG("Address set to " << m_controlClient->address() << ":" << PORT);
+	DBG("Address set to " << m_robotDataReceiver->address() << ":" << PORT);
 
 	m_twistSubscriber = this->create_subscription<geometry_msgs::msg::Twist>(
 		"cmd_vel",
@@ -44,7 +44,7 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	std::clamp(m_rightWheelSpeed, -1., 1.);
 	std::clamp(m_leftWheelSpeed, -1., 1.);
 
-	m_controlClient->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
+	m_robotDataReceiver->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
 const double& BlackMetal::chassisLength()

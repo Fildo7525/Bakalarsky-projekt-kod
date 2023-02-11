@@ -10,9 +10,9 @@ using namespace std::chrono_literals;
 
 BMLogger::BMLogger()
 	: rclcpp::Node("bm_logger")
-	, Client()
+	, m_client()
 {
-	this->start(PORT, this->declare_parameter("bm_lsIP", "192.168.1.3"));
+	m_client->start(PORT, this->declare_parameter("bm_lsIP", "192.168.1.3"));
 
 	INFO("Server created starting the timer.");
 	m_timer = this->create_wall_timer(1s, [this](){
@@ -24,8 +24,8 @@ BMLogger::BMLogger()
 void BMLogger::onTimerTimeoutReadSocket()
 {
 	std::string msg;
-	this->send("");
-	if (receive(msg) != bm::Status::OK) {
+	m_client->send("");
+	if (m_client->receive(msg) != bm::Status::OK) {
 		FATAL("The logging message from robot could not be received");
 	} else {
 		INFO("BlackMetal: " << msg);

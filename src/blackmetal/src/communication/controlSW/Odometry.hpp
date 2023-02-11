@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <thread>
-#include "Client.hpp"
+#include "RobotDataReceiver.hpp"
 
 #include <rclcpp/timer.hpp>
 
@@ -52,7 +52,7 @@ public:
 	 *
 	 * @param controlClient Reference to the control software connected to the robot.
 	 */
-	explicit Odometry(std::shared_ptr<Client> &controlClient);
+	explicit Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver);
 
 	/**
 	 * @brief Function polling the robot for its left and right wheel speed.
@@ -123,7 +123,7 @@ private:
 
 private:
 	/// Instance of the control software client.
-	std::shared_ptr<Client> m_controlClient;
+	std::shared_ptr<RobotDataReceiver> m_robotDataReceiver;
 
 	/// Timer invoking the execute function.
 	rclcpp::TimerBase::SharedPtr m_timer;
