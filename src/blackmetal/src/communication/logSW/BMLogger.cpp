@@ -12,7 +12,7 @@ BMLogger::BMLogger()
 	: rclcpp::Node("bm_logger")
 	, m_client()
 {
-	m_client->start(PORT, this->declare_parameter("bm_lsIP", "192.168.1.3"));
+	m_client->start(PORT, this->declare_parameter("bm_lsIP", "192.168.1.3"), -1);
 
 	INFO("Server created starting the timer.");
 	m_timer = this->create_wall_timer(1s, [this](){

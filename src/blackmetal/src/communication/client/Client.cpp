@@ -18,13 +18,10 @@
 
 INIT_MODULE(Client, dbg_level::DBG);
 
-// wait for 200ms
-#define WAIT_TIME 200'000
-
-Client::Client(int port, const std::string &address)
+Client::Client(int port, const std::string &address, long wateTime_usec)
 	: m_connected(false)
 {
-	start(port, address);
+	start(port, address, wateTime_usec);
 }
 
 Client::~Client()
@@ -32,7 +29,7 @@ Client::~Client()
 	stop();
 }
 
-void Client::start(int port, const std::string &address)
+void Client::start(int port, const std::string &address, long wateTime_usec)
 {
 	if (m_connected) {
 		WARN("The client is already connected to " << m_address << ':' << port);
@@ -70,14 +67,16 @@ void Client::start(int port, const std::string &address)
 	m_port = port;
 	SUCCESS("Client connected to " << m_address << ':' << m_port);
 
-	struct timeval tv;
-	// This may be the case when the connection fails.
-	tv.tv_sec = 0;
-	tv.tv_usec = WAIT_TIME;
-	// Set timeout for receive to WAIT_TIME.
-	setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
-	// Set timeout for send to WAIT_TIME.
-	setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv, sizeof tv);
+	if (wateTime_usec != -1) {
+		struct timeval tv;
+		// This may be the case when the connection fails.
+		tv.tv_sec = 0;
+		tv.tv_usec = wateTime_usec;
+		// Set timeout for receive to WAIT_TIME.
+		setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+		// Set timeout for send to WAIT_TIME.
+		setsockopt(m_socket, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv, sizeof tv);
+	}
 }
 
 void Client::stop()
