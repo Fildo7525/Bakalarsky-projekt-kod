@@ -101,8 +101,6 @@ private:
 	 */
 	void enqueue(const std::string &msg);
 
-private:
-
 	/**
 	 * @brief Overridden function from Client.
 	 *

@@ -11,7 +11,7 @@ RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	, m_queue(new ts::Queue("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue("m_odometryQueue"))
 {
-	std::thread([=] {
+	std::thread([this] {
 		sleep(1);
 		workerThread();
 	}).detach();
@@ -148,6 +148,7 @@ void RobotDataReceiver::workerThread()
 
 		INFO("sending: " << message);
 		_send(message);
+		// If multiple messages are read at once they are evaluated in reveive function.
 		if (_receive(message) == bm::Status::MULTIPLE_RECEIVE) {
 			continue;
 		}

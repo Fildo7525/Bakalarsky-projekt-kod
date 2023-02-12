@@ -3,7 +3,7 @@
 #include <chrono>
 #include <mutex>
 
-static std::vector<double> stoppedTimes = std::vector<double>();
+static std::vector stoppedTimes = std::vector<double>();
 
 std::mutex mut;
 
@@ -18,7 +18,7 @@ Stopwatch::~Stopwatch()
 	auto diff = std::chrono::high_resolution_clock::now() - m_start;
 	double diffMiliseconds = std::chrono::duration_cast<std::chrono::microseconds>(diff).count();
 	{
-		std::lock_guard<std::mutex> lock(mut);
+		std::lock_guard lock(mut);
 		if (m_maxLength == stoppedTimes.size()) {
 			stoppedTimes.erase(stoppedTimes.begin());
 		}
@@ -28,7 +28,7 @@ Stopwatch::~Stopwatch()
 
 double Stopwatch::lastStoppedTime()
 {
-	std::lock_guard<std::mutex>lock(mut);
+	std::lock_guard lock(mut);
 	if (stoppedTimes.empty()) {
 		return -1.0;
 	}
@@ -41,13 +41,13 @@ double Stopwatch::stoppedTimeAt(const std::vector<double>::size_type index)
 		return lastStoppedTime();
 	}
 
-	std::lock_guard<std::mutex> lock(mut);
+	std::lock_guard lock(mut);
 	return stoppedTimes.at(index);
 }
 
 std::vector<double> Stopwatch::getStoppedTimes()
 {
-	std::lock_guard<std::mutex> lock(mut);
+	std::lock_guard lock(mut);
 	auto copy = stoppedTimes;
 	stoppedTimes.clear();
 	return copy;

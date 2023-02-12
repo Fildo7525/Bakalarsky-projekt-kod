@@ -25,9 +25,11 @@ void BMLogger::onTimerTimeoutReadSocket()
 {
 	std::string msg;
 	m_client->send("");
+
 	if (m_client->receive(msg) != bm::Status::OK) {
 		FATAL("The logging message from robot could not be received");
-	} else {
+	}
+	else {
 		INFO("BlackMetal: " << msg);
 	}
 }

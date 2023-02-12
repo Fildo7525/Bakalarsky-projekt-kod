@@ -13,7 +13,8 @@
 
 static std::mutex mut;
 
-const std::string currentDateTime() {
+const std::string currentDateTime()
+{
 	time_t now = time(0);
 	struct tm  tstruct;
 	char buf[80];
@@ -115,5 +116,4 @@ Logger::~Logger()
 	std::flush(m_logFile);
 	m_logFile.close();
 }
-
 
