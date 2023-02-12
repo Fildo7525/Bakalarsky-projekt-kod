@@ -30,6 +30,10 @@ BlackMetal::BlackMetal()
 			this->onTwistRecievedSendJson(msg);
 		}
 	);
+
+	m_positionPublisher = this->create_publisher<geometry_msgs::msg::Vector3>("position", 10);
+	m_odometry->setPositinoPublisher(m_positionPublisher);
+
 	WARN("Odometry created");
 }
 

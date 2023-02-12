@@ -1,10 +1,13 @@
 #pragma once
 
-#include <memory>
-#include <thread>
 #include "RobotDataReceiver.hpp"
 
+#include <geometry_msgs/msg/vector3.hpp>
+#include <rclcpp/publisher.hpp>
 #include <rclcpp/timer.hpp>
+
+#include <memory>
+#include <thread>
 
 /**
  * @class Odometry
@@ -17,21 +20,6 @@
 class Odometry
 {
 public:
-	/**
-	 * @class Coord
-	 * @brief Specifies the coordinates and angle of rotation of the robot.
-	 */
-	struct Coord
-	{
-		/// The x coordinate of the robot in Cartesian plain.
-		double x;
-
-		/// The y coordinate of the robot in Cartesian plain.
-		double y;
-
-		/// The angle of the robot with the x axis in Cartesian plain.
-		double angle;
-	};
 
 	/**
 	 * @class Speed
@@ -107,6 +95,13 @@ public:
 	 * @brief Returns the radius of the wheels.
 	 */
 	const double &getWheelRadius();
+
+	/**
+	 * @brief Sets the position publisher created by rclcpp::Node
+	 *
+	 * @param positionPublisher 
+	 */
+	void setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr positionPublisher);
 private:
 
 	/**
@@ -125,11 +120,14 @@ private:
 	/// Instance of the control software client.
 	std::shared_ptr<RobotDataReceiver> m_robotDataReceiver;
 
+	/// Publisher of the current robot position in robots Cartesian system.
+	rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr m_positionPublisher;
+
 	/// Timer invoking the execute function.
 	rclcpp::TimerBase::SharedPtr m_timer;
 
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
-	Coord m_coordination;
+	geometry_msgs::msg::Vector3 m_coordination;
 
 	/// Thread that polls the server at a certain frequency for the wheels velocity.
 	std::thread m_robotSpeedReceiver;

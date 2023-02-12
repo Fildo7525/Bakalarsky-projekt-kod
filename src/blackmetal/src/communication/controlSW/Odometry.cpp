@@ -32,7 +32,8 @@ INIT_MODULE(Odometry, dbg_level::DBG);
 
 Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	: m_robotDataReceiver(robotDataReceiver)
-	, m_coordination({0, 0, 0})
+	, m_positionPublisher(nullptr)
+	, m_coordination()
 	, m_chassisLength(std::numeric_limits<double>::max())
 	, m_wheelRadius(0)
 {
@@ -100,6 +101,7 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 	auto rws_end = jsonMessage.find_last_of('}');
 	rws = std::stol(jsonMessage.substr(rws_start, rws_end));
 
+	// We need to convert the impulses send by robot to SI units (meters per second).
 	lws = lws / FROM_IMP_TO_MPH_L;
 	rws = rws / FROM_IMP_TO_MPH_R;
 
@@ -145,6 +147,11 @@ const double &Odometry::getWheelRadius()
 	return m_wheelRadius;
 }
 
+void Odometry::setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr positionPublisher)
+{
+	this->m_positionPublisher = positionPublisher;
+}
+
 void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
 	// The poll time is in milliseconds while th elapsedTime is in microseconds.
@@ -153,15 +160,15 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
-	DBG("CoG velocity: " << speedInCenterOfGravity);
+	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);
 	// auto icr = m_controlClient->chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
 
 	double vx;
 	double vy;
 	{
 		std::lock_guard lock(g_robotLocationMutex);
-		vx = speedInCenterOfGravity * std::cos(m_coordination.angle);
-		vy = speedInCenterOfGravity * std::sin(m_coordination.angle);
+		vx = speedInCenterOfGravity * std::cos(m_coordination.z);
+		vy = speedInCenterOfGravity * std::sin(m_coordination.z);
 	}
 
 	double dxt = vx * dt;
@@ -177,8 +184,11 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 		SUCCESS("X: " << m_coordination.x);
 		m_coordination.y += dyt;
 		SUCCESS("Y: " << m_coordination.y);
-		m_coordination.angle += changeOfAngleInTime;
-		SUCCESS("Angle: " << m_coordination.angle);
+		m_coordination.z += changeOfAngleInTime;
+		SUCCESS("Angle: " << m_coordination.z);
+		if (!m_positionPublisher) {
+			m_positionPublisher->publish(m_coordination);
+		}
 	}
 }
 
