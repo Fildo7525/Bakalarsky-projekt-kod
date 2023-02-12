@@ -91,7 +91,7 @@ private:
 	 *
 	 * @param msg received message from the robot.
 	 */
-	std::vector<std::string> validateResponse(const std::string &msg);
+	std::vector<std::string> splitResponses(const std::string &msg);
 
 	/**
 	 * @brief Add the request to priority queue to be sent to server.

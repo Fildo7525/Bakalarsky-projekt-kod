@@ -49,7 +49,7 @@ bm::Status RobotDataReceiver::requestPosition(long rightWheel, long leftWheel)
 	return sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
 }
 
-std::vector<std::string> RobotDataReceiver::validateResponse(const std::string &msg)
+std::vector<std::string> RobotDataReceiver::splitResponses(const std::string &msg)
 {
 	INFO("Received message " << msg);
 	size_t numberOfReceivedMsgs = std::count_if(msg.cbegin(), msg.cend(), [] (char c) { return c == '}'; });
@@ -81,22 +81,25 @@ std::string RobotDataReceiver::robotVelocity()
 
 bm::Status RobotDataReceiver::receive(std::string &msg)
 {
-	this->Client::receive(msg);
+	auto status = this->Client::receive(msg);
+	if (status != bm::Status::OK) {
+		return status;
+	}
 
-	auto responses = validateResponse(msg);
+	auto responses = splitResponses(msg);
 
 	// There may be a situation that the server will send more than one string before we read it.
 	// Therefore we will read more strings at once and the odometry will crush.
 	INFO("The client received " << msg.size() << " bytes");
-	for(auto response : responses) {
-		auto status = evalReturnState(response);
+	for (auto response : responses) {
+		status = evalReturnState(response);
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
 			INFO("Passing " << std::quoted(response) << " to odometry");
 			m_odometryMessages->push(response);
 		}
 	}
 
-	auto status = bm::Status::OK;
+	status = bm::Status::OK;
 	if (responses.size() > 1) {
 		status = bm::Status::MULTIPLE_RECEIVE;
 	}
@@ -113,7 +116,7 @@ void RobotDataReceiver::workerThread()
 	auto _receive = [this] (std::string &message) -> bm::Status {
 		auto receiveStatus = receive(message);
 		if (receiveStatus == bm::Status::MULTIPLE_RECEIVE) {
-			WARN("Multiple responses read at once skipping second read");
+			WARN("Multiple responses read and evaluated at once skipping second read");
 		}
 		else if (receiveStatus != bm::Status::OK) {
 			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
@@ -158,7 +161,7 @@ void RobotDataReceiver::workerThread()
 			std::string wheelSpeed;
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
-			receive(wheelSpeed);
+			_receive(wheelSpeed);
 			INFO("Pushing data " << wheelSpeed << " to m_odometryMessages");
 		}
 	}
