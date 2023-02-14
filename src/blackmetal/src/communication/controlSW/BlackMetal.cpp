@@ -36,6 +36,7 @@ BlackMetal::BlackMetal()
 void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 {
 	static constexpr double toMph = 10;
+	// The maximal linear velocity is 0.8 m/s and the maximal angle velocity is 2.857 rad/s.
 	DBG("Message geometry_msgs::msg::Twist: " << geometry_msgs::msg::to_yaml(msg));
 	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / toMph;
 	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / toMph;
