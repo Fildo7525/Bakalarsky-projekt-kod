@@ -2,19 +2,21 @@
 
 let numberOfCores=$(cat /proc/cpuinfo | grep "processor" | wc -l)*2
 
-cd ~/Bakalarka/code/
+pushd ~/Bakalarka/code/
 colcon build --event-handlers console_direct+ --parallel-workers $numberOfCores
 ret=$?
 
 if [[ $ret -ne 0 ]]; then
 	echo "Exiting with $ret"
+	popd
 	exit $ret
 fi
 
 if [[ "$1" == "-d" || "$1" == "--doc" ]]; then
 	echo "Generating documentation"
-	cd doc
+	pushd doc
 	doxygen config &> /dev/null
-	cd ..
+	popd
 fi
+popd
 
