@@ -18,8 +18,8 @@
 
 /// Defined by the BlackMetal source code.
 #define MAX_WHEEL_SPEED 0.8
-#define FROM_IMP_TO_MPH_L 1012.53636364
-#define FROM_IMP_TO_MPH_R 1053.67588345
+#define FROM_IMP_TO_MPS_L 1012.53636364
+#define FROM_IMP_TO_MPS_R 1053.67588345
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
@@ -93,8 +93,8 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 	rws = std::stod(jsonMessage.substr(rws_start, rws_end));
 
 	// We need to convert the impulses send by robot to SI units (meters per second).
-	lws = lws / FROM_IMP_TO_MPH_L;
-	rws = rws / FROM_IMP_TO_MPH_R;
+	lws = lws / FROM_IMP_TO_MPS_L;
+	rws = rws / FROM_IMP_TO_MPS_R;
 
 	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
 	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
