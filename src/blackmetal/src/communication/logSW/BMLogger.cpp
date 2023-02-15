@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 BMLogger::BMLogger()
 	: rclcpp::Node("bm_logger")
-	, m_client()
+	, m_client(new Client())
 {
 	m_client->start(PORT, this->declare_parameter("bm_lsIP", "192.168.1.3"), -1);
 
