@@ -17,7 +17,7 @@ int main(int argc, char const* argv[])
 
 	double d = std::stod(argv[1]);
 
-	bm::BlackMetal::instance()->execute(bm::Command::SET_LR_WHEEL_VELOCITY, d, d);
+	bm::BlackMetal::instance()->execute(bm::Command::SET_LR_WHEEL_VELOCITY, d, -d);
 
 	for (size_t i = 0; i < 20; i++) {
 		auto s = bm::BlackMetal::instance()->execute(bm::Command::GET_LR_WHEEL_VELOCITY);
