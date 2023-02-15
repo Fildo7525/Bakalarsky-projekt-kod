@@ -28,10 +28,10 @@ public:
 	struct Speed
 	{
 		/// The velocity of left wheel.
-		long leftWheel;
+		double leftWheel;
 
 		/// The velocity of right wheel.
-		long rightWheel;
+		double rightWheel;
 	};
 
 	/**

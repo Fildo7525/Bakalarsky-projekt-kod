@@ -90,16 +90,16 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-	long lws, rws;
+	double lws, rws;
 
 	DBG("Received message: " << jsonMessage);
 	auto lws_start = jsonMessage.find_first_of('=') + 1;
 	auto lws_end = jsonMessage.find_first_of(' ');
-	lws = std::stol(jsonMessage.substr(lws_start, lws_end));
+	lws = std::stod(jsonMessage.substr(lws_start, lws_end));
 
 	auto rws_start = jsonMessage.find_last_of('=') + 1;
 	auto rws_end = jsonMessage.find_last_of('}');
-	rws = std::stol(jsonMessage.substr(rws_start, rws_end));
+	rws = std::stod(jsonMessage.substr(rws_start, rws_end));
 
 	// We need to convert the impulses send by robot to SI units (meters per second).
 	lws = lws / FROM_IMP_TO_MPH_L;
@@ -157,7 +157,7 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	// The poll time is in milliseconds while th elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
-	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_chassisLength;
+	double angularVelocity = (double(speed.rightWheel) - speed.leftWheel) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);
