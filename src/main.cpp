@@ -5,7 +5,21 @@
 #include <iterator>
 #include <iostream>
 
+void prepareControlers();
+void circle(int argc, char const* argv[]);
+
 int main(int argc, char const* argv[])
+{
+	// prepareControlers();
+	circle(argc, argv);
+}
+
+void prepareControlers()
+{
+	bm::BlackMetal::instance()->execute(bm::Command::PREPARE_WHEEL_CONTROLER);
+}
+
+void circle(int argc, char const* argv[])
 {
 	std::vector<long> lws;
 	std::vector<long> rws;
@@ -34,6 +48,5 @@ int main(int argc, char const* argv[])
 	std::cout << "RWS:" << std::endl;
 	std::copy(rws.cbegin(), rws.cend(), std::ostream_iterator<long>(std::cout, ","));
 	std::cout << std::endl;
-	return 0;
 }
 
