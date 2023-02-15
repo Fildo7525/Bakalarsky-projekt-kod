@@ -23,8 +23,8 @@
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
-// WARN: The 3 second interval is just for debugging
-constexpr std::chrono::milliseconds g_pollTime(3000);
+// WARN: The 1 second interval is just for debugging
+constexpr std::chrono::milliseconds g_pollTime(1000);
 
 using namespace std::placeholders;
 
@@ -40,16 +40,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	m_robotSpeedReceiver = std::thread(
 		[this] {
 			while (m_robotDataReceiver->connected()) {
-				std::chrono::duration<double, std::milli> milliseconds{ Stopwatch::lastStoppedTime() };
-				auto time = ((g_pollTime - milliseconds) <= 0ms ? 0ms : g_pollTime - milliseconds);
-
-				if (time > 0ms) {
-					FATAL("Sleeping for " << time.count()/1'000. << " seconds");
-					std::this_thread::sleep_for(time);
-				}
-				else {
-					WARN("The loop time was longer than expected " << (-1*time).count() << "ms");
-				}
+				std::this_thread::sleep_for(g_pollTime);
 				execute();
 			}
 		}
