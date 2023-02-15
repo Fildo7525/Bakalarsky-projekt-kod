@@ -1,0 +1,89 @@
+#!/bin/bash
+
+source ./install/setup.bash
+PI=3.1415926536
+
+stop() {
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "linear:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0" -1
+}
+
+createSide() {
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "linear:
+  x: $1
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0" -1
+
+	sleep $2
+
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "linear:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: -1.570796327" -1
+
+	sleep 1
+
+	stop
+}
+
+help() {
+	echo "To use this script you have to start the ros2 program using the 'run' executable."
+	echo "Than use this script to test the precision of creating the square with the robot."
+	echo
+	echo "Usage:"
+	echo "	./square [-h/--help] <size> <speed>"
+	echo
+	echo "	size	(m) This parameter is mendatory. The size is the size of one of the side of the square."
+	echo "	speed	<-0.8; 0.8> (mps) This parameter is mendatory. The speed at which should the robot operate."
+	echo
+
+	exit 1
+}
+
+trap 'stop; exit 1' 2
+
+declare -i verbose=0
+
+case "$1" in
+	"--help") help ;;
+	"-h") help ;;
+	*) verbose=0 ;;
+esac
+
+if [[ $# -ne 2 ]]; then
+	help
+	exit 1
+fi
+
+side=$1
+speed=$2
+
+if [[ $(echo "$speed < (-0.8)" | bc -l) -ne 0 ]]; then
+	echo "The number you supplied for the speed is too low. Try number higher than -0.8"
+	exit 1
+elif [[ $(echo "$speed > 0.8" | bc -l) -ne 0 ]]; then
+	echo "The number you supplied for the speed is too high. Try number lower than 0.8"
+	exit 1
+fi
+
+waiteTime=$(echo "$side/$speed" | bc)
+turnSpeed=$(echo "$PI*0.56/2/1" | bc -l)
+
+for ((i = 0; i < 4; i++)); do
+	createSide $speed $waiteTime
+done
+
