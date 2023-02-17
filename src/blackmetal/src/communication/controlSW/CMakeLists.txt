@@ -4,6 +4,8 @@ add_library(bm_controlSW
 	BlackMetal.hpp
 	Odometry.cpp
 	Odometry.hpp
+	filter/LowPassFilter.cpp
+	filter/LowPassFilter.hpp
 )
 
 find_package(ament_cmake REQUIRED)
