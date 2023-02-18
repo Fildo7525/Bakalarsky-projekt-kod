@@ -146,7 +146,7 @@ void RobotDataReceiver::workerThread()
 		if (message.find("Command\":6") != std::string::npos) {
 			getSpeedCommand = true;
 		}
-		else if (message.find("Command") != std::string::npos) {
+		else if (message.find("Command\":3") != std::string::npos) {
 		}
 
 		INFO("sending: " << message);

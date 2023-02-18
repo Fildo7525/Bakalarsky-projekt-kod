@@ -52,6 +52,8 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	// WARN: When we change the robot velocity the filter will enlarge the transition time to the requested velocity.
 	// In this case we have to forcefully reset the state of the filter. This should probably happen in RobotDataReceiver
 	// so that we do not analyze old samples in the already reset filter.
+	// For the best implementations we may need to rewrite the type of the queue to a structure. The command that is send will be assembled
+	// right before the send.
 	m_robotDataReceiver->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
