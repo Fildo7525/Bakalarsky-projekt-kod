@@ -6,6 +6,8 @@ add_library(bm_controlSW
 	Odometry.hpp
 	filter/LowPassFilter.cpp
 	filter/LowPassFilter.hpp
+	filter/RobotImpulseFilter.cpp
+	filter/RobotImpulseFilter.hpp
 )
 
 find_package(ament_cmake REQUIRED)
