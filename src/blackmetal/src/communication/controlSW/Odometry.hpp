@@ -21,7 +21,6 @@
 class Odometry
 {
 public:
-
 	/**
 	 * @class Speed
 	 * @brief Stores the speeds of the left and right wheel obtained from the robot.
@@ -50,26 +49,12 @@ public:
 	void execute();
 
 	/**
-	 * @brief Retrieve the left and right wheel speed from the received json message.
-	 *
-	 * This method transforms the left and right wheel impulses to metres per second.
-	 * To ensure the best possible outcome the impulses are run through a low pass filter.
-	 *
-	 * @see m_leftWheelImpulseFilter Low pass filter filtering the impulses of the left wheel.
-	 * @see m_rightWheelImpulseFilter Low pass filter filtering the impulses of the right wheel.
-	 *
-	 * @param jsonMessage Message received from the server.
-	 * @return Structure of left and right wheel speed.
-	 */
-	Speed obtainWheelSpeeds(std::string &&jsonMessage);
-
-	/**
 	 * @brief Get the last left wheel speed.
 	 *
 	 * The output of this function is copy of the actual value.
 	 * Thus you can use this variable in non thread safe functions.
 	 */
-	long leftWheelSpeed() const;
+	[[maybe_unused]] long leftWheelSpeed() const;
 
 	/**
 	 * @brief Get the last right wheel speed.
@@ -77,7 +62,7 @@ public:
 	 * The output of this function is copy of the actual value.
 	 * Thus you can use this variable in non thread safe functions.
 	 */
-	long rightWheelSpeed() const;
+	[[maybe_unused]] long rightWheelSpeed() const;
 
 	/**
 	 * @brief Sets the length of the robot chassis.
@@ -109,7 +94,21 @@ public:
 	 * @param positionPublisher 
 	 */
 	void setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr positionPublisher);
+
 private:
+	/**
+	 * @brief Retrieve the left and right wheel speed from the received json message.
+	 *
+	 * This method transforms the left and right wheel impulses to metres per second.
+	 * To ensure the best possible outcome the impulses are run through a low pass filter.
+	 *
+	 * @see m_leftWheelImpulseFilter Low pass filter filtering the impulses of the left wheel.
+	 * @see m_rightWheelImpulseFilter Low pass filter filtering the impulses of the right wheel.
+	 *
+	 * @param jsonMessage Message received from the server.
+	 * @return Structure of left and right wheel speed.
+	 */
+	Speed obtainWheelSpeeds(std::string &&jsonMessage);
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.

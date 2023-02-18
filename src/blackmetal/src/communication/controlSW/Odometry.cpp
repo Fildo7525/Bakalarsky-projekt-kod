@@ -79,35 +79,6 @@ void Odometry::execute()
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
-Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
-{
-	// The structure will arrive in a wannabe json format
-	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-	double lws, rws;
-
-	DBG("Received message: " << jsonMessage);
-	auto lws_start = jsonMessage.find_first_of('=') + 1;
-	auto lws_end = jsonMessage.find_first_of(' ');
-	lws = std::stod(jsonMessage.substr(lws_start, lws_end));
-
-	auto rws_start = jsonMessage.find_last_of('=') + 1;
-	auto rws_end = jsonMessage.find_last_of('}');
-	rws = std::stod(jsonMessage.substr(rws_start, rws_end));
-
-	// Run the impulses though the low pass filter.
-	lws = m_leftWheelImpulseFilter.filter(lws);
-	rws = m_rightWheelImpulseFilter.filter(rws);
-
-	// We need to convert the impulses send by robot to SI units (meters per second).
-	lws = lws / FROM_IMP_TO_MPS_L;
-	rws = rws / FROM_IMP_TO_MPS_R;
-
-	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
-	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
-
-	return {lws, -rws};
-}
-
 long Odometry::leftWheelSpeed() const
 {
 	std::lock_guard lock(g_odometryMutex);
@@ -147,6 +118,35 @@ const double &Odometry::getWheelRadius()
 void Odometry::setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr positionPublisher)
 {
 	this->m_positionPublisher = positionPublisher;
+}
+
+Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
+{
+	// The structure will arrive in a wannabe json format
+	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
+	double lws, rws;
+
+	DBG("Received message: " << jsonMessage);
+	auto lws_start = jsonMessage.find_first_of('=') + 1;
+	auto lws_end = jsonMessage.find_first_of(' ');
+	lws = std::stod(jsonMessage.substr(lws_start, lws_end));
+
+	auto rws_start = jsonMessage.find_last_of('=') + 1;
+	auto rws_end = jsonMessage.find_last_of('}');
+	rws = std::stod(jsonMessage.substr(rws_start, rws_end));
+
+	// Run the impulses though the low pass filter.
+	lws = m_leftWheelImpulseFilter.filter(lws);
+	rws = m_rightWheelImpulseFilter.filter(rws);
+
+	// We need to convert the impulses send by robot to SI units (meters per second).
+	lws = lws / FROM_IMP_TO_MPS_L;
+	rws = rws / FROM_IMP_TO_MPS_R;
+
+	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
+	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
+
+	return {lws, -rws};
 }
 
 void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
