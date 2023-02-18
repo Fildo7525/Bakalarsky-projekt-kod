@@ -36,6 +36,8 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	, m_coordination()
 	, m_chassisLength(std::numeric_limits<double>::max())
 	, m_wheelRadius(0)
+	, m_leftWheelImpulseFilter(0.999)
+	, m_rightWheelImpulseFilter(0.999)
 {
 	m_robotSpeedReceiver = std::thread(
 		[this] {
@@ -77,7 +79,7 @@ void Odometry::execute()
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
-Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
+Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
@@ -91,6 +93,10 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage) const
 	auto rws_start = jsonMessage.find_last_of('=') + 1;
 	auto rws_end = jsonMessage.find_last_of('}');
 	rws = std::stod(jsonMessage.substr(rws_start, rws_end));
+
+	// Run the impulses though the low pass filter.
+	lws = m_leftWheelImpulseFilter.filter(lws);
+	rws = m_rightWheelImpulseFilter.filter(rws);
 
 	// We need to convert the impulses send by robot to SI units (meters per second).
 	lws = lws / FROM_IMP_TO_MPS_L;
@@ -145,7 +151,7 @@ void Odometry::setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector
 
 void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
-	// The poll time is in milliseconds while th elapsedTime is in microseconds.
+	// The poll time is in milliseconds while the elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
 	double angularVelocity = (double(speed.rightWheel) - speed.leftWheel) / m_chassisLength;

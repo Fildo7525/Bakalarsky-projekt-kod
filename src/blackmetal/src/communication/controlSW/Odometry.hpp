@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RobotDataReceiver.hpp"
+#include "controlSW/filter/RobotImpulseFilter.hpp"
 
 #include <geometry_msgs/msg/vector3.hpp>
 #include <rclcpp/publisher.hpp>
@@ -51,10 +52,16 @@ public:
 	/**
 	 * @brief Retrieve the left and right wheel speed from the received json message.
 	 *
+	 * This method transforms the left and right wheel impulses to metres per second.
+	 * To ensure the best possible outcome the impulses are run through a low pass filter.
+	 *
+	 * @see m_leftWheelImpulseFilter Low pass filter filtering the impulses of the left wheel.
+	 * @see m_rightWheelImpulseFilter Low pass filter filtering the impulses of the right wheel.
+	 *
 	 * @param jsonMessage Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	Speed obtainWheelSpeeds(std::string &&jsonMessage) const;
+	Speed obtainWheelSpeeds(std::string &&jsonMessage);
 
 	/**
 	 * @brief Get the last left wheel speed.
@@ -140,5 +147,11 @@ private:
 
 	/// The left and right wheel radius.
 	double m_wheelRadius;
+
+	/// The filter of the robot's left motor impulses.
+	RobotImpulseFilter m_leftWheelImpulseFilter;
+
+	/// The filter of the robot's right motor impulses.
+	RobotImpulseFilter m_rightWheelImpulseFilter;
 };
 
