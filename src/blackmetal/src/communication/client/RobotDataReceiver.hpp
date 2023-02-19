@@ -94,7 +94,7 @@ private:
 	 *
 	 * @param msg Json string to be sent to the server.
 	 */
-	void enqueue(const std::string &msg);
+	void enqueue(const RobotRequestType &msg);
 
 	/**
 	 * @brief Overridden function from Client.
@@ -117,7 +117,7 @@ private:
 
 private:
 	/// Thread safe priority queue managing the json string that are to be sent to the robot.
-	std::shared_ptr<ts::Queue<std::string>> m_queue;
+	std::shared_ptr<ts::Queue<RobotRequestType>> m_queue;
 
 	/// Thread safe queue containing the returned left and right wheel velocity.
 	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;

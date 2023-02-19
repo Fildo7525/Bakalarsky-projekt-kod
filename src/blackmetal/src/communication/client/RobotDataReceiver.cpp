@@ -1,14 +1,17 @@
 #include "RobotDataReceiver.hpp"
+
+#include "ReturnStatus.hpp"
+#include "log.hpp"
+
 #include <algorithm>
 #include <iomanip>
-#include <log.hpp>
 #include <thread>
 
 INIT_MODULE(RobotDataReceiver);
 
 RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	: Client(port, address)
-	, m_queue(new ts::Queue<std::string>("m_clientQueue"))
+	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue<std::string>("m_odometryQueue"))
 {
 	std::thread([this] {
@@ -19,22 +22,14 @@ RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 
 bm::Status RobotDataReceiver::sendRequest(bm::Command cmd, RobotRequestType::WheelValueT rightWheel, RobotRequestType::WheelValueT leftWheel)
 {
-	DBG("Composing command: " << bm::stringifyCommand(cmd));
-	// Example: "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":0.1,\"LeftWheelSpeed\":0.1,\"RightWheelPosition\":0.1,\"LeftWheelPosition\":0.1}";
-	std::string message = "{\"UserID\":1,\"Command\":";
-	message += std::to_string(int(cmd));
-	if (cmd == bm::Command::SET_LR_WHEEL_VELOCITY) {
-		message += ",\"RightWheelSpeed\":" + std::to_string(std::get<double>(rightWheel)) +
-					",\"LeftWheelSpeed\":" + std::to_string(std::get<double>(leftWheel));
-	} else if (cmd == bm::Command::SET_LR_WHEEL_POSITION) {
-		message += ",\"RightWheelPosition\":" + std::to_string(std::get<long>(rightWheel)) +
-					",\"LeftWheelPosition\":" + std::to_string(std::get<long>(leftWheel));
-	}
-	message += "}";
+	RobotRequestType message = RobotRequestType().setUserID(1)
+									 .setCommand(cmd)
+									 .setRighttWheel(rightWheel)
+									 .setLeftWheel(leftWheel);
 
-	INFO("sending: " << message);
+	INFO("sending: " << message.toJson());
 
-	this->enqueue(message);
+	enqueue(message);
 
 	return bm::Status::OK;
 }
@@ -67,7 +62,7 @@ std::vector<std::string> RobotDataReceiver::splitResponses(const std::string &ms
 	return receivedStrings;
 }
 
-void RobotDataReceiver::enqueue(const std::string &msg)
+void RobotDataReceiver::enqueue(const RobotRequestType &msg)
 {
 	m_queue->push(msg);
 }
@@ -99,17 +94,12 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 		}
 	}
 
-	status = bm::Status::OK;
-	if (responses.size() > 1) {
-		status = bm::Status::MULTIPLE_RECEIVE;
-	}
-
-	return status;
+	return (responses.size() > 1 ? bm::Status::MULTIPLE_RECEIVE : bm::Status::OK);
 }
 
 void RobotDataReceiver::workerThread()
 {
-	std::string message;
+	RobotRequestType robotRequest;
 	bool getSpeedCommand = false;
 
 	// Lambda function used for receiving messages from the server.
@@ -141,7 +131,7 @@ void RobotDataReceiver::workerThread()
 	};
 
 	while (m_connected) {
-		message = m_queue->pop();
+		robotRequest = m_queue->pop();
 
 		if (robotRequest.command() == bm::Command::GET_LR_WHEEL_VELOCITY) {
 			getSpeedCommand = true;
@@ -149,7 +139,9 @@ void RobotDataReceiver::workerThread()
 		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
 		}
 
+		std::string message = robotRequest.toJson();
 		INFO("sending: " << message);
+
 		_send(message);
 		// If multiple messages are read at once they are evaluated in reveive function.
 		if (_receive(message) == bm::Status::MULTIPLE_RECEIVE) {
