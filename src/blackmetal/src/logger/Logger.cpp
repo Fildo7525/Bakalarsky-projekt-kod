@@ -80,25 +80,27 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	std::stringstream threadID;
 	threadID << std::this_thread::get_id();
 
-	if (dbgLevel >= m_level) {
-		std::scoped_lock<std::mutex> lk(mut);
-		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
-			std::fprintf(stderr, "%s[%d:%s] %s : %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
-		} else {
-			std::printf("%s[%d:%s] %s: %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
+	std::thread([&] {
+		if (dbgLevel >= m_level) {
+			std::scoped_lock<std::mutex> lk(mut);
+			if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
+				std::fprintf(stderr, "%s[%d:%s] %s : %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
+			} else {
+				std::printf("%s[%d:%s] %s: %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
+			}
 		}
-	}
-	if (!m_logFile.is_open()) {
-		return;
-	}
+		if (!m_logFile.is_open()) {
+			return;
+		}
 
-	std::stringstream ss;
-	ss << log_time << "\t[" << pid << ':' << threadID.str() << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
-	{
-		std::scoped_lock<std::mutex> lk(mut);
-		m_logFile << ss.str();
-		m_logAllFile << ss.str();
-	}
+		std::stringstream ss;
+		ss << log_time << "\t[" << pid << ':' << threadID.str() << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
+		{
+			std::scoped_lock<std::mutex> lk(mut);
+			m_logFile << ss.str();
+			m_logAllFile << ss.str();
+		}
+	}).detach();
 }
 
 dbg_level Logger::level()
