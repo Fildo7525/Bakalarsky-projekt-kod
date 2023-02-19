@@ -39,6 +39,11 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	, m_leftWheelImpulseFilter(0.999)
 	, m_rightWheelImpulseFilter(0.999)
 {
+	m_robotDataReceiver->setOnVelocityChangeCallback([this] {
+		m_leftWheelImpulseFilter.resetInitState(0);
+		m_rightWheelImpulseFilter.resetInitState(0);
+	});
+
 	m_robotWorkerThread = std::thread(
 		[this] {
 			while (m_robotDataReceiver->connected()) {

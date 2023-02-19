@@ -3,6 +3,8 @@
 #include "Client.hpp"
 #include "types/RobotRequestType.hpp"
 
+#include <functional>
+
 /**
  * @class RobotDataReceiver
  * @brief Child class implementing Client class and operating with robot messages.
@@ -76,6 +78,8 @@ public:
 	 */
 	std::string robotVelocity();
 
+	void setOnVelocityChangeCallback(std::function<void()> onVelocityChange);
+
 private:
 	/**
 	 * @brief Check if the read did not read two messags at the same time.
@@ -123,5 +127,7 @@ private:
 	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;
 
 	bool m_resetFilter;
+
+	std::function<void()> m_onVelocityChange;
 };
 

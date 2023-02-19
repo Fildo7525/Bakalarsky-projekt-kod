@@ -14,6 +14,7 @@ RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	: Client(port, address)
 	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue<std::string>("m_odometryQueue"))
+	, m_onVelocityChange([] {})
 {
 	std::thread([this] {
 		sleep(1);
@@ -75,6 +76,11 @@ std::string RobotDataReceiver::robotVelocity()
 	return front;
 }
 
+void RobotDataReceiver::setOnVelocityChangeCallback(std::function<void()> onVelocityChange)
+{
+	this->m_onVelocityChange = onVelocityChange;
+}
+
 bm::Status RobotDataReceiver::receive(std::string &msg)
 {
 	auto status = this->Client::receive(msg);
@@ -93,6 +99,7 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 			INFO("Passing " << std::quoted(response) << " to odometry");
 			if (m_resetFilter) {
 				m_resetFilter = false;
+				m_onVelocityChange();
 			}
 			m_odometryMessages->push(response);
 		}
