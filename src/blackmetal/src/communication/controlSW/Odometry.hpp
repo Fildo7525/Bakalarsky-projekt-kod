@@ -42,6 +42,8 @@ public:
 	 */
 	explicit Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver);
 
+	~Odometry();
+
 	/**
 	 * @brief Function polling the robot for its left and right wheel speed.
 	 * The function will block the thread, thus it should be run in different thread.
@@ -136,7 +138,7 @@ private:
 	geometry_msgs::msg::Vector3 m_coordination;
 
 	/// Thread that polls the server at a certain frequency for the wheels velocity.
-	std::thread m_robotSpeedReceiver;
+	std::thread m_robotWorkerThread;
 
 	// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;

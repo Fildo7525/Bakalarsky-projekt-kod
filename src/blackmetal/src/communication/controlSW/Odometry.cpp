@@ -39,7 +39,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	, m_leftWheelImpulseFilter(0.999)
 	, m_rightWheelImpulseFilter(0.999)
 {
-	m_robotSpeedReceiver = std::thread(
+	m_robotWorkerThread = std::thread(
 		[this] {
 			while (m_robotDataReceiver->connected()) {
 				std::this_thread::sleep_for(g_pollTime);
@@ -48,6 +48,11 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 		}
 	);
 	INFO("Timer initialized");
+}
+
+Odometry::~Odometry()
+{
+	m_robotWorkerThread.join();
 }
 
 void Odometry::execute()
