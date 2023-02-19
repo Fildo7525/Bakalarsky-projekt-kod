@@ -89,16 +89,17 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 				std::printf("%s[%d:%s] %s: %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
 			}
 		}
-		if (!m_logFile.is_open()) {
-			return;
-		}
 
 		std::stringstream ss;
 		ss << log_time << "\t[" << pid << ':' << threadID.str() << "] " << dbgLevelToString(dbgLevel) << ": " << m_moduleName << " => " << codePath << ": " << message << '\n';
 		{
 			std::scoped_lock<std::mutex> lk(mut);
-			m_logFile << ss.str();
-			m_logAllFile << ss.str();
+			if (m_logFile.is_open()) {
+				m_logFile << ss.str();
+			}
+			if (m_logAllFile.is_open()) {
+				m_logAllFile << ss.str();
+			}
 		}
 	}).detach();
 }
