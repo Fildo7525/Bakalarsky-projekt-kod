@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Client.hpp"
+#include "types/RobotRequestType.hpp"
 
 /**
  * @class RobotDataReceiver
@@ -18,12 +19,6 @@ class RobotDataReceiver
 	: public Client
 {
 public:
-	/**
-	 * The sendRequest function takes arguments for left and right wheel
-	 * for setting position and velocity. The velocity is set with double
-	 * and the position is set with long. This is the generic solution for this issue.
-	 */
-	using WheelValueT = std::variant<long, double>;
 
 	/**
 	 * @brief Constructor implementing Client constructor.
@@ -49,7 +44,7 @@ public:
 	 * @param leftWheel Right wheel speed or position. This parameter is needed only in
 	 * bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
 	 */
-	virtual bm::Status sendRequest(bm::Command cmd, WheelValueT rightWheel = 0, WheelValueT leftWheel = 0);
+	virtual bm::Status sendRequest(bm::Command cmd, RobotRequestType::WheelValueT rightWheel = 0, RobotRequestType::WheelValueT leftWheel = 0);
 
 	/**
 	 * @brief A specific function just for calling execute with bm::Command::SET_LR_WHEEL_VELOCITY.

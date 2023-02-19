@@ -1,6 +1,8 @@
 # Communication library
 add_library(threadSafeQ
 	Queue.hpp
+	types/RobotRequestType.cpp
+	types/RobotRequestType.hpp
 )
 
 find_package(ament_cmake REQUIRED)

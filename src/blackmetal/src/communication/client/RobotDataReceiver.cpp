@@ -143,10 +143,10 @@ void RobotDataReceiver::workerThread()
 	while (m_connected) {
 		message = m_queue->pop();
 
-		if (message.find("Command\":6") != std::string::npos) {
+		if (robotRequest.command() == bm::Command::GET_LR_WHEEL_VELOCITY) {
 			getSpeedCommand = true;
 		}
-		else if (message.find("Command\":3") != std::string::npos) {
+		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
 		}
 
 		INFO("sending: " << message);
