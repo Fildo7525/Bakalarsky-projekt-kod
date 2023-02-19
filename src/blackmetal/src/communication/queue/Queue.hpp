@@ -74,8 +74,8 @@ public:
 	 * @brief Add a new element to the priority queue.
 	 *
 	 * Inserts the element to the queue. If the inserted item
-	 * is sending request for setting the left and right wheel speed
-	 * prioritize this request.
+	 * is evaluated by the std::greater<T>() as grater
+	 * the item is prioritized.
 	 *
 	 * @param item to be added to the queue.
 	 */
@@ -156,11 +156,18 @@ std::ostream &operator<<(std::ostream &os, const ts::Queue<T> &queue)
 {
 	std::thread([&os, &queue] {
 		ts::pqueue<T> tmp;
+		// Copy the contents of the queue to a temporary queue.
+		// So that we will lock the mutex for as low time as possible.
 		{
 			std::scoped_lock<std::mutex> lock(queue.m_qMutex);
 			tmp = queue.m_pqueue;
 		}
-		os << tmp;
+
+		while (tmp.size() > 1)
+		{
+			os << tmp.top() << ", ";
+			tmp.pop();
+		}
 	}).detach();
 	return os;
 }

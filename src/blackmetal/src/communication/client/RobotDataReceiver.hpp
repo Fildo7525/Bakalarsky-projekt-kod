@@ -126,8 +126,10 @@ private:
 	/// Thread safe queue containing the returned left and right wheel velocity.
 	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;
 
+	/// Flag for detecting the change of the robot velocity. When set the filter will be reset using the m_onVelocityChange callback.
 	bool m_resetFilter;
 
+	/// Callback for resetting the filter when the robot velocity changes.
 	std::function<void()> m_onVelocityChange;
 };
 

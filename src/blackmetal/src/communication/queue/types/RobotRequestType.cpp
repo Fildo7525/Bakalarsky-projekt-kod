@@ -28,22 +28,22 @@ RobotRequestType& RobotRequestType::setRighttWheel(WheelValueT rw)
 	return *this;
 }
 
-int RobotRequestType::userID()
+int RobotRequestType::userID() const
 {
 	return m_userID;
 }
 
-bm::Command RobotRequestType::command()
+bm::Command RobotRequestType::command() const
 {
 	return m_command;
 }
 
-RobotRequestType::WheelValueT RobotRequestType::leftWheel()
+RobotRequestType::WheelValueT RobotRequestType::leftWheel() const
 {
 	return m_leftWheel;
 }
 
-RobotRequestType::WheelValueT RobotRequestType::rightWheel()
+RobotRequestType::WheelValueT RobotRequestType::rightWheel() const
 {
 	return m_rightWheel;
 }
