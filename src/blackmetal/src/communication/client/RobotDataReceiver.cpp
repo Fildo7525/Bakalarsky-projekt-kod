@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <thread>
+#include <utility>
 
 INIT_MODULE(RobotDataReceiver);
 
@@ -90,6 +91,9 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 		status = evalReturnState(response);
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
 			INFO("Passing " << std::quoted(response) << " to odometry");
+			if (m_resetFilter) {
+				m_resetFilter = false;
+			}
 			m_odometryMessages->push(response);
 		}
 	}
@@ -101,6 +105,7 @@ void RobotDataReceiver::workerThread()
 {
 	RobotRequestType robotRequest;
 	bool getSpeedCommand = false;
+	std::pair<RobotRequestType::WheelValueT, RobotRequestType::WheelValueT> lastWheelSpeeds = {0, 0};
 
 	// Lambda function used for receiving messages from the server.
 	auto _receive = [this] (std::string &message) -> bm::Status {
@@ -137,6 +142,10 @@ void RobotDataReceiver::workerThread()
 			getSpeedCommand = true;
 		}
 		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
+			if (robotRequest.rightWheel() != lastWheelSpeeds.first || robotRequest.leftWheel() != lastWheelSpeeds.second) {
+				lastWheelSpeeds = {robotRequest.rightWheel(), robotRequest.leftWheel()};
+				m_resetFilter = true;
+			}
 		}
 
 		std::string message = robotRequest.toJson();

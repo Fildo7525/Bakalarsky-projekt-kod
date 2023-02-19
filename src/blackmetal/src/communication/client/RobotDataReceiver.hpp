@@ -121,5 +121,7 @@ private:
 
 	/// Thread safe queue containing the returned left and right wheel velocity.
 	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;
+
+	bool m_resetFilter;
 };
 
