@@ -1,12 +1,17 @@
 #pragma once
 
-#include <iostream>
-#include <iterator>
+#include <algorithm>
+#include <chrono>
 #include <condition_variable>
+#include <iomanip>
+#include <iterator>
+#include <mutex>
 #include <queue>
 #include <string>
-#include <mutex>
+#include <thread>
 #include <vector>
+
+using namespace std::chrono_literals;
 
 /**
  * @brief ts is a namespace grouping thread safe classes and functions.
@@ -14,36 +19,8 @@
 namespace ts
 {
 
-/**
- * @class my_queue
- * @brief Class accessing private members of std::priority_queue. NOT thread safe.
- *
- * This class defines operator<< for logging the contents of the queue. At the same time
- * we define a way to sort the received context in correct order. Meaning, that the request containing
- * the velocity requests are placed on first position with the highest priority.
- *
- * WARN:
- * We use this type to define ts::Queue::m_pqueue. Printing the contents
- * of this class must be handled with locked mutex.
- */
-class my_queue
-	: public std::priority_queue<std::string, std::vector<std::string>, std::greater<std::string>>
-{
-public:
-
-	/**
-	 * @brief Copies the contents of implementing structure to the std::ostream.
-	 *
-	 * The implementing structure is in our case std::vector. This allows us to copy
-	 * all the contents to the std::ostream.
-	 *
-	 * @param os Output stream to which will the context be printed.
-	 * @param queue Queue to be printed.
-	 */
-	friend std::ostream &operator<<(std::ostream &os, const my_queue &queue);
-};
-
-std::ostream &operator<<(std::ostream &os, const my_queue &queue);
+template <typename T>
+using pqueue = std::priority_queue<T, std::vector<T>, std::greater<T>>;
 
 /**
  * @class Queue
@@ -52,6 +29,7 @@ std::ostream &operator<<(std::ostream &os, const my_queue &queue);
  * are those that are setting the robot's left and right wheel speed.
  * The ordering is done using the callable object std::greater<std::string>()
  */
+template <typename T>
 class Queue {
 	/**
 	 * @brief Checks if the queue is empty.
@@ -85,12 +63,12 @@ public:
 	 * @brief Returns the top element in the priority queue and removes
 	 * it from the internal structure.
 	 */
-	std::string pop();
+	T pop();
 
 	/**
 	 * @brief Returns the copy of the top element in the priority queue.
 	 */
-	std::string peek();
+	T peek();
 
 	/**
 	 * @brief Add a new element to the priority queue.
@@ -101,11 +79,11 @@ public:
 	 *
 	 * @param item to be added to the queue.
 	 */
-	void push(const std::string &item);
+	void push(const T &item);
 
 private:
 	/// Priority queue containing the requests to be send.
-	my_queue m_pqueue;
+	ts::pqueue<T> m_pqueue;
 
 	/// The queue mutex.
 	std::mutex m_qMutex;
@@ -118,4 +96,72 @@ private:
 };
 
 } // thread safe namespace
+
+template <typename T>
+ts::Queue<T>::Queue(const std::string &name)
+	: m_queueName(name)
+{
+}
+
+template <typename T>
+bool ts::Queue<T>::empty()
+{
+	std::scoped_lock<std::mutex> lock(m_qMutex);
+	return m_pqueue.empty();
+}
+
+template <typename T>
+unsigned long ts::Queue<T>::size()
+{
+	std::scoped_lock<std::mutex> lock(m_qMutex);
+	return m_pqueue.size();
+}
+
+template <typename T>
+T ts::Queue<T>::pop()
+{
+	// DBG("Pop was invoked");
+	T tmp;
+
+	std::unique_lock<std::mutex> lk(m_qMutex);
+	m_cvPush.wait(lk, [this] { return !m_pqueue.empty(); });
+
+	tmp = m_pqueue.top();
+	m_pqueue.pop();
+	return tmp;
+}
+
+template <typename T>
+T ts::Queue<T>::peek()
+{
+	std::string tmp;
+
+	std::unique_lock<std::mutex> lk(m_qMutex);
+	m_cvPush.wait(lk, [this] { return !m_pqueue.empty(); });
+
+	tmp = m_pqueue.top();
+	return tmp;
+}
+
+template <typename T>
+void ts::Queue<T>::push(const T &item)
+{
+	std::unique_lock<std::mutex> lock(m_qMutex);
+	m_pqueue.push(item);
+	m_cvPush.notify_one();
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const ts::Queue<T> &queue)
+{
+	std::thread([&os, &queue] {
+		ts::pqueue<T> tmp;
+		{
+			std::scoped_lock<std::mutex> lock(queue.m_qMutex);
+			tmp = queue.m_pqueue;
+		}
+		os << tmp;
+	}).detach();
+	return os;
+}
 

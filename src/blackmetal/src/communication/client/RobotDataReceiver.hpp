@@ -122,9 +122,9 @@ private:
 
 private:
 	/// Thread safe priority queue managing the json string that are to be sent to the robot.
-	std::shared_ptr<ts::Queue> m_queue;
+	std::shared_ptr<ts::Queue<std::string>> m_queue;
 
 	/// Thread safe queue containing the returned left and right wheel velocity.
-	std::shared_ptr<ts::Queue> m_odometryMessages;
+	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;
 };
 

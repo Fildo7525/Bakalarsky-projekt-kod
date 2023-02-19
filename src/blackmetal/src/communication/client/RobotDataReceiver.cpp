@@ -8,8 +8,8 @@ INIT_MODULE(RobotDataReceiver);
 
 RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	: Client(port, address)
-	, m_queue(new ts::Queue("m_clientQueue"))
-	, m_odometryMessages(new ts::Queue("m_odometryQueue"))
+	, m_queue(new ts::Queue<std::string>("m_clientQueue"))
+	, m_odometryMessages(new ts::Queue<std::string>("m_odometryQueue"))
 {
 	std::thread([this] {
 		sleep(1);
@@ -17,7 +17,7 @@ RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	}).detach();
 }
 
-bm::Status RobotDataReceiver::sendRequest(bm::Command cmd, WheelValueT rightWheel, WheelValueT leftWheel)
+bm::Status RobotDataReceiver::sendRequest(bm::Command cmd, RobotRequestType::WheelValueT rightWheel, RobotRequestType::WheelValueT leftWheel)
 {
 	DBG("Composing command: " << bm::stringifyCommand(cmd));
 	// Example: "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":0.1,\"LeftWheelSpeed\":0.1,\"RightWheelPosition\":0.1,\"LeftWheelPosition\":0.1}";

@@ -1,6 +1,5 @@
 # Communication library
 add_library(threadSafeQ
-	Queue.cpp
 	Queue.hpp
 )
 
