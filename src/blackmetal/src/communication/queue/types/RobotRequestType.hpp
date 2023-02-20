@@ -16,6 +16,11 @@ class RobotRequestType
 {
 public:
 	/**
+	 * @brief Default constructor.
+	 */
+	RobotRequestType() = default;
+
+	/**
 	 * The sendRequest function takes arguments for left and right wheel
 	 * for setting position and velocity. The velocity is set with double
 	 * and the position is set with long. This is the generic solution for this issue.

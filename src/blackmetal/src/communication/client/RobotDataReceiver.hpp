@@ -16,6 +16,7 @@
  * in separate thread.
  *
  * @see Client class used for communication with the robot.
+ * @see RobotRequestType class used for storing the request parameters.
  */
 class RobotDataReceiver
 	: public Client
