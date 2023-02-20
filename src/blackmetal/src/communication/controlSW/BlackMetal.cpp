@@ -31,7 +31,8 @@ BlackMetal::BlackMetal()
 		}
 	);
 
-	m_positionPublisher = this->create_publisher<geometry_msgs::msg::Vector3>("position", 10);
+	// to see other rclcpp:QoS options see https://docs.ros.org/en/rolling/Concepts/About-Quality-of-Service-Settings.html
+	m_positionPublisher = this->create_publisher<geometry_msgs::msg::Vector3>("position", rclcpp::QoS(1).reliable());
 	m_odometry->setPositinoPublisher(m_positionPublisher);
 
 	WARN("Odometry created");
