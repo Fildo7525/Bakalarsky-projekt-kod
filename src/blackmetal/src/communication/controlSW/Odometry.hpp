@@ -2,6 +2,7 @@
 
 #include "RobotDataReceiver.hpp"
 #include "controlSW/filter/RobotImpulseFilter.hpp"
+#include "types/RobotResponseType.hpp"
 
 #include <geometry_msgs/msg/vector3.hpp>
 #include <rclcpp/publisher.hpp>
@@ -110,7 +111,7 @@ private:
 	 * @param jsonMessage Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	Speed obtainWheelSpeeds(std::string &&jsonMessage);
+	RobotResponseType obtainWheelSpeeds(std::string &&jsonMessage);
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
@@ -122,7 +123,7 @@ private:
 	 * @param speed Rvalue reference to a structure containing the left and right wheel velocity.
 	 * @param elapsedTime The rvalue reference to the elapsed time after the receiving the robot velocity. 
 	 */
-	void changeRobotLocation(Speed &&speed, long double &&elapsedTime);
+	void changeRobotLocation(RobotResponseType &&speed, long double &&elapsedTime);
 
 private:
 	/// Instance of the control software client.
@@ -141,7 +142,7 @@ private:
 	std::thread m_robotWorkerThread;
 
 	// The speeds in the blackmetal code are defined as longs.
-	Speed m_velocity;
+	RobotResponseType m_velocity;
 
 	/// The length of the robot chassis.
 	double m_chassisLength;

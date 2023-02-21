@@ -2,6 +2,7 @@
 
 #include "Client.hpp"
 #include "types/RobotRequestType.hpp"
+#include "types/RobotResponseType.hpp"
 
 #include <functional>
 
@@ -79,7 +80,7 @@ public:
 	 */
 	std::string robotVelocity();
 
-	void setOnVelocityChangeCallback(std::function<void()> onVelocityChange);
+	void setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange);
 
 private:
 	/**
@@ -128,9 +129,9 @@ private:
 	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;
 
 	/// Flag for detecting the change of the robot velocity. When set the filter will be reset using the m_onVelocityChange callback.
-	bool m_resetFilter;
+	bool m_velocityChangeFlag;
 
 	/// Callback for resetting the filter when the robot velocity changes.
-	std::function<void()> m_onVelocityChange;
+	std::function<void(RobotResponseType)> m_onVelocityChange;
 };
 

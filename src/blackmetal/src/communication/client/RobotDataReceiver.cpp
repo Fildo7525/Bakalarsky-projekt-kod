@@ -2,6 +2,7 @@
 
 #include "ReturnStatus.hpp"
 #include "log.hpp"
+#include "types/RobotResponseType.hpp"
 
 #include <algorithm>
 #include <iomanip>
@@ -14,7 +15,7 @@ RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	: Client(port, address)
 	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue<std::string>("m_odometryQueue"))
-	, m_onVelocityChange([] {})
+	, m_onVelocityChange([] (RobotResponseType newValue) { (void)newValue;})
 {
 	std::thread([this] {
 		sleep(1);
@@ -76,7 +77,7 @@ std::string RobotDataReceiver::robotVelocity()
 	return front;
 }
 
-void RobotDataReceiver::setOnVelocityChangeCallback(std::function<void()> onVelocityChange)
+void RobotDataReceiver::setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange)
 {
 	this->m_onVelocityChange = onVelocityChange;
 }
@@ -97,9 +98,9 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 		status = evalReturnState(response);
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
 			INFO("Passing " << std::quoted(response) << " to odometry");
-			if (m_resetFilter) {
-				m_resetFilter = false;
-				m_onVelocityChange();
+			if (m_velocityChangeFlag) {
+				m_velocityChangeFlag = false;
+				m_onVelocityChange(RobotResponseType::fromJson(response));
 			}
 			m_odometryMessages->push(response);
 		}
@@ -151,7 +152,7 @@ void RobotDataReceiver::workerThread()
 		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
 			if (robotRequest.rightWheel() != lastWheelSpeeds.first || robotRequest.leftWheel() != lastWheelSpeeds.second) {
 				lastWheelSpeeds = {robotRequest.rightWheel(), robotRequest.leftWheel()};
-				m_resetFilter = true;
+				m_velocityChangeFlag = true;
 			}
 		}
 

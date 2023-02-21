@@ -20,6 +20,8 @@
 #define MAX_WHEEL_SPEED 0.8
 #define FROM_IMP_TO_MPS_L 1012.53636364
 #define FROM_IMP_TO_MPS_R 1053.67588345
+/// The filter must be strong enough to filter out the noise.
+#define FILTER_COEFFICIENT 0.999
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
@@ -36,12 +38,12 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	, m_coordination()
 	, m_chassisLength(std::numeric_limits<double>::max())
 	, m_wheelRadius(0)
-	, m_leftWheelImpulseFilter(0.999)
-	, m_rightWheelImpulseFilter(0.999)
+	, m_leftWheelImpulseFilter(FILTER_COEFFICIENT)
+	, m_rightWheelImpulseFilter(FILTER_COEFFICIENT)
 {
-	m_robotDataReceiver->setOnVelocityChangeCallback([this] {
-		m_leftWheelImpulseFilter.resetInitState(0);
-		m_rightWheelImpulseFilter.resetInitState(0);
+	m_robotDataReceiver->setOnVelocityChangeCallback([this] (RobotResponseType newValue) {
+		m_leftWheelImpulseFilter.resetInitState(newValue.leftWheel());
+		m_rightWheelImpulseFilter.resetInitState(newValue.rightWheel());
 	});
 
 	m_robotWorkerThread = std::thread(
@@ -62,8 +64,8 @@ Odometry::~Odometry()
 
 void Odometry::execute()
 {
-	static Speed lastValue;
-	Speed wheels;
+	static RobotResponseType lastValue;
+	RobotResponseType wheels;
 
 	TIC;
 
@@ -72,15 +74,15 @@ void Odometry::execute()
 	INFO("Odometry has received a message from robot");
 	wheels = obtainWheelSpeeds(std::move(wheelSpeed));
 
-	if (wheels.leftWheel != lastValue.leftWheel || wheels.rightWheel != lastValue.rightWheel) {
-		INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
+	if (wheels.leftWheel() != lastValue.leftWheel() || wheels.rightWheel() != lastValue.rightWheel()) {
+		INFO("Obtained speeds are " << wheels.leftWheel() << " and " << wheels.rightWheel());
 		lastValue = wheels;
 	}
 
 	{
 		std::lock_guard lock(g_odometryMutex);
-		m_velocity.leftWheel = wheels.leftWheel;
-		m_velocity.rightWheel = wheels.rightWheel;
+		m_velocity.setLeftWheel(wheels.leftWheel());
+		m_velocity.setRightWheel(wheels.rightWheel());
 	}
 
 	TOC;
@@ -92,13 +94,13 @@ void Odometry::execute()
 long Odometry::leftWheelSpeed() const
 {
 	std::lock_guard lock(g_odometryMutex);
-	return m_velocity.leftWheel;
+	return m_velocity.leftWheel();
 }
 
 long Odometry::rightWheelSpeed() const
 {
 	std::lock_guard lock(g_odometryMutex);
-	return m_velocity.rightWheel;
+	return m_velocity.rightWheel();
 }
 
 void Odometry::setChassisLength(double chassisLength)
@@ -130,24 +132,14 @@ void Odometry::setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector
 	this->m_positionPublisher = positionPublisher;
 }
 
-Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
+RobotResponseType Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
 {
 	// The structure will arrive in a wannabe json format
 	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-	double lws, rws;
 
-	DBG("Received message: " << jsonMessage);
-	auto lws_start = jsonMessage.find_first_of('=') + 1;
-	auto lws_end = jsonMessage.find_first_of(' ');
-	lws = std::stod(jsonMessage.substr(lws_start, lws_end));
-
-	auto rws_start = jsonMessage.find_last_of('=') + 1;
-	auto rws_end = jsonMessage.find_last_of('}');
-	rws = std::stod(jsonMessage.substr(rws_start, rws_end));
-
-	// Run the impulses though the low pass filter.
-	lws = m_leftWheelImpulseFilter.filter(lws);
-	rws = m_rightWheelImpulseFilter.filter(rws);
+	RobotResponseType response = RobotResponseType::fromJson(jsonMessage);
+	double lws = response.leftWheel();
+	double rws = response.rightWheel();
 
 	// We need to convert the impulses send by robot to SI units (meters per second).
 	lws = lws / FROM_IMP_TO_MPS_L;
@@ -156,19 +148,22 @@ Odometry::Speed Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
 	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
 	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
 
-	return {lws, -rws};
+	response.setLeftWheel(lws);
+	response.setRightWheel(rws);
+
+	return response;
 }
 
-void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
+void Odometry::changeRobotLocation(RobotResponseType &&speed, long double &&elapsedTime)
 {
 	// The poll time is in milliseconds while the elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
-	double angularVelocity = (double(speed.rightWheel) - speed.leftWheel) / m_chassisLength;
+	double angularVelocity = (double(speed.rightWheel()) - speed.leftWheel()) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
-	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
+	double speedInCenterOfGravity = (speed.rightWheel() + speed.leftWheel()) / 2.0;
 	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);
-	// auto icr = m_controlClient->chassisLength() / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
+	// auto icr = m_chassisLength / 2.0 * (speed.rightWheel() + speed.leftWheel()) / (speed.rightWheel() - speed.leftWheel());
 
 	double vx;
 	double vy;

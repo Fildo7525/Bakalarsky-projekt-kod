@@ -3,6 +3,8 @@ add_library(threadSafeQ
 	Queue.hpp
 	types/RobotRequestType.cpp
 	types/RobotRequestType.hpp
+	types/RobotResponseType.cpp
+	types/RobotResponseType.hpp
 )
 
 find_package(ament_cmake REQUIRED)
