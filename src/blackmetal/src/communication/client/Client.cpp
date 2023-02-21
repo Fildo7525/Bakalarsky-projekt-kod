@@ -6,6 +6,7 @@
 
 #include <errno.h>
 #include <arpa/inet.h>
+#include <mutex>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -56,9 +57,8 @@ void Client::start(int port, const std::string &address, long wateTime_usec)
 
 	DBG("The address is valid and supported");
 
-	int clientFD;
-	if ((clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
-		FATAL("\nConnection Failed: " << strerror(clientFD));
+	if ((m_clientFD = connect(m_socket, (struct sockaddr*)&serv_addr, sizeof(serv_addr))) < 0) {
+		FATAL("\nConnection Failed: " << strerror(m_clientFD));
 		return;
 	}
 
@@ -82,9 +82,13 @@ void Client::start(int port, const std::string &address, long wateTime_usec)
 void Client::stop()
 {
 	// closing the connected socket
-	m_connected = false;
+	std::scoped_lock<std::mutex> lk(m_mutex);
 	INFO("Closing connection with " << m_address << ':' <<  m_port);
+	m_connected = false;
+	m_address = "";
+	m_port = 0;
 	close(m_socket);
+	close(m_clientFD);
 }
 
 bm::Status Client::send(const std::string &msg)
@@ -130,16 +134,19 @@ bm::Status Client::receive(std::string &msg)
 
 std::string Client::address()
 {
+	std::scoped_lock<std::mutex> lk(m_mutex);
 	return m_address;
 }
 
 int Client::socketFD()
 {
+	std::scoped_lock<std::mutex> lk(m_mutex);
 	return m_socket;
 }
 
 bool Client::connected()
 {
+	std::scoped_lock<std::mutex> lk(m_mutex);
 	return m_connected;
 }
 

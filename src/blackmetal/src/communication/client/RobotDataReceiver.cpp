@@ -5,6 +5,7 @@
 #include "types/RobotResponseType.hpp"
 
 #include <algorithm>
+#include <exception>
 #include <iomanip>
 #include <thread>
 #include <utility>
@@ -143,7 +144,7 @@ void RobotDataReceiver::workerThread()
 		return sendStatus;
 	};
 
-	while (m_connected) {
+	while (connected()) {
 		robotRequest = m_queue->pop();
 
 		if (robotRequest.command() == bm::Command::GET_LR_WHEEL_VELOCITY) {

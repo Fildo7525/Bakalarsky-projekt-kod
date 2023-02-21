@@ -138,9 +138,6 @@ private:
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
 	geometry_msgs::msg::Vector3 m_coordination;
 
-	/// Thread that polls the server at a certain frequency for the wheels velocity.
-	std::thread m_robotWorkerThread;
-
 	// The speeds in the blackmetal code are defined as longs.
 	RobotResponseType m_velocity;
 

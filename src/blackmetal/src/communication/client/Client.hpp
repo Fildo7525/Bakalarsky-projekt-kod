@@ -112,12 +112,16 @@ protected:
 	std::string m_address;
 
 	/// Flag checking the client's connection.
-	bool m_connected;
+	mutable bool m_connected;
 
 	/// Port to which is the client connected to.
 	int m_port;
 
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
+
+	int m_clientFD;
+
+	std::mutex m_mutex;
 };
 
