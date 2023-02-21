@@ -1,22 +1,37 @@
 #include "log.hpp"
+#include <memory>
+#include <rclcpp/executors.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/qos.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
+#include <rclcpp/subscription_base.hpp>
+#include <rclcpp/utilities.hpp>
 
 INIT_MODULE(PositionTracker);
 
-void callback(geometry_msgs::msg::Vector3 msg)
+class PositionTracker
+	: public rclcpp::Node
 {
-	INFO(msg.x << ", " << msg.y << ", " << msg.z);
-}
+public:
+	PositionTracker()
+		: Node("position_tracker")
+	{
+		m_subscriber = this->create_subscription<geometry_msgs::msg::Vector3>(
+					"position",
+					rclcpp::QoS(10),
+					[] (const geometry_msgs::msg::Vector3 msg) { INFO(msg.x << ", " << msg.y << ", " << msg.z); });
+	}
+private:
+	rclcpp::Subscription<geometry_msgs::msg::Vector3>::SharedPtr m_subscriber;
+};
 
 int main (int argc, char *argv[])
 {
 	rclcpp::init(argc, argv);
 
-	auto node = rclcpp::Node::make_shared("position");
+	rclcpp::spin(std::make_shared<PositionTracker>());
 
-	node->create_subscription<geometry_msgs::msg::Vector3>("position", 1, &callback);
+	rclcpp::shutdown();
 
 	return 0;
 }

@@ -78,6 +78,33 @@ ament_target_dependencies(bm_logger
 install(TARGETS bm_logger
 	DESTINATION lib/${PROJECT_NAME})
 
+
+
+
+
+
+# Position Tracker
+add_executable(bm_position src/position_tracker.cpp)
+target_link_libraries(bm_position
+	logger
+)
+target_include_directories(
+	bm_position
+PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>
+)
+
+ament_target_dependencies(bm_position
+	"rclcpp"
+	"geometry_msgs"
+)
+
+install(TARGETS bm_position
+	DESTINATION lib/${PROJECT_NAME})
+
+
+
 if(BUILD_TESTING)
 	find_package(ament_lint_auto REQUIRED)
 	# the following line skips the linter which checks for copyrights

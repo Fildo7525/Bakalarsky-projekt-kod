@@ -188,7 +188,7 @@ void Odometry::changeRobotLocation(RobotResponseType &&speed, long double &&elap
 		SUCCESS("Y: " << m_coordination.y);
 		m_coordination.z += changeOfAngleInTime;
 		SUCCESS("Angle: " << m_coordination.z);
-		if (!m_positionPublisher) {
+		if (m_positionPublisher) {
 			m_positionPublisher->publish(m_coordination);
 		}
 	}

@@ -28,6 +28,12 @@ def generate_launch_description():
 			output='screen',
 			parameters = [config_log],
 			emulate_tty=True
+		),
+		Node(
+			package='blackmetal',
+			executable='bm_position',
+			output='screen',
+			emulate_tty=True
 		)
 	])
 
