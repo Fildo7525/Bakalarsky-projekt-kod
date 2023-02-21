@@ -78,7 +78,7 @@ public:
 	/**
 	 * @brief Returns the first json message that is located in the odometry queue.
 	 */
-	std::string robotVelocity();
+	RobotResponseType robotVelocity();
 
 	void setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange);
 
@@ -126,7 +126,7 @@ private:
 	std::shared_ptr<ts::Queue<RobotRequestType>> m_queue;
 
 	/// Thread safe queue containing the returned left and right wheel velocity.
-	std::shared_ptr<ts::Queue<std::string>> m_odometryMessages;
+	std::shared_ptr<ts::Queue<RobotResponseType>> m_odometryMessages;
 
 	/// Flag for detecting the change of the robot velocity. When set the filter will be reset using the m_onVelocityChange callback.
 	bool m_velocityChangeFlag;

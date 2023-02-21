@@ -15,6 +15,8 @@ public:
 
 	std::string toJson() const;
 	static RobotResponseType fromJson(const std::string &json);
+
+	bool operator<(const RobotResponseType &other) const;
 private:
 	double m_leftWheel;
 	double m_rightWheel;

@@ -4,6 +4,7 @@
 #include "controlSW/BlackMetal.hpp"
 #include "stopwatch/Stopwatch.hpp"
 #include "log.hpp"
+#include "types/RobotResponseType.hpp"
 
 #include <chrono>
 #include <cmath>
@@ -38,12 +39,12 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	, m_coordination()
 	, m_chassisLength(std::numeric_limits<double>::max())
 	, m_wheelRadius(0)
-	, m_leftWheelImpulseFilter(FILTER_COEFFICIENT)
-	, m_rightWheelImpulseFilter(FILTER_COEFFICIENT)
+	, m_leftWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
+	, m_rightWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 {
 	m_robotDataReceiver->setOnVelocityChangeCallback([this] (RobotResponseType newValue) {
-		m_leftWheelImpulseFilter.resetInitState(newValue.leftWheel());
-		m_rightWheelImpulseFilter.resetInitState(newValue.rightWheel());
+		m_leftWheelImpulseFilter->resetInitState(newValue.leftWheel());
+		m_rightWheelImpulseFilter->resetInitState(newValue.rightWheel());
 	});
 
 	std::thread(
@@ -63,25 +64,30 @@ Odometry::~Odometry()
 
 void Odometry::execute()
 {
-	static RobotResponseType lastValue;
-	RobotResponseType wheels;
+	static Speed lastValue;
+	Speed wheels;
 
 	TIC;
 
 	m_robotDataReceiver->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
-	std::string wheelSpeed = m_robotDataReceiver->robotVelocity();
-	INFO("Odometry has received a message from robot");
-	wheels = obtainWheelSpeeds(std::move(wheelSpeed));
+	RobotResponseType wheelImpulses = m_robotDataReceiver->robotVelocity();
+	INFO("Odometry has received " << wheelImpulses.toJson());
 
-	if (wheels.leftWheel() != lastValue.leftWheel() || wheels.rightWheel() != lastValue.rightWheel()) {
-		INFO("Obtained speeds are " << wheels.leftWheel() << " and " << wheels.rightWheel());
+	// We must filter the impulses and not the mps, because the filter mus be reset to desired walue on chage request.
+	// This is possible only with impulses.
+	wheelImpulses.setLeftWheel(m_leftWheelImpulseFilter->filter(wheelImpulses.leftWheel()));
+	wheelImpulses.setRightWheel(m_rightWheelImpulseFilter->filter(wheelImpulses.rightWheel()));
+
+	wheels = transformToVelocity(std::move(wheelImpulses));
+
+	if (wheels.leftWheel != lastValue.leftWheel || wheels.rightWheel != lastValue.rightWheel) {
+		INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 		lastValue = wheels;
 	}
 
 	{
 		std::lock_guard lock(g_odometryMutex);
-		m_velocity.setLeftWheel(wheels.leftWheel());
-		m_velocity.setRightWheel(wheels.rightWheel());
+		m_velocity = wheels;
 	}
 
 	TOC;
@@ -90,16 +96,16 @@ void Odometry::execute()
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
 }
 
-long Odometry::leftWheelSpeed() const
+double Odometry::leftWheelSpeed() const
 {
 	std::lock_guard lock(g_odometryMutex);
-	return m_velocity.leftWheel();
+	return m_velocity.leftWheel;
 }
 
-long Odometry::rightWheelSpeed() const
+double Odometry::rightWheelSpeed() const
 {
 	std::lock_guard lock(g_odometryMutex);
-	return m_velocity.rightWheel();
+	return m_velocity.rightWheel;
 }
 
 void Odometry::setChassisLength(double chassisLength)
@@ -114,13 +120,13 @@ void Odometry::setWheelRadius(double wheelRadius)
 	m_wheelRadius = wheelRadius;
 }
 
-const double &Odometry::getChassisLength()
+double Odometry::getChassisLength()
 {
 	std::lock_guard lock(g_odometryMutex);
 	return m_chassisLength;
 }
 
-const double &Odometry::getWheelRadius()
+double Odometry::getWheelRadius()
 {
 	std::lock_guard lock(g_odometryMutex);
 	return m_wheelRadius;
@@ -131,12 +137,8 @@ void Odometry::setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector
 	this->m_positionPublisher = positionPublisher;
 }
 
-RobotResponseType Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
+Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 {
-	// The structure will arrive in a wannabe json format
-	// {"LeftWheelSpeed"=%ld "RightWheelSpeed"=%ld}
-
-	RobotResponseType response = RobotResponseType::fromJson(jsonMessage);
 	double lws = response.leftWheel();
 	double rws = response.rightWheel();
 
@@ -147,20 +149,17 @@ RobotResponseType Odometry::obtainWheelSpeeds(std::string &&jsonMessage)
 	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
 	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
 
-	response.setLeftWheel(lws);
-	response.setRightWheel(rws);
-
-	return response;
+	return {lws, -rws};
 }
 
-void Odometry::changeRobotLocation(RobotResponseType &&speed, long double &&elapsedTime)
+void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
 	// The poll time is in milliseconds while the elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
-	double angularVelocity = (double(speed.rightWheel()) - speed.leftWheel()) / m_chassisLength;
+	double angularVelocity = (double(speed.rightWheel) - speed.leftWheel) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
-	double speedInCenterOfGravity = (speed.rightWheel() + speed.leftWheel()) / 2.0;
+	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);
 	// auto icr = m_chassisLength / 2.0 * (speed.rightWheel() + speed.leftWheel()) / (speed.rightWheel() - speed.leftWheel());
 

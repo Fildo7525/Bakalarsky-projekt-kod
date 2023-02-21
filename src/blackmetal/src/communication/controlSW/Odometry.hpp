@@ -57,7 +57,7 @@ public:
 	 * The output of this function is copy of the actual value.
 	 * Thus you can use this variable in non thread safe functions.
 	 */
-	[[maybe_unused]] long leftWheelSpeed() const;
+	[[maybe_unused]] double leftWheelSpeed() const;
 
 	/**
 	 * @brief Get the last right wheel speed.
@@ -65,7 +65,7 @@ public:
 	 * The output of this function is copy of the actual value.
 	 * Thus you can use this variable in non thread safe functions.
 	 */
-	[[maybe_unused]] long rightWheelSpeed() const;
+	[[maybe_unused]] double rightWheelSpeed() const;
 
 	/**
 	 * @brief Sets the length of the robot chassis.
@@ -84,12 +84,12 @@ public:
 	/**
 	 * @brief Returns the lenth of the chassis.
 	 */
-	const double &getChassisLength();
+	double getChassisLength();
 
 	/**
 	 * @brief Returns the radius of the wheels.
 	 */
-	const double &getWheelRadius();
+	double getWheelRadius();
 
 	/**
 	 * @brief Sets the position publisher created by rclcpp::Node
@@ -108,10 +108,10 @@ private:
 	 * @see m_leftWheelImpulseFilter Low pass filter filtering the impulses of the left wheel.
 	 * @see m_rightWheelImpulseFilter Low pass filter filtering the impulses of the right wheel.
 	 *
-	 * @param jsonMessage Message received from the server.
+	 * @param response Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	RobotResponseType obtainWheelSpeeds(std::string &&jsonMessage);
+	Speed transformToVelocity(RobotResponseType &&response);
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
@@ -123,7 +123,7 @@ private:
 	 * @param speed Rvalue reference to a structure containing the left and right wheel velocity.
 	 * @param elapsedTime The rvalue reference to the elapsed time after the receiving the robot velocity. 
 	 */
-	void changeRobotLocation(RobotResponseType &&speed, long double &&elapsedTime);
+	void changeRobotLocation(Speed &&speed, long double &&elapsedTime);
 
 private:
 	/// Instance of the control software client.
@@ -139,7 +139,7 @@ private:
 	geometry_msgs::msg::Vector3 m_coordination;
 
 	// The speeds in the blackmetal code are defined as longs.
-	RobotResponseType m_velocity;
+	Speed m_velocity;
 
 	/// The length of the robot chassis.
 	double m_chassisLength;
@@ -148,9 +148,9 @@ private:
 	double m_wheelRadius;
 
 	/// The filter of the robot's left motor impulses.
-	RobotImpulseFilter m_leftWheelImpulseFilter;
+	std::shared_ptr<LowPassFilter> m_leftWheelImpulseFilter;
 
 	/// The filter of the robot's right motor impulses.
-	RobotImpulseFilter m_rightWheelImpulseFilter;
+	std::shared_ptr<LowPassFilter> m_rightWheelImpulseFilter;
 };
 

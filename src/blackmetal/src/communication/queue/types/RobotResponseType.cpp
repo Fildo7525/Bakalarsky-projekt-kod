@@ -41,6 +41,12 @@ RobotResponseType RobotResponseType::fromJson(const std::string &json)
 	auto rws_end = json.find_last_of('}');
 	rws = std::stod(json.substr(rws_start, rws_end));
 
-	return RobotResponseType().setLeftWheel(lws).setRightWheel(-rws);
+	return RobotResponseType().setLeftWheel(lws).setRightWheel(rws);
+}
+
+bool RobotResponseType::operator<(const RobotResponseType &other) const
+{
+	// The response type must be ordered chrobologically.
+	return false;
 }
 

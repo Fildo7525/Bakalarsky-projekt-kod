@@ -15,7 +15,7 @@ INIT_MODULE(RobotDataReceiver);
 RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	: Client(port, address)
 	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
-	, m_odometryMessages(new ts::Queue<std::string>("m_odometryQueue"))
+	, m_odometryMessages(new ts::Queue<RobotResponseType>("m_odometryQueue"))
 	, m_onVelocityChange([] (RobotResponseType newValue) { (void)newValue;})
 {
 	std::thread([this] {
@@ -71,7 +71,7 @@ void RobotDataReceiver::enqueue(const RobotRequestType &msg)
 	m_queue->push(msg);
 }
 
-std::string RobotDataReceiver::robotVelocity()
+RobotResponseType RobotDataReceiver::robotVelocity()
 {
 	DBG("Getting robot velocity");
 	auto front = m_odometryMessages->pop();
@@ -99,11 +99,13 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 		status = evalReturnState(response);
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
 			INFO("Passing " << std::quoted(response) << " to odometry");
+			RobotResponseType robotResponse = RobotResponseType::fromJson(response);
 			if (m_velocityChangeFlag) {
+				DBG("Resetting filter to " << response);
 				m_velocityChangeFlag = false;
-				m_onVelocityChange(RobotResponseType::fromJson(response));
+				m_onVelocityChange(robotResponse);
 			}
-			m_odometryMessages->push(response);
+			m_odometryMessages->push(robotResponse);
 		}
 	}
 
@@ -113,8 +115,8 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 void RobotDataReceiver::workerThread()
 {
 	RobotRequestType robotRequest;
+	RobotRequestType lastWheelSpeeds;
 	bool getSpeedCommand = false;
-	std::pair<RobotRequestType::WheelValueT, RobotRequestType::WheelValueT> lastWheelSpeeds = {0, 0};
 
 	// Lambda function used for receiving messages from the server.
 	auto _receive = [this] (std::string &message) -> bm::Status {
@@ -151,8 +153,9 @@ void RobotDataReceiver::workerThread()
 			getSpeedCommand = true;
 		}
 		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
-			if (robotRequest.rightWheel() != lastWheelSpeeds.first || robotRequest.leftWheel() != lastWheelSpeeds.second) {
-				lastWheelSpeeds = {robotRequest.rightWheel(), robotRequest.leftWheel()};
+			if (robotRequest.rightWheel() != lastWheelSpeeds.rightWheel() || robotRequest.leftWheel() != lastWheelSpeeds.leftWheel()) {
+				DBG("The last value and new value are different. Resetting filters. Last value:\n" << lastWheelSpeeds.toJson() << "\nnew value:\n" << robotRequest.toJson());
+				lastWheelSpeeds = robotRequest;
 				m_velocityChangeFlag = true;
 			}
 		}
