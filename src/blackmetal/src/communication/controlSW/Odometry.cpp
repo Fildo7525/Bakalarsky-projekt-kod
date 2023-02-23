@@ -76,7 +76,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> robotDataDelegator)
 				execute();
 			}
 		}
-	).detach();
+	);
 	INFO("Timer initialized");
 }
 

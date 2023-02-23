@@ -125,6 +125,8 @@ private:
 	/// Instance of the control software client.
 	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
 
+	std::thread m_workerThread;
+
 	/// Publisher of the current robot position in robots Cartesian system.
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
 
