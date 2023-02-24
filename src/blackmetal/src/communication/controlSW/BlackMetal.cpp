@@ -58,12 +58,12 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	m_robotDataReceiver->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
-const double& BlackMetal::chassisLength()
+double BlackMetal::chassisLength()
 {
 	return m_odometry->getChassisLength();
 }
 
-const double& BlackMetal::wheelRadius()
+double BlackMetal::wheelRadius()
 {
 	return m_odometry->getWheelRadius();
 }
