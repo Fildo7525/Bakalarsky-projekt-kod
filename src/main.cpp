@@ -7,6 +7,7 @@
 
 void prepareControlers();
 void circle(int argc, char const* argv[]);
+void line(int argc, char const* argv[]);
 
 int main(int argc, char const* argv[])
 {
@@ -48,5 +49,13 @@ void circle(int argc, char const* argv[])
 	std::cout << "RWS:" << std::endl;
 	std::copy(rws.cbegin(), rws.cend(), std::ostream_iterator<long>(std::cout, ","));
 	std::cout << std::endl;
+}
+
+void line(int argc, char const* argv[])
+{
+	std::vector<long> lws;
+	std::vector<long> rws;
+
+
 }
 
