@@ -71,12 +71,13 @@ void Odometry::execute()
 
 	m_robotDataReceiver->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
 	RobotResponseType wheelImpulses = m_robotDataReceiver->robotVelocity();
-	INFO("Odometry has received " << wheelImpulses.toJson());
+	INFO("Before filtering " << wheelImpulses.toJson());
 
 	// We must filter the impulses and not the mps, because the filter mus be reset to desired walue on chage request.
 	// This is possible only with impulses.
 	wheelImpulses.setLeftWheel(m_leftWheelImpulseFilter->filter(wheelImpulses.leftWheel()));
 	wheelImpulses.setRightWheel(m_rightWheelImpulseFilter->filter(wheelImpulses.rightWheel()));
+	INFO("After filtering " << wheelImpulses.toJson());
 
 	wheels = transformToVelocity(std::move(wheelImpulses));
 
