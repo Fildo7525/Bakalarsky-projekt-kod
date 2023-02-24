@@ -44,9 +44,10 @@ RobotResponseType RobotResponseType::fromJson(const std::string &json)
 	return RobotResponseType().setLeftWheel(lws).setRightWheel(rws);
 }
 
-bool RobotResponseType::operator<(const RobotResponseType &other) const
+bool RobotResponseType::operator>(const RobotResponseType &other) const
 {
 	// The response type must be ordered chrobologically.
+	(void)other;
 	return false;
 }
 
