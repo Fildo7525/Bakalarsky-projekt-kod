@@ -61,7 +61,7 @@ private:
 
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
-	
+
 	rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr m_positionPublisher;
 };
 

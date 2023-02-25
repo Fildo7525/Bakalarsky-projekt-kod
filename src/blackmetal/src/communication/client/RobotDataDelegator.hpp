@@ -81,6 +81,11 @@ public:
 	 */
 	RobotResponseType robotVelocity();
 
+	/**
+	 * @brief Sets the callabck function for resetting the filter when the robot velocity changes.
+	 *
+	 * @param onVelocityChange Callabck function called when the robot velocity changes.
+	 */
 	void setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange);
 
 private:

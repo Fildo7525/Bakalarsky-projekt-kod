@@ -45,10 +45,11 @@ public:
 	 * Based on their meaning change the logging level and do some actions.
 	 */
 	void onTimerTimeoutReadSocket();
+
 private:
 	/// Timer calling the defined callback function.
 	rclcpp::TimerBase::SharedPtr m_timer;
-	
+
 	/// Client communicating with the logging server of the robot.
 	std::shared_ptr<Client> m_client;
 };

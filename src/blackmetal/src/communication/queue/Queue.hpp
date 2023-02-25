@@ -53,7 +53,7 @@ public:
 	Queue() = delete;
 	Queue(const Queue &) = delete;
 	Queue& operator=(const Queue &) = delete;
- 
+
 	/**
 	 * @brief Returns the size of the priority queue.
 	 */
