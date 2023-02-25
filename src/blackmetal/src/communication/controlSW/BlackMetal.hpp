@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RobotDataReceiver.hpp"
+#include "RobotDataDelegator.hpp"
 
 #include "controlSW/Odometry.hpp"
 
@@ -48,7 +48,7 @@ public:
 
 private:
 	/// Client for sending requests to robot.
-	std::shared_ptr<RobotDataReceiver> m_robotDataReceiver;
+	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
 
 	/// Object handling the odometry of the robot.
 	std::shared_ptr<Odometry> m_odometry;

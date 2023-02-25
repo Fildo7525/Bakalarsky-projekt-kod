@@ -1,4 +1,4 @@
-#include "RobotDataReceiver.hpp"
+#include "RobotDataDelegator.hpp"
 
 #include "ReturnStatus.hpp"
 #include "log.hpp"
@@ -10,9 +10,9 @@
 #include <thread>
 #include <utility>
 
-INIT_MODULE(RobotDataReceiver);
+INIT_MODULE(RobotDataDelegator);
 
-RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
+RobotDataDelegator::RobotDataDelegator(int port, const std::string &address)
 	: Client(port, address)
 	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue<RobotResponseType>("m_odometryQueue"))
@@ -24,7 +24,7 @@ RobotDataReceiver::RobotDataReceiver(int port, const std::string &address)
 	}).detach();
 }
 
-bm::Status RobotDataReceiver::sendRequest(bm::Command cmd, RobotRequestType::WheelValueT rightWheel, RobotRequestType::WheelValueT leftWheel)
+bm::Status RobotDataDelegator::sendRequest(bm::Command cmd, RobotRequestType::WheelValueT rightWheel, RobotRequestType::WheelValueT leftWheel)
 {
 	RobotRequestType message = RobotRequestType().setUserID(1)
 									 .setCommand(cmd)
@@ -38,17 +38,17 @@ bm::Status RobotDataReceiver::sendRequest(bm::Command cmd, RobotRequestType::Whe
 	return bm::Status::OK;
 }
 
-bm::Status RobotDataReceiver::requestSpeed(double rightWheel, double leftWheel)
+bm::Status RobotDataDelegator::requestSpeed(double rightWheel, double leftWheel)
 {
 	return sendRequest(bm::Command::SET_LR_WHEEL_VELOCITY, rightWheel, leftWheel);
 }
 
-bm::Status RobotDataReceiver::requestPosition(long rightWheel, long leftWheel)
+bm::Status RobotDataDelegator::requestPosition(long rightWheel, long leftWheel)
 {
 	return sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
 }
 
-std::vector<std::string> RobotDataReceiver::splitResponses(const std::string &msg)
+std::vector<std::string> RobotDataDelegator::splitResponses(const std::string &msg)
 {
 	INFO("Received message " << msg);
 	size_t numberOfReceivedMsgs = std::count_if(msg.cbegin(), msg.cend(), [] (char c) { return c == '}'; });
@@ -66,24 +66,24 @@ std::vector<std::string> RobotDataReceiver::splitResponses(const std::string &ms
 	return receivedStrings;
 }
 
-void RobotDataReceiver::enqueue(const RobotRequestType &msg)
+void RobotDataDelegator::enqueue(const RobotRequestType &msg)
 {
 	m_queue->push(msg);
 }
 
-RobotResponseType RobotDataReceiver::robotVelocity()
+RobotResponseType RobotDataDelegator::robotVelocity()
 {
 	DBG("Getting robot velocity");
 	auto front = m_odometryMessages->pop();
 	return front;
 }
 
-void RobotDataReceiver::setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange)
+void RobotDataDelegator::setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange)
 {
 	this->m_onVelocityChange = onVelocityChange;
 }
 
-bm::Status RobotDataReceiver::receive(std::string &msg)
+bm::Status RobotDataDelegator::receive(std::string &msg)
 {
 	auto status = this->Client::receive(msg);
 	if (status != bm::Status::OK) {
@@ -112,7 +112,7 @@ bm::Status RobotDataReceiver::receive(std::string &msg)
 	return (responses.size() > 1 ? bm::Status::MULTIPLE_RECEIVE : bm::Status::OK);
 }
 
-void RobotDataReceiver::workerThread()
+void RobotDataDelegator::workerThread()
 {
 	RobotRequestType robotRequest;
 	RobotRequestType lastWheelSpeeds;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "RobotDataReceiver.hpp"
-#include "controlSW/filter/RobotImpulseFilter.hpp"
+#include "RobotDataDelegator.hpp"
+#include "filter/RobotImpulseFilter.hpp"
 #include "types/RobotResponseType.hpp"
 
 #include <geometry_msgs/msg/vector3.hpp>
@@ -41,7 +41,7 @@ public:
 	 *
 	 * @param controlClient Reference to the control software connected to the robot.
 	 */
-	explicit Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver);
+	explicit Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator);
 
 	~Odometry();
 
@@ -127,7 +127,7 @@ private:
 
 private:
 	/// Instance of the control software client.
-	std::shared_ptr<RobotDataReceiver> m_robotDataReceiver;
+	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
 
 	/// Publisher of the current robot position in robots Cartesian system.
 	rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr m_positionPublisher;

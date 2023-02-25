@@ -13,15 +13,15 @@ INIT_MODULE(BlackMetal, dbg_level::DBG);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, m_robotDataReceiver(new RobotDataReceiver(PORT, "192.168.1.3"))
-	, m_odometry(new Odometry(m_robotDataReceiver))
+	, m_robotDataDelegator(new RobotDataDelegator(PORT, "192.168.1.3"))
+	, m_odometry(new Odometry(m_robotDataDelegator))
 {
 	m_odometry->setChassisLength(declare_parameter<double>("chasis", 1));
 	m_odometry->setWheelRadius(declare_parameter<double>("wheelRadius", 0.2));
 
 	DBG("Chasis has lenght " << m_odometry->getChassisLength() << " m");
 	DBG("Wheel has radius " << m_odometry->getWheelRadius() << " m");
-	DBG("Address set to " << m_robotDataReceiver->address() << ":" << PORT);
+	DBG("Address set to " << m_robotDataDelegator->address() << ":" << PORT);
 
 	m_twistSubscriber = this->create_subscription<geometry_msgs::msg::Twist>(
 		"cmd_vel",
@@ -51,11 +51,11 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	std::clamp(m_leftWheelSpeed, -1., 1.);
 
 	// WARN: When we change the robot velocity the filter will enlarge the transition time to the requested velocity.
-	// In this case we have to forcefully reset the state of the filter. This should probably happen in RobotDataReceiver
+	// In this case we have to forcefully reset the state of the filter. This should probably happen in RobotDataDelegator
 	// so that we do not analyze old samples in the already reset filter.
 	// For the best implementations we may need to rewrite the type of the queue to a structure. The command that is send will be assembled
 	// right before the send.
-	m_robotDataReceiver->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
+	m_robotDataDelegator->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
 double BlackMetal::chassisLength()

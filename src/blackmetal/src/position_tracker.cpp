@@ -9,6 +9,12 @@
 
 INIT_MODULE(PositionTracker);
 
+/**
+ * @class PositionTracker
+ * @brief Class for tracking and logging robot location.
+ *
+ * This class connects to the topic "position" and logs the received messages.
+ */
 class PositionTracker
 	: public rclcpp::Node
 {

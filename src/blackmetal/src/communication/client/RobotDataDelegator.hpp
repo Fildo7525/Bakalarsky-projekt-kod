@@ -7,7 +7,7 @@
 #include <functional>
 
 /**
- * @class RobotDataReceiver
+ * @class RobotDataDelegator
  * @brief Child class implementing Client class and operating with robot messages.
  *
  * This class send json requests via the Client's send method. The parameters to send are supplied
@@ -17,9 +17,10 @@
  * in separate thread.
  *
  * @see Client class used for communication with the robot.
- * @see RobotRequestType class used for storing the request parameters.
+ * @see RobotRequestType Class used for storing the request parameters.
+ * @see RobotResponseType Class used for storing the response parameters.
  */
-class RobotDataReceiver
+class RobotDataDelegator
 	: public Client
 {
 public:
@@ -30,7 +31,7 @@ public:
 	 * @param port Port to connect to.
 	 * @param address Address of the server.
 	 */
-	RobotDataReceiver(int port, const std::string &address);
+	RobotDataDelegator(int port, const std::string &address);
 
 	/**
 	 * @brief Forms a json string out of supplied parameters and sends them to server.

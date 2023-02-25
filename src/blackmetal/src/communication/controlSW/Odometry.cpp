@@ -33,8 +33,8 @@ using namespace std::placeholders;
 
 INIT_MODULE(Odometry, dbg_level::DBG);
 
-Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
-	: m_robotDataReceiver(robotDataReceiver)
+Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
+	: m_robotDataDelegator(robotDataDelegator)
 	, m_positionPublisher(nullptr)
 	, m_coordination()
 	, m_chassisLength(std::numeric_limits<double>::max())
@@ -42,14 +42,14 @@ Odometry::Odometry(std::shared_ptr<RobotDataReceiver> &robotDataReceiver)
 	, m_leftWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 	, m_rightWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 {
-	m_robotDataReceiver->setOnVelocityChangeCallback([this] (RobotResponseType newValue) {
+	m_robotDataDelegator->setOnVelocityChangeCallback([this] (RobotResponseType newValue) {
 		m_leftWheelImpulseFilter->resetInitState(newValue.leftWheel());
 		m_rightWheelImpulseFilter->resetInitState(newValue.rightWheel());
 	});
 
 	std::thread(
 		[this] {
-			while (m_robotDataReceiver->connected()) {
+			while (m_robotDataDelegator->connected()) {
 				std::this_thread::sleep_for(g_pollTime);
 				execute();
 			}
@@ -69,8 +69,8 @@ void Odometry::execute()
 
 	TIC;
 
-	m_robotDataReceiver->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
-	RobotResponseType wheelImpulses = m_robotDataReceiver->robotVelocity();
+	m_robotDataDelegator->sendRequest(bm::Command::GET_LR_WHEEL_VELOCITY);
+	RobotResponseType wheelImpulses = m_robotDataDelegator->robotVelocity();
 	INFO("Before filtering " << wheelImpulses.toJson());
 
 	// We must filter the impulses and not the mps, because the filter mus be reset to desired walue on chage request.
