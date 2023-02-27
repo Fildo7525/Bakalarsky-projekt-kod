@@ -138,7 +138,7 @@ private:
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
 	geometry_msgs::msg::Vector3 m_coordination;
 
-	// The speeds in the blackmetal code are defined as longs.
+	/// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;
 
 	/// The length of the robot chassis.
