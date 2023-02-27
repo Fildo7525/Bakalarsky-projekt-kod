@@ -10,7 +10,7 @@
  * This greatly breaks the filter. Thus, we do not use this values.
  */
 class RobotImpulseFilter
-	: public LowPassFilter
+	: public FrequencyFilter
 {
 public:
 	/**

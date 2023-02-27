@@ -10,7 +10,7 @@
  * You have to supply the alpha value. It represents the percentage of how much should
  * the old output value effect the new output value.
  */
-class LowPassFilter
+class FrequencyFilter
 {
 public:
 	/**
@@ -23,7 +23,7 @@ public:
 	 * the old value effect the output state.
 	 * @param initState State at which should the filter start.
 	 */
-	explicit LowPassFilter(double alpha, double initState = 0);
+	explicit FrequencyFilter(double alpha, double initState = 0);
 
 	/**
 	 * @brief Add a new value to the output of the filter.

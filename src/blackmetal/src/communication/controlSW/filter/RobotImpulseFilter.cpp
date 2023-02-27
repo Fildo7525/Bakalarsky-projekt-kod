@@ -1,7 +1,7 @@
 #include "RobotImpulseFilter.hpp"
 
 RobotImpulseFilter::RobotImpulseFilter(double alpha)
-	: LowPassFilter(alpha, 0)
+	: FrequencyFilter(alpha, 0)
 	, m_zeroFlag(false)
 {
 }
@@ -25,6 +25,6 @@ double RobotImpulseFilter::filter(double input)
 		}
 	}
 
-	return this->LowPassFilter::filter(input);
+	return this->FrequencyFilter::filter(input);
 }
 

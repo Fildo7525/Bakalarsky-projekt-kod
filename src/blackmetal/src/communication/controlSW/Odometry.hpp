@@ -148,9 +148,9 @@ private:
 	double m_wheelRadius;
 
 	/// The filter of the robot's left motor impulses.
-	std::shared_ptr<LowPassFilter> m_leftWheelImpulseFilter;
+	std::shared_ptr<FrequencyFilter> m_leftWheelImpulseFilter;
 
 	/// The filter of the robot's right motor impulses.
-	std::shared_ptr<LowPassFilter> m_rightWheelImpulseFilter;
+	std::shared_ptr<FrequencyFilter> m_rightWheelImpulseFilter;
 };
 
