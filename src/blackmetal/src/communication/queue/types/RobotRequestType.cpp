@@ -50,7 +50,6 @@ RobotRequestType::WheelValueT RobotRequestType::rightWheel() const
 
 std::string RobotRequestType::toJson() const
 {
-	DBG("Composing command: " << bm::stringifyCommand(m_command));
 	// Example: "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":0.1,\"LeftWheelSpeed\":0.1,\"RightWheelPosition\":0.1,\"LeftWheelPosition\":0.1}";
 	std::string message = "{\"UserID\":1,\"Command\":";
 	message += std::to_string(int(m_command));

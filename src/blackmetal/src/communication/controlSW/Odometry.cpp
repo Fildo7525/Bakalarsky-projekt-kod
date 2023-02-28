@@ -44,6 +44,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 	, m_rightWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 {
 	m_robotDataDelegator->setOnVelocityChangeCallback([this] (RobotResponseType newValue) {
+		INFO("Resetting the filter values to " << newValue.toJson() << " because of a change request");
 		m_leftWheelImpulseFilter->resetInitState(newValue.leftWheel());
 		m_rightWheelImpulseFilter->resetInitState(newValue.rightWheel());
 	});

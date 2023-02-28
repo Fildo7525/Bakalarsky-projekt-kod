@@ -32,7 +32,7 @@ bm::Status RobotDataDelegator::sendRequest(bm::Command cmd, RobotRequestType::Wh
 									 .setRighttWheel(rightWheel)
 									 .setLeftWheel(leftWheel);
 
-	INFO("sending: " << message.toJson());
+	INFO("Enqueuing: " << message.toJson());
 
 	enqueue(message);
 
@@ -95,7 +95,7 @@ bm::Status RobotDataDelegator::receive(std::string &msg)
 
 	// There may be a situation that the server will send more than one string before we read it.
 	// Therefore we will read more strings at once and the odometry will crush.
-	INFO("The client received " << msg.size() << " bytes");
+	DBG("The client received " << msg.size() << " bytes");
 	for (auto response : responses) {
 		status = evalReturnState(response);
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
@@ -176,7 +176,7 @@ void RobotDataDelegator::workerThread()
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
 			_receive(wheelSpeed);
-			INFO("Pushing data " << wheelSpeed << " to m_odometryMessages");
+			DBG("Pushing data " << wheelSpeed << " to m_odometryMessages");
 		}
 	}
 }
