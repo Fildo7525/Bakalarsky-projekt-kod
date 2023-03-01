@@ -19,8 +19,8 @@ RobotDataDelegator::RobotDataDelegator(int port, const std::string &address)
 	, m_onVelocityChange([] (RobotResponseType newValue) { (void)newValue;})
 {
 	std::thread([this] {
-		 // We want to create a simultated delay for other components to catch up.
-		 std::this_thread::sleep_for(1s);
+		// We want to create a simultated delay for other components to catch up.
+		std::this_thread::sleep_for(1s);
 		workerThread();
 	}).detach();
 }

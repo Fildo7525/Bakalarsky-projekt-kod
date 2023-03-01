@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <limits>
 #include <mutex>
+#include <ratio>
 #include <stdexcept>
 #include <thread>
 #include <variant>
@@ -28,7 +29,7 @@
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
-constexpr std::chrono::milliseconds g_pollTime(100);
+constexpr std::chrono::milliseconds g_pollTime(250);
 
 using namespace std::placeholders;
 
@@ -52,7 +53,16 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 	std::thread(
 		[this] {
 			while (m_robotDataDelegator->connected()) {
-				std::this_thread::sleep_for(g_pollTime);
+				std::chrono::duration<double, std::micro> microseconds{ Stopwatch::lastStoppedTime() };
+				auto time = ((g_pollTime - microseconds) <= 0ms ? 0ms : g_pollTime - microseconds);
+
+				if (time > 0ms) {
+					DBG("Sleeping for " << time.count()/1'000. << " seconds");
+					std::this_thread::sleep_for(time);
+				}
+				else {
+					WARN("The loop time was longer than expected " << (-1*time).count() << "ms");
+				}
 				execute();
 			}
 		}
