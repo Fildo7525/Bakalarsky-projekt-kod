@@ -22,14 +22,14 @@
 #define MAX_WHEEL_SPEED 0.8
 /// Constatns used to convert the impulses to meters per second.
 /// They were obtained by tests and than by applying the linear regression to the measured samples.
-#define FROM_IMP_TO_MPS_L 1261.13519092
-#define FROM_IMP_TO_MPS_R 1188.08952528
+#define FROM_IMP_TO_MPS_L 1198.86351909
+#define FROM_IMP_TO_MPS_R 1212.51934985
 /// The filter must be strong enough to filter out the noise.
 #define FILTER_COEFFICIENT 0.8
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
-constexpr std::chrono::milliseconds g_pollTime(250);
+constexpr std::chrono::milliseconds g_pollTime(100);
 
 using namespace std::placeholders;
 
