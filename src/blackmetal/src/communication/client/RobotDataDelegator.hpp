@@ -4,6 +4,11 @@
 #include "types/RobotRequestType.hpp"
 #include "types/RobotResponseType.hpp"
 
+/// Constatns used to convert the impulses to meters per second.
+/// They were obtained by tests and than by applying the linear regression to the measured samples.
+#define FROM_IMP_TO_MPS_L 1198.86351909
+#define FROM_IMP_TO_MPS_R 1212.51934985
+
 #include <functional>
 
 /**
@@ -86,7 +91,7 @@ public:
 	 *
 	 * @param onVelocityChange Callabck function called when the robot velocity changes.
 	 */
-	void setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange);
+	void setOnVelocityChangeCallback(std::function<void(RobotRequestType)> onVelocityChange);
 
 private:
 	/**
@@ -138,6 +143,6 @@ private:
 	bool m_velocityChangeFlag;
 
 	/// Callback for resetting the filter when the robot velocity changes.
-	std::function<void(RobotResponseType)> m_onVelocityChange;
+	std::function<void(RobotRequestType)> m_onVelocityChange;
 };
 

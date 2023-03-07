@@ -20,10 +20,6 @@
 
 /// Defined by the BlackMetal source code.
 #define MAX_WHEEL_SPEED 0.8
-/// Constatns used to convert the impulses to meters per second.
-/// They were obtained by tests and than by applying the linear regression to the measured samples.
-#define FROM_IMP_TO_MPS_L 1198.86351909
-#define FROM_IMP_TO_MPS_R 1212.51934985
 /// The filter must be strong enough to filter out the noise.
 #define FILTER_COEFFICIENT 0.8
 
@@ -44,10 +40,10 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 	, m_leftWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 	, m_rightWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 {
-	m_robotDataDelegator->setOnVelocityChangeCallback([this] (RobotResponseType newValue) {
+	m_robotDataDelegator->setOnVelocityChangeCallback([this] (RobotRequestType newValue) {
 		INFO("Resetting the filter values to " << newValue.toJson() << " because of a change request");
-		m_leftWheelImpulseFilter->resetInitState(newValue.leftWheel());
-		m_rightWheelImpulseFilter->resetInitState(newValue.rightWheel());
+		m_leftWheelImpulseFilter->resetInitState(std::get<double>(newValue.leftWheel()));
+		m_rightWheelImpulseFilter->resetInitState(std::get<double>(newValue.rightWheel()));
 	});
 
 	std::thread(
@@ -170,7 +166,7 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	// The poll time is in milliseconds while the elapsedTime is in microseconds.
 	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
 	DBG("dt: " << dt);
-	double angularVelocity = (double(speed.rightWheel) - speed.leftWheel) / m_chassisLength;
+	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
 	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
 	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);

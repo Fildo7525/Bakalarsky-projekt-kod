@@ -16,7 +16,7 @@ RobotDataDelegator::RobotDataDelegator(int port, const std::string &address)
 	: Client(port, address)
 	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue<RobotResponseType>("m_odometryQueue"))
-	, m_onVelocityChange([] (RobotResponseType newValue) { (void)newValue;})
+	, m_onVelocityChange([] (RobotRequestType newValue) { (void)newValue;})
 {
 	std::thread([this] {
 		// We want to create a simultated delay for other components to catch up.
@@ -79,7 +79,7 @@ RobotResponseType RobotDataDelegator::robotVelocity()
 	return front;
 }
 
-void RobotDataDelegator::setOnVelocityChangeCallback(std::function<void(RobotResponseType)> onVelocityChange)
+void RobotDataDelegator::setOnVelocityChangeCallback(std::function<void(RobotRequestType)> onVelocityChange)
 {
 	this->m_onVelocityChange = onVelocityChange;
 }
@@ -101,11 +101,6 @@ bm::Status RobotDataDelegator::receive(std::string &msg)
 		if (status == bm::Status::ODOMETRY_SPEED_DATA) {
 			INFO("Passing " << std::quoted(response) << " to odometry");
 			RobotResponseType robotResponse = RobotResponseType::fromJson(response);
-			if (m_velocityChangeFlag) {
-				DBG("Resetting filter to " << response);
-				m_velocityChangeFlag = false;
-				m_onVelocityChange(robotResponse);
-			}
 			m_odometryMessages->push(robotResponse);
 		}
 	}
@@ -157,7 +152,12 @@ void RobotDataDelegator::workerThread()
 			if (robotRequest.rightWheel() != lastWheelSpeeds.rightWheel() || robotRequest.leftWheel() != lastWheelSpeeds.leftWheel()) {
 				DBG("The last value and new value are different. Resetting filters. Last value:\n" << lastWheelSpeeds.toJson() << "\nnew value:\n" << robotRequest.toJson());
 				lastWheelSpeeds = robotRequest;
-				m_velocityChangeFlag = true;
+
+				DBG("Resetting filter to " << robotRequest);
+				RobotRequestType request = RobotRequestType()
+					.setLeftWheel(std::get<double>(robotRequest.leftWheel()) * FROM_IMP_TO_MPS_L)
+					.setRighttWheel(std::get<double>(robotRequest.rightWheel()) * FROM_IMP_TO_MPS_R);
+				m_onVelocityChange(request);
 			}
 		}
 
