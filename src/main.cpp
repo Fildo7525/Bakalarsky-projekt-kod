@@ -83,8 +83,8 @@ void line(int argc, char const* argv[])
 			}
 
 			if (i == 1) {
-				lf.resetInitState(s.lws);
-				rf.resetInitState(s.rws);
+				lf.resetInitState(speed * 1198.86351909);
+				rf.resetInitState(speed * 1212.51934985);
 			}
 
 			lws_f.push_back(lf.filter(s.lws));
