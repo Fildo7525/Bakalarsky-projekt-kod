@@ -2,7 +2,7 @@
 
 let numberOfCores=$(cat /proc/cpuinfo | grep "processor" | wc -l)*2
 
-pushd ~/Bakalarka/code/
+pushd ~/Bakalarka/code/ &> /dev/null
 colcon build --event-handlers console_direct+ --parallel-workers $numberOfCores
 ret=$?
 
@@ -14,9 +14,9 @@ fi
 
 if [[ "$1" == "-d" || "$1" == "--doc" ]]; then
 	echo "Generating documentation"
-	pushd doc
+	pushd doc &> /dev/null
 	doxygen config &> /dev/null
-	popd
+	popd &> /dev/null
 fi
-popd
+popd &> /dev/null
 
