@@ -57,7 +57,7 @@ public:
 	 * @param rw Right wheel value to be set in the request. This applies only in bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
 	 * @return RobotRequestType& Reference to the object.
 	 */
-	RobotRequestType &setRighttWheel(WheelValueT rw);
+	RobotRequestType &setRightWheel(WheelValueT rw);
 
 	/**
 	 * @brief Returns the user ID.

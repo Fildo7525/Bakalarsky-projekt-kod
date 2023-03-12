@@ -22,7 +22,7 @@ RobotRequestType& RobotRequestType::setLeftWheel(WheelValueT lw)
 	return *this;
 }
 
-RobotRequestType& RobotRequestType::setRighttWheel(WheelValueT rw)
+RobotRequestType& RobotRequestType::setRightWheel(WheelValueT rw)
 {
 	this->m_rightWheel = rw;
 	return *this;

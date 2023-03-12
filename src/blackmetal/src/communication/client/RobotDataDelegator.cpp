@@ -29,7 +29,7 @@ bm::Status RobotDataDelegator::sendRequest(bm::Command cmd, RobotRequestType::Wh
 {
 	RobotRequestType message = RobotRequestType().setUserID(1)
 									 .setCommand(cmd)
-									 .setRighttWheel(rightWheel)
+									 .setRightWheel(rightWheel)
 									 .setLeftWheel(leftWheel);
 
 	INFO("Enqueuing: " << message.toJson());
@@ -156,7 +156,7 @@ void RobotDataDelegator::workerThread()
 				DBG("Resetting filter to " << robotRequest);
 				RobotRequestType request = RobotRequestType()
 					.setLeftWheel(std::get<double>(robotRequest.leftWheel()) * FROM_IMP_TO_MPS_L)
-					.setRighttWheel(std::get<double>(robotRequest.rightWheel()) * FROM_IMP_TO_MPS_R);
+					.setRightWheel(std::get<double>(robotRequest.rightWheel()) * FROM_IMP_TO_MPS_R);
 				m_onVelocityChange(request);
 			}
 		}
