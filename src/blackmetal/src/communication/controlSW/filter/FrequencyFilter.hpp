@@ -3,8 +3,8 @@
 #include <mutex>
 
 /**
- * @class LowPassFilter
- * @brief Class implementing Low Pass (LP) filter.
+ * @class FrequencyFilter
+ * @brief Class implementing a frequency filter.
  *
  * To filter out the high frequency of a signal, you can use this class. To initialize an object
  * You have to supply the alpha value. It represents the percentage of how much should

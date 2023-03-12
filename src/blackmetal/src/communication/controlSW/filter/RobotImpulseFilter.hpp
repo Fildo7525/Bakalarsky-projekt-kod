@@ -1,6 +1,6 @@
 #pragma once
 
-#include "controlSW/filter/LowPassFilter.hpp"
+#include "controlSW/filter/FrequencyFilter.hpp"
 
 /**
  * @class RobotImpulseFilter
@@ -16,7 +16,7 @@ public:
 	/**
 	 * @brief Constructor
 	 *
-	 * @see LowPassFilter Base class of this filter.
+	 * @see FrequencyFilter Base class of this filter.
 	 */
 	explicit RobotImpulseFilter(double alpha);
 

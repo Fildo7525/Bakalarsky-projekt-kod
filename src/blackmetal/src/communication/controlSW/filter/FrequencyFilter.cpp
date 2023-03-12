@@ -1,4 +1,4 @@
-#include "LowPassFilter.hpp"
+#include "FrequencyFilter.hpp"
 
 FrequencyFilter::FrequencyFilter(double alpha, double initState)
 	: m_alpha(alpha)
