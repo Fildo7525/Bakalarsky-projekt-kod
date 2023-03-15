@@ -23,7 +23,7 @@ public:
 	 *
 	 * @param maxLength The maximal number of timestamps this instance will allow.
 	 */
-	Stopwatch(size_t maxLength = 100);
+	Stopwatch(size_t maxLength = 1000);
 
 	/**
 	 * @brief Destructor calculates the time of its life and saves the time in microseconds (double)

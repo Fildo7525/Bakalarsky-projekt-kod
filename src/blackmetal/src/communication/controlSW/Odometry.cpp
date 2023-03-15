@@ -6,6 +6,7 @@
 #include "log.hpp"
 #include "types/RobotResponseType.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <exception>
@@ -14,6 +15,7 @@
 #include <limits>
 #include <mutex>
 #include <ratio>
+#include <sstream>
 #include <stdexcept>
 #include <thread>
 #include <variant>
@@ -53,7 +55,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 				auto time = ((g_pollTime - microseconds) <= 0ms ? 0ms : g_pollTime - microseconds);
 
 				if (time > 0ms) {
-					DBG("Sleeping for " << time.count()/1'000. << " seconds");
+					DBG("Sleeping for " << time.count()/1'000'000. << " seconds");
 					std::this_thread::sleep_for(time);
 				}
 				else {
@@ -155,16 +157,18 @@ Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 	lws = lws / FROM_IMP_TO_MPS_L;
 	rws = rws / FROM_IMP_TO_MPS_R;
 
-	lws = lws > MAX_WHEEL_SPEED ? 0 : lws;
-	rws = rws > MAX_WHEEL_SPEED ? 0 : rws;
+	lws = std::clamp(lws, 0., MAX_WHEEL_SPEED);
+	rws = std::clamp(rws, 0., MAX_WHEEL_SPEED);
 
 	return {lws, -rws};
 }
 
 void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
-	// The poll time is in milliseconds while the elapsedTime is in microseconds.
-	long double dt = (g_pollTime.count() + elapsedTime/1'000.) / 1'000.;
+	speed.leftWheel *= m_wheelRadius;
+	speed.rightWheel *= m_wheelRadius;
+	// The poll time is in milliseconds.
+	long double dt = (g_pollTime.count()) / 1'000.;
 	DBG("dt: " << dt);
 	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_chassisLength;
 	DBG("Angular velocity: " << angularVelocity);
@@ -172,19 +176,14 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);
 	// auto icr = m_chassisLength / 2.0 * (speed.rightWheel() + speed.leftWheel()) / (speed.rightWheel() - speed.leftWheel());
 
-	double vx;
-	double vy;
-	{
-		std::lock_guard lock(g_robotLocationMutex);
-		vx = speedInCenterOfGravity * std::cos(m_coordination.z);
-		vy = speedInCenterOfGravity * std::sin(m_coordination.z);
-	}
+	double vx = speedInCenterOfGravity * std::cos(angularVelocity * dt / 2.0);
+	double vy = speedInCenterOfGravity * std::sin(angularVelocity * dt / 2.0);
 
 	double dxt = vx * dt;
 	DBG("x change: " << dxt);
 	double dyt = vy * dt;
 	DBG("y change: " << dyt);
-	double changeOfAngleInTime = angularVelocity * dt;
+	double changeOfAngleInTime = angularVelocity/2.0 * dt;
 	DBG("angle change: " << changeOfAngleInTime);
 
 	{
