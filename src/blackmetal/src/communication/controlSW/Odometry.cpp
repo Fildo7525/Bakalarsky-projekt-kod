@@ -70,6 +70,8 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 
 Odometry::~Odometry()
 {
+	auto v = Stopwatch::getStoppedTimes();
+	std::copy(v.begin(), v.end(), std::ostream_iterator<double>(std::cout, ", "));
 }
 
 void Odometry::execute()
