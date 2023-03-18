@@ -169,36 +169,45 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 {
 	speed.leftWheel *= m_wheelRadius;
 	speed.rightWheel *= m_wheelRadius;
-	// The poll time is in milliseconds.
-	long double dt = (g_pollTime.count()) / 1'000.;
-	DBG("dt: " << dt);
+
+	double icr{0};
+	if ((speed.leftWheel - speed.rightWheel) >= std::numeric_limits<double>::epsilon() * std::max(1.0, std::max(speed.rightWheel, speed.leftWheel))) {
+		icr = m_chassisLength / 2.0 * (speed.rightWheel + speed.leftWheel) / (speed.rightWheel - speed.leftWheel);
+	}
+
+	double dx = m_coordination.x - icr * std::sin(m_coordination.z);
+	double dy = m_coordination.y - icr * std::cos(m_coordination.z);
+
 	double angularVelocity = (speed.rightWheel - speed.leftWheel) / m_chassisLength;
-	DBG("Angular velocity: " << angularVelocity);
-	double speedInCenterOfGravity = (speed.rightWheel + speed.leftWheel) / 2.0;
-	DBG("Centre of gravity velocity: " << speedInCenterOfGravity);
-	// auto icr = m_chassisLength / 2.0 * (speed.rightWheel() + speed.leftWheel()) / (speed.rightWheel() - speed.leftWheel());
+	double changeOfAngle = wrapAngle(angularVelocity * elapsedTime);
 
-	double vx = speedInCenterOfGravity * std::cos(angularVelocity * dt / 2.0);
-	double vy = speedInCenterOfGravity * std::sin(angularVelocity * dt / 2.0);
-
-	double dxt = vx * dt;
-	DBG("x change: " << dxt);
-	double dyt = vy * dt;
-	DBG("y change: " << dyt);
-	double changeOfAngleInTime = angularVelocity/2.0 * dt;
-	DBG("angle change: " << changeOfAngleInTime);
+	double newX = std::cos(changeOfAngle) * (m_coordination.x - dx) - std::sin(changeOfAngle) * (m_coordination.y - dy) + dx;
+	DBG("x change: " << newX);
+	double newY = std::sin(changeOfAngle) * (m_coordination.x - dx) + std::cos(changeOfAngle) * (m_coordination.y - dy) + dy;
+	DBG("y change: " << newY);
 
 	{
 		std::lock_guard lock(g_robotLocationMutex);
-		m_coordination.x += dxt;
+		m_coordination.x = newX ;
 		SUCCESS("X: " << m_coordination.x);
-		m_coordination.y += dyt;
+		m_coordination.y = newY;
 		SUCCESS("Y: " << m_coordination.y);
-		m_coordination.z += changeOfAngleInTime;
+		m_coordination.z += changeOfAngle;
 		SUCCESS("Angle: " << m_coordination.z);
 		if (m_positionPublisher) {
 			m_positionPublisher->publish(m_coordination);
 		}
 	}
+}
+
+double Odometry::wrapAngle(double angle)
+{
+	while (angle >= 2 * M_PI) {
+		angle -= 2 * M_PI;
+	}
+	while (angle < 0) {
+		angle += 2 * M_PI;
+	}
+	return angle;
 }
 

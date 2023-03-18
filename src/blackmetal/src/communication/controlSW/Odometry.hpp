@@ -125,6 +125,7 @@ private:
 	 */
 	void changeRobotLocation(Speed &&speed, long double &&elapsedTime);
 
+	double wrapAngle(double angle);
 private:
 	/// Instance of the control software client.
 	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
