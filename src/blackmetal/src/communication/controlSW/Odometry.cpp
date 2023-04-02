@@ -200,11 +200,10 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 
 double Odometry::wrapAngle(double angle)
 {
-	while (angle >= 2 * M_PI) {
-		angle -= 2 * M_PI;
-	}
-	while (angle < 0) {
-		angle += 2 * M_PI;
+	// Calculate the reminder of deviding two doubles.
+	angle = fmod(angle, 2.0 * M_PI);
+	if (angle < 0.0) {
+		angle += 2.0 * M_PI;
 	}
 	return angle;
 }
