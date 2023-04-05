@@ -9,6 +9,7 @@
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/timer.hpp>
 
+#include <chrono>
 #include <memory>
 #include <thread>
 
@@ -110,9 +111,6 @@ private:
 	/**
 	 * @brief Retrieve the left and right wheel speed from the received json message.
 	 *
-	 * This method transforms the left and right wheel impulses to metres per second.
-	 * To ensure the best possible outcome the impulses are run through a low pass filter.
-	 *
 	 * @see m_leftWheelImpulseFilter Low pass filter filtering the impulses of the left wheel.
 	 * @see m_rightWheelImpulseFilter Low pass filter filtering the impulses of the right wheel.
 	 *
@@ -163,5 +161,7 @@ private:
 
 	/// The filter of the robot's right motor impulses.
 	std::shared_ptr<FrequencyFilter> m_rightWheelImpulseFilter;
+
+	std::chrono::system_clock::time_point m_lastTime;
 };
 

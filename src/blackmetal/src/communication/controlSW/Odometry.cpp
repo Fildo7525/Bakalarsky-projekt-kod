@@ -27,6 +27,7 @@
 
 std::mutex g_odometryMutex;
 std::mutex g_robotLocationMutex;
+using namespace std::chrono_literals;
 constexpr std::chrono::milliseconds g_pollTime(100);
 
 using namespace std::placeholders;
@@ -51,6 +52,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 	std::thread(
 		[this] {
 			while (m_robotDataDelegator->connected()) {
+				m_lastTime = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::micro> microseconds{ Stopwatch::lastStoppedTime() };
 				auto time = ((g_pollTime - microseconds) <= 0ms ? 0ms : g_pollTime - microseconds);
 
@@ -91,14 +93,12 @@ void Odometry::execute()
 	wheelImpulses.setRightWheel(m_rightWheelImpulseFilter->filter(wheelImpulses.rightWheel()));
 	INFO("After filtering " << wheelImpulses.toJson());
 
-	// The impulses are taken from the struct and run thourgh low pass filter.
-	// WARN: The rith wheel impulses are inverted.
+	// The impulses are taken from the struct and run through low pass filter.
+	// WARN: The right wheel impulses are inverted.
 	wheels = transformToVelocity(std::move(wheelImpulses));
 
-	if (wheels.leftWheel != lastValue.leftWheel || wheels.rightWheel != lastValue.rightWheel) {
-		INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
-		lastValue = wheels;
-	}
+	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
+	lastValue = wheels;
 
 	{
 		std::lock_guard lock(g_odometryMutex);
@@ -134,6 +134,12 @@ void Odometry::setWheelRadius(double wheelRadius)
 	m_wheelRadius = wheelRadius;
 }
 
+void Odometry::setEncoderResolution(int encoderResolution)
+{
+	std::lock_guard lock(g_odometryMutex);
+	m_encoderResolution = encoderResolution;
+}
+
 double Odometry::getChassisLength()
 {
 	std::lock_guard lock(g_odometryMutex);
@@ -156,39 +162,50 @@ Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 	double lws = response.leftWheel();
 	double rws = response.rightWheel();
 
-	lws = std::clamp(lws, 0., MAX_WHEEL_SPEED);
-	rws = std::clamp(rws, 0., MAX_WHEEL_SPEED);
-
 	return {lws, rws};
 }
 
 void Odometry::changeRobotLocation(Speed &&speed)
 {
-	speed = {
-		.leftWheel = speed.leftWheel * g_pollTime.count() / 1'000,
-		.rightWheel = speed.rightWheel * g_pollTime.count() / 1'000,
-	};
-	WARN("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
+	DBG("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
 
 	// Calculate the distance traveled by each wheel in meters
-	double leftWheelDistance = 2.0 * M_PI * m_wheelRadius * speed.leftWheel / 1024.0;
-	double rightWheelDistance = 2.0 * M_PI * m_wheelRadius * speed.rightWheel / 1024.0;
-	WARN("lwDistance: " << leftWheelDistance << " rwDistance: " << rightWheelDistance);
+	double leftWheelFloorVelocity = 2.0 * M_PI * m_wheelRadius * speed.leftWheel / m_encoderResolution;
+	double rightWheelFloorVelocity = 2.0 * M_PI * m_wheelRadius * speed.rightWheel / m_encoderResolution;
+	DBG("lwDistance: " << leftWheelFloorVelocity << " rwDistance: " << rightWheelFloorVelocity);
 
 	// Calculate the robot's linear and angular displacement in meters and radians, respectively
-	double linearDisplacement = (leftWheelDistance + rightWheelDistance) / 2.0;
-	double angularDisplacement = (rightWheelDistance - leftWheelDistance) / m_chassisLength;
-	WARN("linear change: " << linearDisplacement << " angular change: " << angularDisplacement);
+	double linearVelocity = (leftWheelFloorVelocity + rightWheelFloorVelocity) / 2.0;
+	double angularVelocity = (rightWheelFloorVelocity - leftWheelFloorVelocity) / m_chassisLength;
+	DBG("linear change: " << linearVelocity << " angular change: " << angularVelocity);
 
 	// Calculate the robot's new position based on its current position and displacement
+	auto now = std::chrono::high_resolution_clock::now();
+	auto tmp = now - m_lastTime;
+	m_lastTime = now;
+	double dt = std::chrono::duration_cast<std::chrono::microseconds>(tmp).count() / 1'000.;
+	DBG("dt: " << dt);
 	{
 		std::lock_guard lock(g_odometryMutex);
-		// Replace with the robot's current x coordinate
-		m_coordination.pose.pose.position.x += linearDisplacement * std::cos(angularDisplacement);
-		// Replace with the robot's current y coordinate
-		m_coordination.pose.pose.position.y += linearDisplacement * std::sin(angularDisplacement);
+		// Set the linear velocity for the odometry message.
+		m_coordination.twist.twist.linear.x = linearVelocity;
+		m_coordination.twist.twist.linear.y = 0.0;
+		m_coordination.twist.twist.linear.z = 0.0;
+
+		// Set the angular velocity for the odometry message.
+		m_coordination.twist.twist.angular.x = 0.0;
+		m_coordination.twist.twist.angular.y = 0.0;
+		m_coordination.twist.twist.angular.z = angularVelocity;
+
+		// Replace with the robot's current coordinates
+		m_coordination.pose.pose.position.x += linearVelocity * std::cos(m_coordination.pose.pose.orientation.z) * dt;
+		m_coordination.pose.pose.position.y += linearVelocity * std::sin(m_coordination.pose.pose.orientation.z) * dt;
+		m_coordination.pose.pose.position.z = 0.0;
+
 		// Replace with the robot's current heading in radians
-		m_coordination.pose.pose.orientation.z = wrapAngle(m_coordination.pose.pose.orientation.z + angularDisplacement);
+		m_coordination.pose.pose.orientation.x = 0.0;
+		m_coordination.pose.pose.orientation.y = 0.0;
+		m_coordination.pose.pose.orientation.z = wrapAngle(m_coordination.pose.pose.orientation.z + angularVelocity * dt);
 
 		if (m_positionPublisher) {
 			m_positionPublisher->publish(m_coordination);
