@@ -107,8 +107,7 @@ void Odometry::execute()
 
 	TOC;
 
-	double elapsedTime = Stopwatch::lastStoppedTime();
-	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1, _2), std::move(wheels), std::move(elapsedTime)).detach();
+	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1), std::move(wheels)).detach();
 }
 
 double Odometry::leftWheelSpeed() const
@@ -157,17 +156,13 @@ Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 	double lws = response.leftWheel();
 	double rws = response.rightWheel();
 
-	// We need to convert the impulses send by robot to SI units (meters per second).
-	// lws = lws / FROM_IMP_TO_MPS_L;
-	// rws = rws / FROM_IMP_TO_MPS_R;
-
 	lws = std::clamp(lws, 0., MAX_WHEEL_SPEED);
 	rws = std::clamp(rws, 0., MAX_WHEEL_SPEED);
 
 	return {lws, -rws};
 }
 
-void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
+void Odometry::changeRobotLocation(Speed &&speed)
 {
 	WARN("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
 
@@ -195,7 +190,6 @@ void Odometry::changeRobotLocation(Speed &&speed, long double &&elapsedTime)
 			m_positionPublisher->publish(m_coordination);
 		}
 	}
-
 }
 
 double Odometry::wrapAngle(double angle)

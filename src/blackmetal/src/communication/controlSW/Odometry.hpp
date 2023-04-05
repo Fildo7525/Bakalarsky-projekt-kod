@@ -121,9 +121,8 @@ private:
 	 * @see execute the polling function.
 	 *
 	 * @param speed Rvalue reference to a structure containing the left and right wheel velocity.
-	 * @param elapsedTime The rvalue reference to the elapsed time after the receiving the robot velocity. 
 	 */
-	void changeRobotLocation(Speed &&speed, long double &&elapsedTime);
+	void changeRobotLocation(Speed &&speed);
 
 	double wrapAngle(double angle);
 private:
