@@ -18,6 +18,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 add_subdirectory(src/logger)
 add_subdirectory(src/stopwatch)
@@ -48,6 +49,7 @@ ament_target_dependencies(blackmetal
 	"rclcpp"
 	"std_msgs"
 	"geometry_msgs"
+	"nav_msgs"
 )
 
 install(TARGETS blackmetal
@@ -98,6 +100,7 @@ PUBLIC
 ament_target_dependencies(bm_position
 	"rclcpp"
 	"geometry_msgs"
+	"nav_msgs"
 )
 
 install(TARGETS bm_position

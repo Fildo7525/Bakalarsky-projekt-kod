@@ -5,6 +5,7 @@
 #include "types/RobotResponseType.hpp"
 
 #include <geometry_msgs/msg/vector3.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/timer.hpp>
 
@@ -96,7 +97,7 @@ public:
 	 *
 	 * @param positionPublisher 
 	 */
-	void setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr positionPublisher);
+	void setPositinoPublisher(rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr positionPublisher);
 
 private:
 	/**
@@ -130,13 +131,13 @@ private:
 	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
 
 	/// Publisher of the current robot position in robots Cartesian system.
-	rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr m_positionPublisher;
+	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
 
 	/// Timer invoking the execute function.
 	rclcpp::TimerBase::SharedPtr m_timer;
 
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
-	geometry_msgs::msg::Vector3 m_coordination;
+	nav_msgs::msg::Odometry m_coordination;
 
 	/// The speeds in the blackmetal code are defined as longs.
 	Speed m_velocity;

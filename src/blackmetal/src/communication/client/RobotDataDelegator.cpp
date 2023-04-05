@@ -154,6 +154,8 @@ void RobotDataDelegator::workerThread()
 				lastWheelSpeeds = robotRequest;
 
 				DBG("Resetting filter to " << robotRequest);
+				// FROM_IMP_TO_MPS_x is used to convert impulses per second to meters per second using the division.
+				// In case we want to convert from meters per second to impulses per second we must use multiplication.
 				RobotRequestType request = RobotRequestType()
 					.setLeftWheel(std::get<double>(robotRequest.leftWheel()) * FROM_IMP_TO_MPS_L)
 					.setRightWheel(std::get<double>(robotRequest.rightWheel()) * FROM_IMP_TO_MPS_R);
@@ -176,7 +178,7 @@ void RobotDataDelegator::workerThread()
 			// We take a risk and do not check for an error. The connection is established at this point.
 			// May be changed in the future.
 			_receive(wheelSpeed);
-			DBG("Pushing data " << wheelSpeed << " to m_odometryMessages");
+			DBG("Pushing data " << std::quoted(wheelSpeed) << " to m_odometryMessages");
 		}
 	}
 }

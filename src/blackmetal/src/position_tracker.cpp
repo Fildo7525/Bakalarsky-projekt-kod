@@ -3,7 +3,7 @@
 #include <rclcpp/executors.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/qos.hpp>
-#include <geometry_msgs/msg/vector3.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/subscription_base.hpp>
 #include <rclcpp/utilities.hpp>
 
@@ -22,13 +22,13 @@ public:
 	PositionTracker()
 		: Node("position_tracker")
 	{
-		m_subscriber = this->create_subscription<geometry_msgs::msg::Vector3>(
-					"position",
+		m_subscriber = this->create_subscription<nav_msgs::msg::Odometry>(
+					"odom",
 					rclcpp::QoS(10),
-					[] (const geometry_msgs::msg::Vector3 msg) { INFO(msg.x << ", " << msg.y << ", " << msg.z); });
+					[] (const nav_msgs::msg::Odometry msg) { INFO(msg.pose.pose.position.x << ", " << msg.pose.pose.position.y << ", " << msg.pose.pose.position.z); });
 	}
 private:
-	rclcpp::Subscription<geometry_msgs::msg::Vector3>::SharedPtr m_subscriber;
+	rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr m_subscriber;
 };
 
 int main (int argc, char *argv[])

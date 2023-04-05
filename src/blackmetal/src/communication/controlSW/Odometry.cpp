@@ -146,7 +146,7 @@ double Odometry::getWheelRadius()
 	return m_wheelRadius;
 }
 
-void Odometry::setPositinoPublisher(rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr positionPublisher)
+void Odometry::setPositinoPublisher(rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr positionPublisher)
 {
 	this->m_positionPublisher = positionPublisher;
 }
@@ -159,32 +159,36 @@ Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 	lws = std::clamp(lws, 0., MAX_WHEEL_SPEED);
 	rws = std::clamp(rws, 0., MAX_WHEEL_SPEED);
 
-	return {lws, -rws};
+	return {lws, rws};
 }
 
 void Odometry::changeRobotLocation(Speed &&speed)
 {
+	speed = {
+		.leftWheel = speed.leftWheel * g_pollTime.count() / 1'000,
+		.rightWheel = speed.rightWheel * g_pollTime.count() / 1'000,
+	};
 	WARN("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
 
 	// Calculate the distance traveled by each wheel in meters
 	double leftWheelDistance = 2.0 * M_PI * m_wheelRadius * speed.leftWheel / 1024.0;
 	double rightWheelDistance = 2.0 * M_PI * m_wheelRadius * speed.rightWheel / 1024.0;
-	WARN("lwDistance: " << speed.leftWheel << " rwDistance: " << speed.rightWheel);
+	WARN("lwDistance: " << leftWheelDistance << " rwDistance: " << rightWheelDistance);
 
 	// Calculate the robot's linear and angular displacement in meters and radians, respectively
 	double linearDisplacement = (leftWheelDistance + rightWheelDistance) / 2.0;
 	double angularDisplacement = (rightWheelDistance - leftWheelDistance) / m_chassisLength;
-	WARN("linear change: " << speed.leftWheel << " angular change: " << speed.rightWheel);
+	WARN("linear change: " << linearDisplacement << " angular change: " << angularDisplacement);
 
 	// Calculate the robot's new position based on its current position and displacement
 	{
 		std::lock_guard lock(g_odometryMutex);
 		// Replace with the robot's current x coordinate
-		m_coordination.x += linearDisplacement * std::cos(angularDisplacement / 2.0);
+		m_coordination.pose.pose.position.x += linearDisplacement * std::cos(angularDisplacement);
 		// Replace with the robot's current y coordinate
-		m_coordination.y += linearDisplacement * std::sin(angularDisplacement / 2.0);
+		m_coordination.pose.pose.position.y += linearDisplacement * std::sin(angularDisplacement);
 		// Replace with the robot's current heading in radians
-		m_coordination.z = wrapAngle(m_coordination.z + angularDisplacement);
+		m_coordination.pose.pose.orientation.z = wrapAngle(m_coordination.pose.pose.orientation.z + angularDisplacement);
 
 		if (m_positionPublisher) {
 			m_positionPublisher->publish(m_coordination);

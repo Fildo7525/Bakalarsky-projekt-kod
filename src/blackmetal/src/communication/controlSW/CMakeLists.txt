@@ -28,5 +28,6 @@ ament_target_dependencies(bm_controlSW
 	"rclcpp"
 	"std_msgs"
 	"geometry_msgs"
+	"nav_msgs"
 )
 

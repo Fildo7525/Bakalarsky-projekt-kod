@@ -4,6 +4,7 @@
 
 #include "controlSW/Odometry.hpp"
 
+#include <nav_msgs/msg/detail/odometry__struct.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
@@ -62,6 +63,6 @@ private:
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
 
-	rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr m_positionPublisher;
+	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
 };
 
