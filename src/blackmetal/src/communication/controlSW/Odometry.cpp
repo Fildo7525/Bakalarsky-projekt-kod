@@ -85,7 +85,7 @@ void Odometry::execute()
 	RobotResponseType wheelImpulses = m_robotDataDelegator->robotVelocity();
 	INFO("Before filtering " << wheelImpulses.toJson());
 
-	// We must filter the impulses and not the mps, because the filter mus be reset to desired walue on chage request.
+	// We must filter the impulses and not the mps, because the filter mus be reset to desired value on change request.
 	// This is possible only with impulses.
 	wheelImpulses.setLeftWheel(m_leftWheelImpulseFilter->filter(wheelImpulses.leftWheel()));
 	wheelImpulses.setRightWheel(m_rightWheelImpulseFilter->filter(wheelImpulses.rightWheel()));
