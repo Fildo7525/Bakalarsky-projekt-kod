@@ -83,6 +83,13 @@ public:
 	void setWheelRadius(double wheelRadius);
 
 	/**
+	 * @brief Sets the encoder resolution.
+	 *
+	 * @param encoderResolution value to be set.
+	 */
+	void setEncoderResolution(int encoderResolution);
+
+	/**
 	 * @brief Returns the lenth of the chassis.
 	 */
 	double getChassisLength();
@@ -147,6 +154,9 @@ private:
 
 	/// The left and right wheel radius.
 	double m_wheelRadius;
+
+	/// How many impulses will the encoder send per one turn.
+	int m_encoderResolution;
 
 	/// The filter of the robot's left motor impulses.
 	std::shared_ptr<FrequencyFilter> m_leftWheelImpulseFilter;

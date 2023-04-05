@@ -18,6 +18,7 @@ BlackMetal::BlackMetal()
 {
 	m_odometry->setChassisLength(declare_parameter<double>("chasis", 1));
 	m_odometry->setWheelRadius(declare_parameter<double>("wheelRadius", 0.2));
+	m_odometry->setEncoderResolution(declare_parameter<int>("encoderResolution", 1000));
 
 	DBG("Chasis has lenght " << m_odometry->getChassisLength() << " m");
 	DBG("Wheel has radius " << m_odometry->getWheelRadius() << " m");
