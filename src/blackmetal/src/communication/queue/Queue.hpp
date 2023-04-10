@@ -91,7 +91,7 @@ private:
 	/// Condition variable ensuring the pop method will wait for an element if the queue is empty.
 	std::condition_variable m_cvPush;
 
-	// The name of the queue used for debugging.
+	/// The name of the queue used for debugging.
 	const std::string m_queueName;
 };
 

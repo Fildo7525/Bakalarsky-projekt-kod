@@ -45,6 +45,7 @@ public:
 	 */
 	explicit Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator);
 
+	/// Destructor.
 	~Odometry();
 
 	/**
@@ -130,7 +131,14 @@ private:
 	 */
 	void changeRobotLocation(Speed &&speed);
 
+	/**
+	 * @brief Computes the angle of the robot in interval [-pi, pi] on Cartesian plain.
+	 *
+	 * @param angle Angle to be wrapped in radians.
+	 * @return Wrapped angle in radians.
+	 */
 	double wrapAngle(double angle);
+
 private:
 	/// Instance of the control software client.
 	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
@@ -162,6 +170,7 @@ private:
 	/// The filter of the robot's right motor impulses.
 	std::shared_ptr<FrequencyFilter> m_rightWheelImpulseFilter;
 
+	/// The last time the execute function was called.
 	std::chrono::system_clock::time_point m_lastTime;
 };
 

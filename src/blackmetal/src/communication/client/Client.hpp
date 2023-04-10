@@ -120,8 +120,10 @@ protected:
 	/// Socket for biding to server, sending and receiving data.
 	int m_socket;
 
+	/// Client file descriptor.
 	int m_clientFD;
 
+	/// Mutex called every time we want to get data from the client.
 	std::mutex m_mutex;
 };
 

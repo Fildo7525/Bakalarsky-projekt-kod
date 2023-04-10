@@ -63,6 +63,7 @@ private:
 	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
 
+	/// Publisher for the odometry of the robot.
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
 };
 
