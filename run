@@ -10,9 +10,17 @@ esac
 
 if [[ $doc -eq 1 ]]; then
 	./compile --doc
+	ret=$?
 else
 	./compile
+	ret=$?
 fi
+
+if [[ $ret != 0 ]]; then
+	echo "Compilation failed"
+	exit $ret
+fi
+
 source ./install/setup.bash
 
 ros2 launch blackmetal blackmetal.launch.py
