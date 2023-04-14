@@ -7,7 +7,7 @@
 using namespace std::chrono_literals;
 
 TEST(QueueTest, fillAndEmpty) {
-	ts::Queue q("q");
+	ts::Queue<std::string> q("q");
 
 	q.push("1");
 	q.push("2");
@@ -23,7 +23,7 @@ TEST(QueueTest, fillAndEmpty) {
 }
 
 TEST(QueueTest, multitreadedFillAndEmpty) {
-	ts::Queue q("q");
+	ts::Queue <std::string> q("q");
 	
 	std::thread t([&] {
 		std::this_thread::sleep_for(1s);
