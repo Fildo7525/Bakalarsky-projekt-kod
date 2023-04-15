@@ -2,6 +2,8 @@ set(TEST_FILES
 	main.cpp
 	./stopwatch/testStopwatch.cpp
 	./communication/queue/testQueue.cpp
+	./communication/controlSW/testOdometry.hpp
+	./communication/controlSW/testOdometry.cpp
 	./communication/client/testClient.cpp
 )
 

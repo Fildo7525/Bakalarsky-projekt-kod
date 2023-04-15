@@ -87,7 +87,7 @@ public:
 	 */
 	void setPositinoPublisher(rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr positionPublisher);
 
-private:
+protected:
 	/**
 	 * @brief Retrieve the left and right wheel speed from the received json message.
 	 *
