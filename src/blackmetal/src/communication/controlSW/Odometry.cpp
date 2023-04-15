@@ -188,6 +188,7 @@ void Odometry::changeRobotLocation(Speed &&speed)
 	{
 		std::lock_guard lock(g_odometryMutex);
 		// Set the linear velocity for the odometry message.
+		m_coordination.header.stamp.sec = now.time_since_epoch().count();
 		m_coordination.twist.twist.linear.x = linearVelocity;
 		m_coordination.twist.twist.linear.y = 0.0;
 		m_coordination.twist.twist.linear.z = 0.0;
