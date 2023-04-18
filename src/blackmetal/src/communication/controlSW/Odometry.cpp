@@ -167,8 +167,14 @@ Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 
 void Odometry::changeRobotLocation(Speed &&speed)
 {
-	DBG("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
+	// Calculate the robot's new position based on its current position and displacement
+	auto now = std::chrono::high_resolution_clock::now();
+	auto tmp = now - m_lastTime;
+	m_lastTime = now;
+	double dt = std::chrono::duration_cast<std::chrono::microseconds>(tmp).count() / 1'000.;
+	DBG("dt: " << dt);
 
+	DBG("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
 	// Calculate the distance traveled by each wheel in meters
 	double leftWheelFloorVelocity = 2.0 * M_PI * m_wheelRadius * speed.leftWheel / m_encoderResolution;
 	double rightWheelFloorVelocity = 2.0 * M_PI * m_wheelRadius * speed.rightWheel / m_encoderResolution;
@@ -178,13 +184,6 @@ void Odometry::changeRobotLocation(Speed &&speed)
 	double linearVelocity = (leftWheelFloorVelocity + rightWheelFloorVelocity) / 2.0;
 	double angularVelocity = (rightWheelFloorVelocity - leftWheelFloorVelocity) / m_chassisLength;
 	DBG("linear change: " << linearVelocity << " angular change: " << angularVelocity);
-
-	// Calculate the robot's new position based on its current position and displacement
-	auto now = std::chrono::high_resolution_clock::now();
-	auto tmp = now - m_lastTime;
-	m_lastTime = now;
-	double dt = std::chrono::duration_cast<std::chrono::microseconds>(tmp).count() / 1'000.;
-	DBG("dt: " << dt);
 	{
 		std::lock_guard lock(g_odometryMutex);
 		// Set the linear velocity for the odometry message.
