@@ -20,6 +20,8 @@
 #include <thread>
 #include <variant>
 
+#include <tf2/LinearMath/Quaternion.h>
+
 /// Defined by the BlackMetal source code.
 #define MAX_WHEEL_SPEED 0.8
 /// The filter must be strong enough to filter out the noise.
@@ -168,12 +170,6 @@ Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
 void Odometry::changeRobotLocation(Speed &&speed)
 {
 	// Calculate the robot's new position based on its current position and displacement
-	auto now = std::chrono::high_resolution_clock::now();
-	auto tmp = now - m_lastTime;
-	m_lastTime = now;
-	double dt = std::chrono::duration_cast<std::chrono::microseconds>(tmp).count() / 1'000.;
-	DBG("dt: " << dt);
-
 	DBG("Traveled impulses lw: " << speed.leftWheel << " rw: " << speed.rightWheel);
 	// Calculate the distance traveled by each wheel in meters
 	double leftWheelFloorVelocity = 2.0 * M_PI * m_wheelRadius * speed.leftWheel / m_encoderResolution;
@@ -186,6 +182,16 @@ void Odometry::changeRobotLocation(Speed &&speed)
 	DBG("linear change: " << linearVelocity << " angular change: " << angularVelocity);
 	{
 		std::lock_guard lock(g_odometryMutex);
+		auto now = std::chrono::high_resolution_clock::now();
+		auto tmp = now - m_lastTime;
+		m_lastTime = now;
+		double dt = std::chrono::duration_cast<std::chrono::microseconds>(tmp).count() / 1'000.;
+		DBG("dt: " << dt);
+
+		tf2::Quaternion q;
+		q.setRPY(0, 0, wrapAngle(m_coordination.pose.pose.orientation.z + angularVelocity * dt));
+		DBG("Quaternion: " << q.x() << ", " << q.y() << ", " << q.z() << ", " << q.w());
+
 		// Set the linear velocity for the odometry message.
 		m_coordination.header.stamp.sec = now.time_since_epoch().count();
 		m_coordination.twist.twist.linear.x = linearVelocity;
@@ -203,9 +209,10 @@ void Odometry::changeRobotLocation(Speed &&speed)
 		m_coordination.pose.pose.position.z = 0.0;
 
 		// Replace with the robot's current heading in radians
-		m_coordination.pose.pose.orientation.x = 0.0;
-		m_coordination.pose.pose.orientation.y = 0.0;
-		m_coordination.pose.pose.orientation.z = wrapAngle(m_coordination.pose.pose.orientation.z + angularVelocity * dt);
+		m_coordination.pose.pose.orientation.x = q.x();
+		m_coordination.pose.pose.orientation.y = q.y();
+		m_coordination.pose.pose.orientation.z = q.z();
+		m_coordination.pose.pose.orientation.w = q.w();
 
 		if (m_positionPublisher) {
 			m_positionPublisher->publish(m_coordination);
@@ -216,10 +223,12 @@ void Odometry::changeRobotLocation(Speed &&speed)
 double Odometry::wrapAngle(double angle)
 {
 	// Calculate the reminder of deviding two doubles.
+	FATAL("Input angle: " << angle);
 	angle = fmod(angle, 2.0 * M_PI);
 	if (angle < 0.0) {
 		angle += 2.0 * M_PI;
 	}
+	FATAL("Output angle: " << angle);
 	return angle;
 }
 

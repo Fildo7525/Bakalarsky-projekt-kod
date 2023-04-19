@@ -25,7 +25,10 @@ public:
 		m_subscriber = this->create_subscription<nav_msgs::msg::Odometry>(
 					"odom",
 					rclcpp::QoS(10),
-					[] (const nav_msgs::msg::Odometry msg) { INFO(msg.pose.pose.position.x << ", " << msg.pose.pose.position.y << ", " << msg.pose.pose.position.z); });
+					[] (const nav_msgs::msg::Odometry msg) {
+						INFO("Position: " << msg.pose.pose.position.x << ", " << msg.pose.pose.position.y << ", " << msg.pose.pose.orientation.z);
+						INFO("Velocity: " << msg.twist.twist.linear.x << ", " << msg.twist.twist.angular.z);
+			});
 	}
 private:
 	rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr m_subscriber;

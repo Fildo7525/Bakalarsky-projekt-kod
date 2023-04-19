@@ -29,5 +29,7 @@ ament_target_dependencies(bm_controlSW
 	"std_msgs"
 	"geometry_msgs"
 	"nav_msgs"
+	"tf2"
+	"tf2_ros"
 )
 
