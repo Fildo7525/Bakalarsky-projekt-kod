@@ -46,9 +46,13 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 	, m_rightWheelImpulseFilter(new RobotImpulseFilter(FILTER_COEFFICIENT))
 {
 	m_robotDataDelegator->setOnVelocityChangeCallback([this] (RobotRequestType newValue) {
-		INFO("Resetting the filter values to " << newValue.toJson() << " because of a change request");
-		m_leftWheelImpulseFilter->resetInitState(std::get<double>(newValue.leftWheel()));
-		m_rightWheelImpulseFilter->resetInitState(std::get<double>(newValue.rightWheel()));
+		if (newValue.command() == bm::Command::SET_LR_WHEEL_VELOCITY
+			|| newValue.command() == bm::Command::SET_LR_WHEEL_POSITION) {
+			INFO("Resetting the filter values to " << std::quoted(newValue.toJson()) << " because of a change request");
+			m_leftWheelImpulseFilter->resetInitState(std::get<double>(newValue.leftWheel()));
+			m_rightWheelImpulseFilter->resetInitState(std::get<double>(newValue.rightWheel()));
+		}
+		WARN("Filters cannot be reset with json " << std::quoted(newValue.toJson()));
 	});
 
 	m_orientationZ = 0;
