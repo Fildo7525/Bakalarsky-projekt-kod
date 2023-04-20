@@ -73,3 +73,5 @@ private:
 	double m_rightWheel;
 };
 
+std::ostream& operator<<(std::ostream &os, const RobotResponseType &robotResponse);
+

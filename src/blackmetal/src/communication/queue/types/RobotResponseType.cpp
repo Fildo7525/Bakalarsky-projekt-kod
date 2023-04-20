@@ -51,3 +51,8 @@ bool RobotResponseType::operator>(const RobotResponseType &other) const
 	return false;
 }
 
+std::ostream& operator<<(std::ostream &os, const RobotResponseType &robotResponse)
+{
+	return os << robotResponse.toJson();
+}
+
