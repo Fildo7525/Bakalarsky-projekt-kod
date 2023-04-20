@@ -62,7 +62,7 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 			while (m_robotDataDelegator->connected()) {
 				m_lastTime = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::micro> microseconds{ Stopwatch::lastStoppedTime() };
-				auto time = ((g_pollTime - microseconds) <= 0ms ? 0ms : g_pollTime - microseconds);
+				std::chrono::duration<long double, std::micro> time = ((g_pollTime - microseconds) <= 0ms ? 0ms : g_pollTime - microseconds);
 
 				if (time > 0ms) {
 					DBG("Sleeping for " << time.count()/1'000'000. << " seconds");
