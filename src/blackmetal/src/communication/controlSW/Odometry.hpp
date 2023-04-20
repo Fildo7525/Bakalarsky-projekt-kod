@@ -55,22 +55,6 @@ public:
 	void execute();
 
 	/**
-	 * @brief Get the last left wheel speed.
-	 *
-	 * The output of this function is copy of the actual value.
-	 * Thus you can use this variable in non thread safe functions.
-	 */
-	[[maybe_unused]] double leftWheelSpeed() const;
-
-	/**
-	 * @brief Get the last right wheel speed.
-	 *
-	 * The output of this function is copy of the actual value.
-	 * Thus you can use this variable in non thread safe functions.
-	 */
-	[[maybe_unused]] double rightWheelSpeed() const;
-
-	/**
 	 * @brief Sets the length of the robot chassis.
 	 *
 	 * @param chassisLength  value to be set.
@@ -151,9 +135,6 @@ private:
 
 	/// The robot coordinates in system where its initial position is [0, 0, 0] => (x, y, angle).
 	nav_msgs::msg::Odometry m_coordination;
-
-	/// The speeds in the blackmetal code are defined as longs.
-	Speed m_velocity;
 
 	/// The length of the robot chassis.
 	double m_chassisLength;

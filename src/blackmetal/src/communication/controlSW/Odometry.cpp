@@ -104,26 +104,9 @@ void Odometry::execute()
 	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 	lastValue = wheels;
 
-	{
-		std::lock_guard lock(g_odometryMutex);
-		m_velocity = wheels;
-	}
-
 	TOC;
 
 	std::thread(std::bind(&Odometry::changeRobotLocation, this, _1), std::move(wheels)).detach();
-}
-
-double Odometry::leftWheelSpeed() const
-{
-	std::lock_guard lock(g_odometryMutex);
-	return m_velocity.leftWheel;
-}
-
-double Odometry::rightWheelSpeed() const
-{
-	std::lock_guard lock(g_odometryMutex);
-	return m_velocity.rightWheel;
 }
 
 void Odometry::setChassisLength(double chassisLength)
@@ -229,7 +212,6 @@ void Odometry::changeRobotLocation(Speed &&speed)
 double Odometry::wrapAngle(double angle)
 {
 	// Calculate the reminder of deviding two doubles.
-	FATAL("Input angle: " << angle);
 	angle = fmod(angle, 2.0 * M_PI);
 	if (angle < 0.0) {
 		angle += 2.0 * M_PI;
