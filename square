@@ -54,8 +54,6 @@ help() {
 	exit 1
 }
 
-trap 'stop; exit 1' 2
-
 declare -i verbose=0
 
 case "$1" in
