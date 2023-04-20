@@ -172,5 +172,7 @@ private:
 
 	/// The last time the execute function was called.
 	std::chrono::system_clock::time_point m_lastTime;
+
+	long double m_orientationZ;
 };
 

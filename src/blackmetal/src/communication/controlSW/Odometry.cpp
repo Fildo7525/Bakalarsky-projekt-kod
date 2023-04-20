@@ -51,6 +51,8 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 		m_rightWheelImpulseFilter->resetInitState(std::get<double>(newValue.rightWheel()));
 	});
 
+	m_orientationZ = 0;
+
 	std::thread(
 		[this] {
 			while (m_robotDataDelegator->connected()) {
@@ -188,8 +190,12 @@ void Odometry::changeRobotLocation(Speed &&speed)
 		double dt = std::chrono::duration_cast<std::chrono::microseconds>(tmp).count() / 1'000.;
 		DBG("dt: " << dt);
 
+		m_orientationZ = wrapAngle(m_orientationZ + angularVelocity * dt);
+		auto poseX = linearVelocity * std::cos(m_orientationZ) * dt;
+		auto poseY = linearVelocity * std::sin(m_orientationZ) * dt;
+
 		tf2::Quaternion q;
-		q.setRPY(0, 0, wrapAngle(m_coordination.pose.pose.orientation.z + angularVelocity * dt));
+		q.setRPY(0, 0, m_orientationZ);
 		DBG("Quaternion: " << q.x() << ", " << q.y() << ", " << q.z() << ", " << q.w());
 
 		// Set the linear velocity for the odometry message.
@@ -204,8 +210,8 @@ void Odometry::changeRobotLocation(Speed &&speed)
 		m_coordination.twist.twist.angular.z = angularVelocity;
 
 		// Replace with the robot's current coordinates
-		m_coordination.pose.pose.position.x += linearVelocity * std::cos(m_coordination.pose.pose.orientation.z) * dt;
-		m_coordination.pose.pose.position.y += linearVelocity * std::sin(m_coordination.pose.pose.orientation.z) * dt;
+		m_coordination.pose.pose.position.x += poseX;
+		m_coordination.pose.pose.position.y += poseY;
 		m_coordination.pose.pose.position.z = 0.0;
 
 		// Replace with the robot's current heading in radians
