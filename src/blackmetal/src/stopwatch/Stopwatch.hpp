@@ -34,7 +34,7 @@ public:
 	/**
 	 * @brief Access the last stopped time in the vector.
 	 *
-	 * @return Const double reference to the last stopped time.
+	 * @return Copied double of the last stopped time.
 	 */
 	static double lastStoppedTime();
 

@@ -30,7 +30,7 @@ double Stopwatch::lastStoppedTime()
 {
 	std::lock_guard lock(mut);
 	if (stoppedTimes.empty()) {
-		return -1.0;
+		return 0.0;
 	}
 	return stoppedTimes.back();
 }
