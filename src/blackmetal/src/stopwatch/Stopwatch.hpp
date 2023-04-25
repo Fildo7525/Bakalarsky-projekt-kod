@@ -48,7 +48,7 @@ public:
 	static double stoppedTimeAt(const std::vector<double>::size_type index);
 
 	/**
-	 * @brief Get the copy of all the stopped times. The vector capturing them 
+	 * @brief Get the copy of all the stopped times. The vector capturing them
 	 * is cleared.
 	 */
 	static std::vector<double> getStoppedTimes();

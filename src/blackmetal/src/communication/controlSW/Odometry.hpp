@@ -39,7 +39,7 @@ public:
 
 	/**
 	 * @brief Creates an odometry object. This object polls the server for its velocity.
-	 * Therefor the object should call the execute function in different thread.
+	 * Therefore the object should call the execute function in different thread.
 	 *
 	 * @param controlClient Reference to the control software connected to the robot.
 	 */
@@ -50,7 +50,7 @@ public:
 
 	/**
 	 * @brief Function polling the robot for its left and right wheel speed.
-	 * The function will block the thread, thus it should be run in different thread.
+	 * WARN: The function WILL block the thread, thus it must be run in different thread.
 	 */
 	void execute();
 
