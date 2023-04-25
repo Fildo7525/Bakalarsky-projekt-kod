@@ -30,7 +30,8 @@ using pqueue = std::priority_queue<T, std::vector<T>, std::greater<T>>;
  * The ordering is done using the callable object std::greater<std::string>()
  */
 template <typename T>
-class Queue {
+class Queue
+{
 	/**
 	 * @brief Checks if the queue is empty.
 	 *
@@ -41,18 +42,18 @@ class Queue {
 	 */
 	bool empty();
 
-public:
-	/**
-	 * @brief Default constructor.
-	 */
-	explicit Queue(const std::string &name);
-
 	/**
 	 * @brief The class is not default constructable, copyable or assignable.
 	 */
 	Queue() = delete;
 	Queue(const Queue &) = delete;
 	Queue& operator=(const Queue &) = delete;
+
+public:
+	/**
+	 * @brief Default constructor.
+	 */
+	explicit Queue(const std::string &name);
 
 	/**
 	 * @brief Returns the size of the priority queue.
