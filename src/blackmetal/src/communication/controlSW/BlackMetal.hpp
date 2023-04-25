@@ -40,12 +40,12 @@ public:
 	/**
 	 * @brief Retrieve the chassis length set in the config file.
 	 */
-	[[maybe_unused]] double chassisLength();
+	[[maybe_unused]] double chassisLength() const;
 
 	/**
 	 * @brief Retrieve the wheel radius set from the config file.
 	 */
-	[[maybe_unused]] double wheelRadius();
+	[[maybe_unused]] double wheelRadius() const;
 
 private:
 	/// Client for sending requests to robot.

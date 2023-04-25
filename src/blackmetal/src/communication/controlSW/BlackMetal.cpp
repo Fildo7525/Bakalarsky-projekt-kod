@@ -20,8 +20,8 @@ BlackMetal::BlackMetal()
 	m_odometry->setWheelRadius(declare_parameter<double>("wheelRadius", 0.2));
 	m_odometry->setEncoderResolution(declare_parameter<int>("encoderResolution", 1000));
 
-	DBG("Chasis has lenght " << m_odometry->getChassisLength() << " m");
-	DBG("Wheel has radius " << m_odometry->getWheelRadius() << " m");
+	DBG("Chasis has lenght " << m_odometry->chassisLength() << " m");
+	DBG("Wheel has radius " << m_odometry->wheelRadius() << " m");
 	DBG("Address set to " << m_robotDataDelegator->address() << ":" << PORT);
 
 	m_twistSubscriber = this->create_subscription<geometry_msgs::msg::Twist>(
@@ -44,8 +44,8 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	static constexpr double toMps = 10;
 	// The maximal linear velocity is 0.8 m/s and the maximal angle velocity is 2.857 rad/s.
 	DBG("Message geometry_msgs::msg::Twist: " << geometry_msgs::msg::to_yaml(msg));
-	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / toMps;
-	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->getChassisLength() * msg.angular.z)/ m_odometry->getWheelRadius() / toMps;
+	m_rightWheelSpeed = (msg.linear.x + 0.5 * m_odometry->chassisLength() * msg.angular.z)/ m_odometry->wheelRadius() / toMps;
+	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->chassisLength() * msg.angular.z)/ m_odometry->wheelRadius() / toMps;
 	INFO("Right wheel speed: " << m_rightWheelSpeed << " Left wheel speed: " << m_leftWheelSpeed);
 
 	std::clamp(m_rightWheelSpeed, -1., 1.);
@@ -59,13 +59,13 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	m_robotDataDelegator->requestSpeed(m_rightWheelSpeed, m_leftWheelSpeed);
 }
 
-double BlackMetal::chassisLength()
+double BlackMetal::chassisLength() const
 {
-	return m_odometry->getChassisLength();
+	return m_odometry->chassisLength();
 }
 
-double BlackMetal::wheelRadius()
+double BlackMetal::wheelRadius() const
 {
-	return m_odometry->getWheelRadius();
+	return m_odometry->wheelRadius();
 }
 

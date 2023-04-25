@@ -131,13 +131,13 @@ void Odometry::setEncoderResolution(int encoderResolution)
 	m_encoderResolution = encoderResolution;
 }
 
-double Odometry::getChassisLength()
+double Odometry::chassisLength() const
 {
 	std::lock_guard lock(g_odometryMutex);
 	return m_chassisLength;
 }
 
-double Odometry::getWheelRadius()
+double Odometry::wheelRadius() const
 {
 	std::lock_guard lock(g_odometryMutex);
 	return m_wheelRadius;
@@ -148,7 +148,7 @@ void Odometry::setPositinoPublisher(rclcpp::Publisher<nav_msgs::msg::Odometry>::
 	this->m_positionPublisher = positionPublisher;
 }
 
-Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response)
+Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response) const
 {
 	double lws = response.leftWheel();
 	double rws = response.rightWheel();
@@ -213,7 +213,7 @@ void Odometry::changeRobotLocation(Speed &&speed)
 	}
 }
 
-double Odometry::wrapAngle(double angle)
+double Odometry::wrapAngle(double angle) const
 {
 	// Calculate the reminder of deviding two doubles.
 	angle = fmod(angle, 2.0 * M_PI);

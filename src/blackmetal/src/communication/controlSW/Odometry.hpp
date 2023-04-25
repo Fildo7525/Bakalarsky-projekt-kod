@@ -78,12 +78,12 @@ public:
 	/**
 	 * @brief Returns the lenth of the chassis.
 	 */
-	double getChassisLength();
+	double chassisLength() const;
 
 	/**
 	 * @brief Returns the radius of the wheels.
 	 */
-	double getWheelRadius();
+	double wheelRadius() const;
 
 	/**
 	 * @brief Sets the position publisher created by rclcpp::Node
@@ -102,7 +102,7 @@ private:
 	 * @param response Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	Speed transformToVelocity(RobotResponseType &&response);
+	Speed transformToVelocity(RobotResponseType &&response) const;
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
@@ -121,7 +121,7 @@ private:
 	 * @param angle Angle to be wrapped in radians.
 	 * @return Wrapped angle in radians.
 	 */
-	double wrapAngle(double angle);
+	double wrapAngle(double angle) const;
 
 private:
 	/// Instance of the control software client.
