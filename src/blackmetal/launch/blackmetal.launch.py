@@ -21,6 +21,7 @@ def generate_launch_description():
 	teleop_launch_file = os.path.join(teleop_twist_joy_dir, 'launch', 'teleop-launch.py')
 
 	joy_config = LaunchConfiguration('joy_config', default='ps3')
+	# according to the teleop_twist_joy documentatino the parameter default can be one of: atk3, ps3-holonomic, ps3, xbox, xd3.
 
 	return LaunchDescription([
 		Node(
