@@ -102,7 +102,7 @@ private:
 	 * @param response Message received from the server.
 	 * @return Structure of left and right wheel speed.
 	 */
-	Speed transformToVelocity(RobotResponseType &&response) const;
+	Speed getImpulsesFromResponse(RobotResponseType &&response) const;
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.

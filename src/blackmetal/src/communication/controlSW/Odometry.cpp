@@ -102,7 +102,7 @@ void Odometry::execute()
 
 	// The impulses are taken from the struct and run through low pass filter.
 	// WARN: The right wheel impulses are inverted.
-	wheels = transformToVelocity(std::move(wheelImpulses));
+	wheels = getImpulsesFromResponse(std::move(wheelImpulses));
 
 	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
 
@@ -146,7 +146,7 @@ void Odometry::setPositinoPublisher(rclcpp::Publisher<nav_msgs::msg::Odometry>::
 	this->m_positionPublisher = positionPublisher;
 }
 
-Odometry::Speed Odometry::transformToVelocity(RobotResponseType &&response) const
+Odometry::Speed Odometry::getImpulsesFromResponse(RobotResponseType &&response) const
 {
 	double lws = response.leftWheel();
 	double rws = response.rightWheel();
