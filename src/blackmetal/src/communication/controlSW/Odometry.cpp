@@ -151,7 +151,7 @@ Odometry::Speed Odometry::getImpulsesFromResponse(RobotResponseType &&response) 
 	double lws = response.leftWheel();
 	double rws = response.rightWheel();
 
-	return {lws, rws};
+	return {lws, -rws};
 }
 
 void Odometry::changeRobotLocation(Speed &&speed)
