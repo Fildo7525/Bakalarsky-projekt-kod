@@ -86,7 +86,6 @@ Odometry::~Odometry()
 
 void Odometry::execute()
 {
-	static Speed lastValue;
 	Speed wheels;
 
 	TIC;
@@ -106,7 +105,6 @@ void Odometry::execute()
 	wheels = transformToVelocity(std::move(wheelImpulses));
 
 	INFO("Obtained speeds are " << wheels.leftWheel << " and " << wheels.rightWheel);
-	lastValue = wheels;
 
 	TOC;
 
