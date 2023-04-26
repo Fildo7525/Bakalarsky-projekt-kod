@@ -166,18 +166,26 @@ void RobotDataDelegator::workerThread()
 		std::string message = robotRequest.toJson();
 		INFO("sending: " << message);
 
-		_send(message);
+		// Leave this iteration due to the error in communication.
+		if (_send(message) != bm::Status::OK) {
+			continue;
+		}
+
 		// If multiple messages are read at once they are evaluated in reveive function.
-		if (_receive(message) == bm::Status::MULTIPLE_RECEIVE) {
+		auto readStatus = _receive(message);
+		if (readStatus == bm::Status::MULTIPLE_RECEIVE || readStatus != bm::Status::OK) {
 			continue;
 		}
 
 		if (getSpeedCommand) {
 			getSpeedCommand = false;
 			std::string wheelSpeed;
-			// We take a risk and do not check for an error. The connection is established at this point.
-			// May be changed in the future.
-			_receive(wheelSpeed);
+
+			readStatus = _receive(wheelSpeed);
+			if (readStatus != bm::Status::OK) {
+				continue;
+			}
+
 			DBG("Pushing data " << std::quoted(wheelSpeed) << " to m_odometryMessages");
 		}
 	}
