@@ -7,7 +7,7 @@
 #include <variant>
 #include <mutex>
 
-constexpr long WAIT_TIME = 200'000;
+constexpr long WAIT_TIME = 400'000;
 
 /**
  * @class Client

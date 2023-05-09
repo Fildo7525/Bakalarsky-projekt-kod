@@ -53,6 +53,8 @@ public:
 	 * bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
 	 * @param leftWheel Right wheel speed or position. This parameter is needed only in
 	 * bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
+	 *
+	 * @return Always returns @c bm::Status::OK.
 	 */
 	virtual bm::Status sendRequest(bm::Command cmd, RobotRequestType::WheelValueT rightWheel = 0, RobotRequestType::WheelValueT leftWheel = 0);
 

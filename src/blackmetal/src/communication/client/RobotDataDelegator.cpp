@@ -70,6 +70,7 @@ std::vector<std::string> RobotDataDelegator::splitResponses(const std::string &m
 void RobotDataDelegator::enqueue(const RobotRequestType &msg)
 {
 	m_queue->push(msg);
+	FATAL("Queue size is " << m_queue->size());
 }
 
 RobotResponseType RobotDataDelegator::robotVelocity()
@@ -113,6 +114,8 @@ void RobotDataDelegator::workerThread()
 	RobotRequestType robotRequest;
 	RobotRequestType lastWheelSpeeds;
 	bool getSpeedCommand = false;
+	std::string lastSendMsg = "";
+	bm::Status lastSendStatus = bm::Status::OK;
 
 	// Lambda function used for receiving messages from the server.
 	auto _receive = [this] (std::string &message) -> bm::Status {
@@ -131,14 +134,20 @@ void RobotDataDelegator::workerThread()
 	};
 
 	// Lambda function used for sending messages to the server.
-	auto _send = [this] (const std::string &message) -> bm::Status {
+	auto _send = [this, &lastSendMsg, &lastSendStatus] (const std::string &message) -> bm::Status {
+		if (lastSendMsg == message && !message.ends_with("\"Command\":6}") && lastSendStatus == bm::Status::OK) {
+			return bm::Status::OK;
+		}
+
+		SUCCESS("Sending message: " << message);
 		auto sendStatus = this->send(message);
 		if (sendStatus != bm::Status::OK) {
 			FATAL("Could not send: " << message << ".");
 		}
-		else {
-			DBG("The data were sent");
-		}
+
+		lastSendMsg = message;
+		lastSendStatus = sendStatus;
+
 		return sendStatus;
 	};
 
@@ -150,13 +159,14 @@ void RobotDataDelegator::workerThread()
 		}
 		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
 			if (robotRequest.rightWheel() != lastWheelSpeeds.rightWheel() || robotRequest.leftWheel() != lastWheelSpeeds.leftWheel()) {
-				DBG("The last value and new value are different. Resetting filters. Last value:\n" << lastWheelSpeeds.toJson() << "\nnew value:\n" << robotRequest.toJson());
+				DBG("Value change.\n Last value:\n" << lastWheelSpeeds.toJson() << "\nnew value:\n" << robotRequest.toJson());
 				lastWheelSpeeds = robotRequest;
 
-				DBG("Resetting filter to " << robotRequest);
 				// FROM_IMP_TO_MPS_x is used to convert impulses per second to meters per second using the division.
 				// In case we want to convert from meters per second to impulses per second we must use multiplication.
 				RobotRequestType request = RobotRequestType()
+					.setUserID(1)
+					.setCommand(robotRequest.command())
 					.setLeftWheel(std::get<double>(robotRequest.leftWheel()) * FROM_IMP_TO_MPS_L)
 					.setRightWheel(std::get<double>(robotRequest.rightWheel()) * FROM_IMP_TO_MPS_R);
 				m_onVelocityChange(request);
