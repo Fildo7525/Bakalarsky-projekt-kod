@@ -52,7 +52,9 @@ Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
 			m_leftWheelImpulseFilter->resetInitState(std::get<double>(newValue.leftWheel()));
 			m_rightWheelImpulseFilter->resetInitState(std::get<double>(newValue.rightWheel()));
 		}
-		WARN("Filters cannot be reset with json " << std::quoted(newValue.toJson()));
+		else {
+			WARN("Filters cannot be reset with json " << std::quoted(newValue.toJson()));
+		}
 	});
 
 	m_orientationZ = 0;
