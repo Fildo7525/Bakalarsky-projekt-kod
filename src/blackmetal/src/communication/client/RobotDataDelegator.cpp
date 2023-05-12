@@ -49,6 +49,18 @@ bm::Status RobotDataDelegator::requestPosition(long rightWheel, long leftWheel)
 	return sendRequest(bm::Command::SET_LR_WHEEL_POSITION, rightWheel, leftWheel);
 }
 
+RobotResponseType RobotDataDelegator::robotVelocity()
+{
+	DBG("Getting robot velocity");
+	auto front = m_odometryMessages->pop();
+	return front;
+}
+
+void RobotDataDelegator::setOnVelocityChangeCallback(std::function<void(RobotRequestType)> onVelocityChange)
+{
+	this->m_onVelocityChange = onVelocityChange;
+}
+
 std::vector<std::string> RobotDataDelegator::splitResponses(const std::string &msg)
 {
 	INFO("Received message " << msg);
@@ -71,18 +83,6 @@ void RobotDataDelegator::enqueue(const RobotRequestType &msg)
 {
 	m_queue->push(msg);
 	FATAL("Queue size is " << m_queue->size());
-}
-
-RobotResponseType RobotDataDelegator::robotVelocity()
-{
-	DBG("Getting robot velocity");
-	auto front = m_odometryMessages->pop();
-	return front;
-}
-
-void RobotDataDelegator::setOnVelocityChangeCallback(std::function<void(RobotRequestType)> onVelocityChange)
-{
-	this->m_onVelocityChange = onVelocityChange;
 }
 
 bm::Status RobotDataDelegator::receive(std::string &msg)
