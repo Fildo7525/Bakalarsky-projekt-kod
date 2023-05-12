@@ -43,7 +43,7 @@ public:
 	 *
 	 * @param controlClient Reference to the control software connected to the robot.
 	 */
-	explicit Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator);
+	explicit Odometry(std::shared_ptr<RobotDataDelegator> robotDataDelegator);
 
 	/// Destructor.
 	~Odometry();

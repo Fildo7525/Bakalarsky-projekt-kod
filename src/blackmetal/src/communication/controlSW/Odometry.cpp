@@ -36,7 +36,7 @@ using namespace std::placeholders;
 
 INIT_MODULE(Odometry, dbg_level::DBG);
 
-Odometry::Odometry(std::shared_ptr<RobotDataDelegator> &robotDataDelegator)
+Odometry::Odometry(std::shared_ptr<RobotDataDelegator> robotDataDelegator)
 	: m_robotDataDelegator(robotDataDelegator)
 	, m_positionPublisher(nullptr)
 	, m_coordination()
