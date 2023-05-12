@@ -124,7 +124,7 @@ void RobotDataDelegator::workerThread()
 			WARN("Multiple responses read and evaluated at once skipping second read");
 		}
 		else if (receiveStatus != bm::Status::OK) {
-			FATAL("The message could not be received with return state: " << stringifyStatus(receiveStatus));
+			FATAL("The message could not be received with return state: " << toString(receiveStatus));
 		}
 		else {
 			message = "";

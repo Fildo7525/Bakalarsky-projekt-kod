@@ -40,7 +40,7 @@ enum class Command {
  *
  * @param command Status to be transformed.
  */
-std::string stringifyCommand(const bm::Command command);
+std::string toString(const bm::Command command);
 
 /**
  * @enum Status
@@ -71,7 +71,7 @@ enum class Status {
  *
  * @param status Status to be transformed.
  */
-std::string stringifyStatus(const bm::Status status);
+std::string toString(const bm::Status status);
 
 } // namespace bm
 

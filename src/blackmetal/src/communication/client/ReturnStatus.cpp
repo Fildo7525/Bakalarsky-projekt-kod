@@ -1,6 +1,6 @@
 #include "ReturnStatus.hpp"
 
-std::string bm::stringifyStatus(const bm::Status status)
+std::string bm::toString(const bm::Status status)
 {
 	switch (status) {
 		case bm::Status::OK:
@@ -21,7 +21,7 @@ std::string bm::stringifyStatus(const bm::Status status)
 	return "Unknown bm::Status";
 }
 
-std::string bm::stringifyCommand(const bm::Command command)
+std::string bm::toString(const bm::Command command)
 {
 	switch (command) {
 		case bm::Command::EMPTY:
