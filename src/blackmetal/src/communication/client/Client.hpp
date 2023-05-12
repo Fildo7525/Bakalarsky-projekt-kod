@@ -11,19 +11,11 @@ constexpr long WAIT_TIME = 400'000;
 
 /**
  * @class Client
- * @brief Base class handling TCP/IP connections
+ * @brief Class handling TCP/IPv4 connections.
  *
- * The classes inputs are port and address of the desired server.
- * This class then offers multiple methods of communication with
- * the mobile robot. The communication is handled by json strings.
- *
- * The order of send and received messages is organized using a thread
- * safe queue.
- * @see ts::Queue thread safe queue.
- *
- * NOTE:
- * The strings cannot be passed to parser, because the messages we
- * receive are no according to the standard. We have to do it manually.
+ * This class is a wrapper arround linux server-client interface.
+ * The communication is done using TCP/IP protocol. You can define the time,
+ * how much should the send and receive functions wait for the server.
  */
 class Client
 {
@@ -38,8 +30,8 @@ public:
 	 *
 	 * If -1 is supplied as a wateTime_usec the functions will stay blocking.
 	 *
-	 * @param port On which to start the communication. 
-	 * @param address Address of the server.
+	 * @param port On which to start the communication.
+	 * @param address IPv4 Address of the server.
 	 * @param wateTime_usec How many seconds should the client wait on receive and send functions.
 	 */
 	Client(int port, const std::string &address, long wateTime_usec = WAIT_TIME);
@@ -48,7 +40,7 @@ public:
 	virtual ~Client();
 
 	/**
-	 * @brief Starts the client and connects to the specified server IP.
+	 * @brief Starts the client and connects to the specified server at IP:port.
 	 *
 	 * @param port Port to connect to.
 	 * @param address Address to connect to.
@@ -58,7 +50,7 @@ public:
 	void start(int port, const std::string &address, long wateTime_usec);
 
 	/**
-	 * @brief Disconnects the client from the server.
+	 * @brief Disconnects the client from the server and closes the opened socket.
 	 */
 	void stop();
 
@@ -66,7 +58,9 @@ public:
 	 * @brief Send a desired string message to the server.
 	 *
 	 * @param msg message to be send.
-	 * @return bm::Status::SEND_ERROR when the ::send function crashes, bm::Status::OK otherwise.
+	 * @return @c bm::Status::RECEIVE_ERROR when the ::send function crashes,
+	 * 		   @c bm::Status::TIMEOUT_ERROR when the wateTime_usec is exceeded,
+	 * 		   @c bm::Status::OK otherwise.
 	 */
 	virtual bm::Status send(const std::string &msg);
 
@@ -77,12 +71,14 @@ public:
 	 * The execution will stop until the server does not send a message to us.
 	 *
 	 * @param msg Variable where the received message should be saved.
-	 * @return bm::Status::RECEIVE_ERROR when the ::read function crashes, bm::Status::OK otherwise.
+	 * @return @c bm::Status::RECEIVE_ERROR when the ::read function crashes,
+	 * 		   @c bm::Status::TIMEOUT_ERROR when the wateTime_usec is exceeded,
+	 * 		   @c bm::Status::OK otherwise.
 	 */
 	virtual bm::Status receive(std::string &msg);
 
 	/**
-	 * @brief Returns the address with which was the start method called with.
+	 * @brief Returns copy of the IP address of the server we are currently connected to.
 	 */
 	std::string address();
 
@@ -108,7 +104,7 @@ protected:
 	virtual bm::Status evalReturnState(const std::string &returnJson);
 
 protected:
-	/// IP address to which we tried or are connected to.
+	/// IPv4 address to which we tried or are connected to.
 	std::string m_address;
 
 	/// Flag checking the client's connection.

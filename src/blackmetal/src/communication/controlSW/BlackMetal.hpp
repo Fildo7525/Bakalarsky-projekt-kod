@@ -18,7 +18,7 @@
  *
  * This class inherits the functionality of Client class
  * and implements the methods for communication with the mentioned Black Metal robot.
- * The left and right wheel velocities are converted from geometry_msgs::msg::Twist message type.
+ * The left and right wheel velocities are converted from @c geometry_msgs::msg::Twist message type.
  */
 class BlackMetal
 	: public rclcpp::Node
@@ -60,10 +60,10 @@ private:
 	/// The angular velocity of right wheel.
 	double m_rightWheelSpeed;
 
-	/// Subscriber that waits for the Twist message and executes the onTwistRecievedSendJson callback on it.
+	/// Subscriber that waits for the Twist message and executes the @c onTwistRecievedSendJson callback on it.
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_twistSubscriber;
 
-	/// Publisher for the odometry of the robot.
+	/// Publisher the odometry of the robot.
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
 };
 

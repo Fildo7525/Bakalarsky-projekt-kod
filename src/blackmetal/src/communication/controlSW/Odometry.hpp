@@ -15,11 +15,11 @@
 
 /**
  * @class Odometry
- * @brief Manages left and right wheel speed using the control server.
+ * @brief Manages the received data containing left and right wheel speed using the control server.
  *
  * With a set frequency sends requests to server and evaluates the position, of where it is located
  * in the Cartesian plain. The beginning position after turning on 
- * the robot is [0, 0, 0]. The coordinates are represented as [x, y, angle].
+ * the robot is [0, 0, 0]. The coordinates are represented as [x, y, quaternion].
  */
 class Odometry
 {
@@ -57,26 +57,26 @@ public:
 	/**
 	 * @brief Sets the length of the robot chassis.
 	 *
-	 * @param chassisLength  value to be set.
+	 * @param chassisLength Value to be set.
 	 */
 	void setChassisLength(double chassisLength);
 
 	/**
 	 * @brief Sets the radius of left and right wheel speed.
 	 *
-	 * @param wheelRadius value to be set.
+	 * @param wheelRadius Value to be set.
 	 */
 	void setWheelRadius(double wheelRadius);
 
 	/**
 	 * @brief Sets the encoder resolution.
 	 *
-	 * @param encoderResolution value to be set.
+	 * @param encoderResolution Value to be set.
 	 */
 	void setEncoderResolution(int encoderResolution);
 
 	/**
-	 * @brief Returns the lenth of the chassis.
+	 * @brief Returns the length of the chassis.
 	 */
 	double chassisLength() const;
 
@@ -86,9 +86,9 @@ public:
 	double wheelRadius() const;
 
 	/**
-	 * @brief Sets the position publisher created by rclcpp::Node
+	 * @brief Sets the position publisher created by @c rclcpp::Node
 	 *
-	 * @param positionPublisher 
+	 * @param positionPublisher Publisher of the odometry messages.
 	 */
 	void setPositinoPublisher(rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr positionPublisher);
 
@@ -99,17 +99,20 @@ private:
 	 * @see m_leftWheelImpulseFilter Low pass filter filtering the impulses of the left wheel.
 	 * @see m_rightWheelImpulseFilter Low pass filter filtering the impulses of the right wheel.
 	 *
+	 * @warn This method inverts the right wheel speed so that we could calculate the position of the robot.
+	 *
 	 * @param response Message received from the server.
-	 * @return Structure of left and right wheel speed.
+	 * @return @c Speed structure of left and right wheel speed.
 	 */
 	Speed getImpulsesFromResponse(RobotResponseType &&response) const;
 
 	/**
 	 * @brief Changes the robot location based on the left and right wheel velocity.
 	 *
-	 * The location is calculated from the period of the polling execute function and the
-	 * time that takes to obtain the velocities of the wheels.
-	 * @see execute the polling function.
+	 * The location is calculated from the period of the polling execute function
+	 * and the time that takes to obtain the velocities of the wheels.
+	 *
+	 * @see execute The polling function.
 	 *
 	 * @param speed Rvalue reference to a structure containing the left and right wheel velocity.
 	 */
@@ -154,6 +157,7 @@ private:
 	/// The last time the execute function was called.
 	std::chrono::system_clock::time_point m_lastTime;
 
+	/// The rotation of the robot around the z axis.
 	long double m_orientationZ;
 };
 

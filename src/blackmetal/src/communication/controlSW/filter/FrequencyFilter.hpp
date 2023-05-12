@@ -6,8 +6,8 @@
  * @class FrequencyFilter
  * @brief Class implementing a frequency filter.
  *
- * To filter out the high frequency of a signal, you can use this class. To initialize an object
- * You have to supply the alpha value. It represents the percentage of how much should
+ * This class can be used to filter out the high frequency of a signal. To initialize an object
+ * You have to supply the @c alpha value. It represents the percentage of how much should
  * the old output value effect the new output value.
  */
 class FrequencyFilter
@@ -47,7 +47,7 @@ public:
 	double output();
 
 private:
-	/// The percentage of how much should the old output effect the new output.
+	/// The ratio of how much should the old output effect the new output.
 	double m_alpha;
 
 	/// The output of the filter.

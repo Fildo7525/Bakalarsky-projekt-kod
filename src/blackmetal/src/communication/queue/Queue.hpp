@@ -14,20 +14,34 @@
 using namespace std::chrono_literals;
 
 /**
+ * @brief Priority queue.
+ *
+ * The priority queue is implemented using std::priority_queue.
+ * The ordering is done using the callable object std::greater<T>().
+ *
+ * @tparam T The type of the elements stored in the queue.
+ */
+template <typename T>
+using pqueue = std::priority_queue<T, std::vector<T>, std::greater<T>>;
+
+/**
  * @brief ts is a namespace grouping thread safe classes and functions.
  */
 namespace ts
 {
 
-template <typename T>
-using pqueue = std::priority_queue<T, std::vector<T>, std::greater<T>>;
 
 /**
  * @class Queue
- * @brief Thread safe dynamic priority queue storing json strings
- * that are to be sent to the desired IP address. The preferred strings
- * are those that are setting the robot's left and right wheel speed.
- * The ordering is done using the callable object std::greater<std::string>()
+ * @brief Thread safe dynamic templated priority queue.
+ *
+ * The queue is implemented using @c pqueue<T>, @c std::mutex and @c std::condition_variable.
+ * When you want to pop an element from the queue the thread will be blocked until you push
+ * an element from other thread.
+ *
+ * @see pqueue<T> For more information about the priority queue.
+ *
+ * @tparam T The type of the elements stored in the queue.
  */
 template <typename T>
 class Queue
@@ -44,14 +58,20 @@ class Queue
 
 	/**
 	 * @brief The class is not default constructable, copyable or assignable.
+	 * @{
 	 */
 	Queue() = delete;
 	Queue(const Queue &) = delete;
 	Queue& operator=(const Queue &) = delete;
+	/**
+	 * @}
+	 */
 
 public:
 	/**
 	 * @brief Default constructor.
+	 *
+	 * @param name The name of the queue used for debugging.
 	 */
 	explicit Queue(const std::string &name);
 
@@ -75,7 +95,7 @@ public:
 	 * @brief Add a new element to the priority queue.
 	 *
 	 * Inserts the element to the queue. If the inserted item
-	 * is evaluated by the std::greater<T>() as grater
+	 * is evaluated by the @c std::greater<T>() as grater
 	 * the item is prioritized.
 	 *
 	 * @param item to be added to the queue.
@@ -84,7 +104,7 @@ public:
 
 private:
 	/// Priority queue containing the requests to be send.
-	ts::pqueue<T> m_pqueue;
+	pqueue<T> m_pqueue;
 
 	/// The queue mutex.
 	std::mutex m_qMutex;
@@ -96,7 +116,7 @@ private:
 	const std::string m_queueName;
 };
 
-} // thread safe namespace
+} // namespace ts
 
 template <typename T>
 ts::Queue<T>::Queue(const std::string &name)
@@ -121,7 +141,6 @@ unsigned long ts::Queue<T>::size()
 template <typename T>
 T ts::Queue<T>::pop()
 {
-	// DBG("Pop was invoked");
 	T tmp;
 
 	std::unique_lock<std::mutex> lk(m_qMutex);
@@ -156,7 +175,7 @@ template <typename T>
 std::ostream &operator<<(std::ostream &os, const ts::Queue<T> &queue)
 {
 	std::thread([&os, &queue] {
-		ts::pqueue<T> tmp;
+		pqueue<T> tmp;
 		// Copy the contents of the queue to a temporary queue.
 		// So that we will lock the mutex for as low time as possible.
 		{

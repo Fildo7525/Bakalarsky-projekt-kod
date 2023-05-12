@@ -89,13 +89,14 @@ bm::Status RobotDataDelegator::receive(std::string &msg)
 {
 	auto status = this->Client::receive(msg);
 	if (status != bm::Status::OK) {
+		// The client will display error message.
 		return status;
 	}
 
 	auto responses = splitResponses(msg);
 
 	// There may be a situation that the server will send more than one string before we read it.
-	// Therefore we will read more strings at once and the odometry will crush.
+	// Therefore we will read more strings at once and the odometry will not crush.
 	DBG("The client received " << msg.size() << " bytes");
 	for (auto response : responses) {
 		status = evalReturnState(response);

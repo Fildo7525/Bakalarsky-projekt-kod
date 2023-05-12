@@ -61,7 +61,7 @@ public:
 	 * @brief Compares the left and right wheel speed.
 	 *
 	 * @param other Object to be compared with.
-	 * @return Alwais false
+	 * @return Always false
 	 */
 	bool operator>(const RobotResponseType &other) const;
 

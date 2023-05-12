@@ -8,7 +8,7 @@
 
 /**
  * @class RobotRequestType
- * @brief Class for storing the request parameters.
+ * @brief Class for storing and managing the request parameters.
  *
  * This class is used for storing the request parameters and their transformation to json string.
  */
@@ -31,7 +31,7 @@ public:
 	 * @brief Sets the user ID.
 	 *
 	 * @param id User ID to be set in the request.
-	 * @return RobotRequestType& Reference to the object.
+	 * @return RobotRequestType& Reference to this object.
 	 */
 	RobotRequestType &setUserID(int id);
 
@@ -39,23 +39,25 @@ public:
 	 * @brief Sets the command.
 	 *
 	 * @param cmd Command to be set in the request.
-	 * @return RobotRequestType& Reference to the object.
+	 * @return RobotRequestType& Reference to this object.
 	 */
 	RobotRequestType &setCommand(bm::Command cmd);
 
 	/**
 	 * @brief Sets the left wheel value.
 	 *
-	 * @param lw Left wheel value to be set in the request. This applies only in bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
-	 * @return RobotRequestType& Reference to the object.
+	 * @param lw Left wheel value to be set in the request. This applies only
+	 * in @c bm::Command::SET_LR_WHEEL_VELOCITY and @c bm::Command::SET_LR_WHEEL_POSITION.
+	 * @return RobotRequestType& Reference to this object.
 	 */
 	RobotRequestType &setLeftWheel(WheelValueT lw);
 
 	/**
 	 * @brief Sets the right wheel value.
 	 *
-	 * @param rw Right wheel value to be set in the request. This applies only in bm::Command::SET_LR_WHEEL_VELOCITY and bm::Command::SET_LR_WHEEL_POSITION.
-	 * @return RobotRequestType& Reference to the object.
+	 * @param rw Right wheel value to be set in the request. This applies only
+	 * in @c bm::Command::SET_LR_WHEEL_VELOCITY and @c bm::Command::SET_LR_WHEEL_POSITION.
+	 * @return RobotRequestType& Reference to this object.
 	 */
 	RobotRequestType &setRightWheel(WheelValueT rw);
 
@@ -67,21 +69,21 @@ public:
 	int userID() const;
 
 	/**
-	 * @brief Returns the command.
+	 * @brief Returns the request command.
 	 */
 	bm::Command command() const;
 
 	/**
 	 * @brief Returns the left wheel value.
 	 *
-	 * @return WheelValueT Left wheel value.
+	 * @return @c WheelValueT Left wheel value.
 	 */
 	WheelValueT leftWheel() const;
 
 	/**
 	 * @brief Returns the right wheel value.
 	 *
-	 * @return WheelValueT Right wheel value.
+	 * @return @c WheelValueT Right wheel value.
 	 */
 	WheelValueT rightWheel() const;
 
@@ -94,7 +96,7 @@ public:
 	 * @brief Compares two requests.
 	 *
 	 * The requests are compared by their command. The lower command numbers
-	 * are EMEERGENCY_STOP, SET_LR_WHEEL_VELOCITY, SET_LR_WHEEL_POSITION.
+	 * are @c EMEERGENCY_STOP, @c SET_LR_WHEEL_VELOCITY, @c SET_LR_WHEEL_POSITION.
 	 * When requests with this enqueued they have priority over the other requests.
 	 *
 	 * @param other The other request to compare with.
