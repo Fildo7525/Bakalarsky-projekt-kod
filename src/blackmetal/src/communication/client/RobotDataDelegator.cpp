@@ -32,7 +32,7 @@ bm::Status RobotDataDelegator::sendRequest(bm::Command cmd, RobotRequestType::Wh
 									 .setRightWheel(rightWheel)
 									 .setLeftWheel(leftWheel);
 
-	INFO("Enqueuing: " << message.toJson());
+	INFO("Enqueuing: " << message);
 
 	enqueue(message);
 
@@ -159,7 +159,7 @@ void RobotDataDelegator::workerThread()
 		}
 		else if (robotRequest.command() == bm::Command::SET_LR_WHEEL_VELOCITY) {
 			if (robotRequest.rightWheel() != lastWheelSpeeds.rightWheel() || robotRequest.leftWheel() != lastWheelSpeeds.leftWheel()) {
-				DBG("Value change.\n Last value:\n" << lastWheelSpeeds.toJson() << "\nnew value:\n" << robotRequest.toJson());
+				DBG("Value change.\n Last value:\n" << lastWheelSpeeds << "\nnew value:\n" << robotRequest);
 				lastWheelSpeeds = robotRequest;
 
 				// FROM_IMP_TO_MPS_x is used to convert impulses per second to meters per second using the division.
