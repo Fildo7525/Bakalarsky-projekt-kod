@@ -51,7 +51,7 @@ RobotRequestType::WheelValueT RobotRequestType::rightWheel() const
 std::string RobotRequestType::toJson() const
 {
 	// Example: "{\"UserID\":1,\"Command\":3,\"RightWheelSpeed\":0.1,\"LeftWheelSpeed\":0.1,\"RightWheelPosition\":0.1,\"LeftWheelPosition\":0.1}";
-	std::string message = "{\"UserID\":1,\"Command\":";
+	std::string message = "{\"UserID\":" + std::to_string(m_userID) + ",\"Command\":";
 	message += std::to_string(int(m_command));
 	if (m_command == bm::Command::SET_LR_WHEEL_VELOCITY) {
 		message += ",\"RightWheelSpeed\":" + std::to_string(std::get<double>(m_rightWheel)) +
