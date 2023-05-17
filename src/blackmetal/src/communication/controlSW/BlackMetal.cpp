@@ -48,8 +48,8 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	m_leftWheelSpeed = (msg.linear.x - 0.5 * m_odometry->chassisLength() * msg.angular.z)/ m_odometry->wheelRadius() / toMps;
 	INFO("Right wheel speed: " << m_rightWheelSpeed << " Left wheel speed: " << m_leftWheelSpeed);
 
-	std::clamp(m_rightWheelSpeed, -1., 1.);
-	std::clamp(m_leftWheelSpeed, -1., 1.);
+	m_rightWheelSpeed = std::clamp(m_rightWheelSpeed, -1., 1.);
+	m_leftWheelSpeed = std::clamp(m_leftWheelSpeed, -1., 1.);
 
 	// WARN: When we change the robot velocity the filter will enlarge the transition time to the requested velocity.
 	// In this case we have to forcefully reset the state of the filter. This should probably happen in RobotDataDelegator
