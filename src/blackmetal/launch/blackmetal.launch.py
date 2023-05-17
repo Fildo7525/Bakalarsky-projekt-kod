@@ -20,7 +20,7 @@ def generate_launch_description():
 	teleop_twist_joy_dir = get_package_share_directory('teleop_twist_joy')
 	teleop_launch_file = os.path.join(teleop_twist_joy_dir, 'launch', 'teleop-launch.py')
 
-	joy_config = LaunchConfiguration('joy_config', default='ps3')
+	joy_config = LaunchConfiguration('joy_config', default='xbox')
 	# according to the teleop_twist_joy documentatino the parameter default can be one of: atk3, ps3-holonomic, ps3, xbox, xd3.
 
 	return LaunchDescription([
@@ -29,20 +29,8 @@ def generate_launch_description():
 			executable='blackmetal',
 			output='screen',
 			parameters = [config_blackmetal],
-			emulate_tty=True
-		),
-		Node(
-			package='blackmetal',
-			executable='bm_logger',
-			output='screen',
-			parameters = [config_log],
-			emulate_tty=True
-		),
-		Node(
-			package='blackmetal',
-			executable='bm_position',
-			output='screen',
-			emulate_tty=True
+			emulate_tty=True,
+			prefix=['gnome-terminal -- gdb -ex run --args']
 		),
 		IncludeLaunchDescription(
 			PythonLaunchDescriptionSource(teleop_launch_file),
