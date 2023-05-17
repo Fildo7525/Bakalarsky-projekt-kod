@@ -3,6 +3,7 @@
 #include "RobotDataDelegator.hpp"
 
 #include "controlSW/Odometry.hpp"
+#include "RequestMatcher.hpp"
 
 #include <nav_msgs/msg/detail/odometry__struct.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -65,5 +66,7 @@ private:
 
 	/// Publisher the odometry of the robot.
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
+
+	RequestMatcher m_matcher;
 };
 

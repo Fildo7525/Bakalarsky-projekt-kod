@@ -93,6 +93,7 @@ bm::Status RobotDataDelegator::receive(std::string &msg)
 		return status;
 	}
 
+	FATAL("Received string: " << msg);
 	auto responses = splitResponses(msg);
 
 	// There may be a situation that the server will send more than one string before we read it.
@@ -115,8 +116,6 @@ void RobotDataDelegator::workerThread()
 	RobotRequestType robotRequest;
 	RobotRequestType lastWheelSpeeds;
 	bool getSpeedCommand = false;
-	std::string lastSendMsg = "";
-	bm::Status lastSendStatus = bm::Status::OK;
 
 	// Lambda function used for receiving messages from the server.
 	auto _receive = [this] (std::string &message) -> bm::Status {
@@ -128,26 +127,18 @@ void RobotDataDelegator::workerThread()
 			FATAL("The message could not be received with return state: " << toString(receiveStatus));
 		}
 		else {
-			message = "";
 			DBG("The data were received");
 		}
 		return receiveStatus;
 	};
 
 	// Lambda function used for sending messages to the server.
-	auto _send = [this, &lastSendMsg, &lastSendStatus] (const std::string &message) -> bm::Status {
-		if (lastSendMsg == message && !message.ends_with("\"Command\":6}") && lastSendStatus == bm::Status::OK) {
-			return bm::Status::OK;
-		}
-
+	auto _send = [this] (const std::string &message) -> bm::Status {
 		SUCCESS("Sending message: " << message);
 		auto sendStatus = this->send(message);
 		if (sendStatus != bm::Status::OK) {
 			FATAL("Could not send: " << message << ".");
 		}
-
-		lastSendMsg = message;
-		lastSendStatus = sendStatus;
 
 		return sendStatus;
 	};

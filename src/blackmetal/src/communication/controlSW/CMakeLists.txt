@@ -4,6 +4,8 @@ add_library(bm_controlSW
 	BlackMetal.hpp
 	Odometry.cpp
 	Odometry.hpp
+	RequestMatcher.hpp
+	RequestMatcher.cpp
 	filter/FrequencyFilter.cpp
 	filter/FrequencyFilter.hpp
 	filter/RobotImpulseFilter.cpp
