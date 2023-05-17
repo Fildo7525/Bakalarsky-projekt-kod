@@ -12,10 +12,11 @@ Pre jednoduchosť zaobchádzania sú s balíkom priložené štyri súbory:
 
 | Skript       | Opis   |
 |------------- | ------ |
-| compile      | Kopiluje kod pomocou prikazu `colcon build`. Zisti kolko jadier ma pocitac uzivatela a pouzije dvojnasobok vlakien tohto poctu na kopilaciu. Je tu moznost pouzit vlajku `-d` popripade <br> `--doc`, ktora zabezpeci generovanie dokumentacie kodu pomocou spustitelneho suboru `doxygen`. |
+| compile      | Kopiluje kod pomocou prikazu `colcon build`. Zisti kolko jadier ma pocitac uzivatela a pouzije dvojnasobok vlakien tohto poctu na kopilaciu. Je tu moznost pouzit vlajku `-d` popripade <br> `--doc`, ktora zabezpeci generovanie dokumentacie kodu pomocou spustitelneho suboru `doxygen`. `-h / --help` zobrazi help prikazy. Pri zadani vlajky `-c / --clean` sa vymaze build adresar a spusti kompilaciu z praznej konfiguracie. |
 | run          | Pouziva subor `compile`. Ak prebehne kompilacia bez chyb tak spusti program. Tento program vie sprostredkovat vlajku `-d` respektive `--doc` suboru `compile`. |
 | test         | Taktiez pouziva subor `compile`. Namiesto spustenia programu spusti testy. |
 | clearLogs    | Tento skript vytvori priecinok `backupLogs`. Tam presunie vsetky logy z priecinka `log`. |
+| square | Subor `square` mozeme spustit az po spusteni suboru `run`. Tento subor posiela prikazy robtu tak, aby spravil stvorec. Pre blizsie informacie zadajte prikaz `square --help`|
 
 > _**NOTE**_: Dokumentácia k programu je vygenerovaná v anglickom jazyku, aby si ju mohlo precitať väčšie spektrum lúdi.
 
