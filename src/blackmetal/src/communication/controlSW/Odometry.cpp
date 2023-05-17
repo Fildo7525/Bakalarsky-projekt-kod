@@ -220,7 +220,7 @@ double Odometry::wrapAngle(double angle) const
 	if (angle < 0.0) {
 		angle += 2.0 * M_PI;
 	}
-	FATAL("Output angle: " << angle);
+	INFO("The angle was wrapped to: " << angle);
 	return angle;
 }
 

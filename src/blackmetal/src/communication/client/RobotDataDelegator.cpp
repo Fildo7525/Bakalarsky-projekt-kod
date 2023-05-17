@@ -82,7 +82,7 @@ std::vector<std::string> RobotDataDelegator::splitResponses(const std::string &m
 void RobotDataDelegator::enqueue(const RobotRequestType &msg)
 {
 	m_queue->push(msg);
-	FATAL("Queue size is " << m_queue->size());
+	INFO("Queue size is " << m_queue->size());
 }
 
 bm::Status RobotDataDelegator::receive(std::string &msg)
@@ -94,7 +94,7 @@ bm::Status RobotDataDelegator::receive(std::string &msg)
 		return status;
 	}
 
-	FATAL("Received string: " << msg);
+	DBG("Received string: " << msg);
 	auto responses = splitResponses(msg);
 
 	// There may be a situation that the server will send more than one string before we read it.

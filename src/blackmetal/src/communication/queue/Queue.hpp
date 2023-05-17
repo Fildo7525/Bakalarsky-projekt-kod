@@ -30,7 +30,6 @@ using pqueue = std::priority_queue<T, std::vector<T>, std::greater<T>>;
 namespace ts
 {
 
-
 /**
  * @class Queue
  * @brief Thread safe dynamic templated priority queue.
