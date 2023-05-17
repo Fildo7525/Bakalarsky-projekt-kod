@@ -8,10 +8,10 @@
 using namespace std::chrono_literals;
 
 /**
- * @class MessageMatcher
- * @brief Class used for filtering the sending messages.
+ * @class RequestMatcher
+ * @brief Class used for filtering out the sending request data.
  *
- * If the message to be send is the same as the last send message
+ * If the requests parameters to be send are the same as the last send data
  * and the last send was successful. The message is not send. The robot
  * has set timer to stop execution after 10 seconds, therefore we set
  * a timelimit to 9 seconds. If this limit is overstepped we send
