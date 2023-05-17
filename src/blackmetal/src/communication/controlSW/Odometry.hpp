@@ -4,14 +4,9 @@
 #include "filter/RobotImpulseFilter.hpp"
 #include "types/RobotResponseType.hpp"
 
-#include <geometry_msgs/msg/vector3.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rclcpp/timer.hpp>
-
-#include <chrono>
-#include <memory>
-#include <thread>
 
 /**
  * @class Odometry

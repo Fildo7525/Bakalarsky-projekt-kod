@@ -5,13 +5,7 @@
 #include "controlSW/Odometry.hpp"
 #include "RequestMatcher.hpp"
 
-#include <nav_msgs/msg/detail/odometry__struct.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <geometry_msgs/msg/twist.hpp>
-
-#include <memory>
-#include <string>
-#include <thread>
 
 /**
  * @class BlackMetal

@@ -1,5 +1,4 @@
 #include "RequestMatcher.hpp"
-#include <mutex>
 
 RequestMatcher::RequestMatcher(const std::pair<double, double> &speeds)
 	: m_time(std::chrono::system_clock::now() - 10s)

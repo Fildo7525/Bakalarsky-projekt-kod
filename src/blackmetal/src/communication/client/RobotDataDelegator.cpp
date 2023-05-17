@@ -2,7 +2,6 @@
 
 #include "ReturnStatus.hpp"
 #include "log.hpp"
-#include "types/RobotResponseType.hpp"
 
 #include <algorithm>
 #include <exception>
