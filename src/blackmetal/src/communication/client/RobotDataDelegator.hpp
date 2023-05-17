@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Client.hpp"
+#include "controlSW/RequestMatcher.hpp"
 #include "types/RobotRequestType.hpp"
 #include "types/RobotResponseType.hpp"
 
@@ -42,7 +43,7 @@ public:
 	 * @param port Port to connect to.
 	 * @param address IPv4 Address of the server.
 	 */
-	RobotDataDelegator(int port, const std::string &address);
+	RobotDataDelegator(int port, const std::string &address, std::shared_ptr<RequestMatcher> matcher);
 
 	/**
 	 * @brief Forms a json string out of supplied parameters and enqueues them.
@@ -152,6 +153,9 @@ private:
 
 	/// Thread safe queue containing the returned left and right wheel velocity.
 	std::shared_ptr<ts::Queue<RobotResponseType>> m_odometryMessages;
+
+	/// Object for filtering the duplicated requests.
+	std::shared_ptr<RequestMatcher> m_matcher;
 
 	/// Flag for detecting the change of the robot velocity. When set the filter will be reset using the @c m_onVelocityChange callback.
 	bool m_velocityChangeFlag;

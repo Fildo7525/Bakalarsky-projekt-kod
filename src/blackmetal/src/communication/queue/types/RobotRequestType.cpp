@@ -4,25 +4,25 @@
 
 INIT_MODULE(RobotRequestType);
 
-RobotRequestType& RobotRequestType::setUserID(int id)
+RobotRequestType &RobotRequestType::setUserID(int id)
 {
 	this->m_userID = id;
 	return *this;
 }
 
-RobotRequestType& RobotRequestType::setCommand(bm::Command cmd)
+RobotRequestType &RobotRequestType::setCommand(bm::Command cmd)
 {
 	this->m_command = cmd;
 	return *this;
 }
 
-RobotRequestType& RobotRequestType::setLeftWheel(WheelValueT lw)
+RobotRequestType &RobotRequestType::setLeftWheel(WheelValueT lw)
 {
 	this->m_leftWheel = lw;
 	return *this;
 }
 
-RobotRequestType& RobotRequestType::setRightWheel(WheelValueT rw)
+RobotRequestType &RobotRequestType::setRightWheel(WheelValueT rw)
 {
 	this->m_rightWheel = rw;
 	return *this;
@@ -79,7 +79,7 @@ bool RobotRequestType::operator>(const RobotRequestType &other) const
 	return false;
 }
 
-std::ostream& operator<<(std::ostream &os, const RobotRequestType &request)
+std::ostream &operator<<(std::ostream &os, const RobotRequestType &request)
 {
 	return os << request.toJson();
 }

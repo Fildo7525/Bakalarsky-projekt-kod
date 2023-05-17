@@ -12,10 +12,11 @@
 
 INIT_MODULE(RobotDataDelegator);
 
-RobotDataDelegator::RobotDataDelegator(int port, const std::string &address)
+RobotDataDelegator::RobotDataDelegator(int port, const std::string &address, std::shared_ptr<RequestMatcher> matcher)
 	: Client(port, address)
 	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
 	, m_odometryMessages(new ts::Queue<RobotResponseType>("m_odometryQueue"))
+	, m_matcher(matcher)
 	, m_onVelocityChange([] (RobotRequestType newValue) { (void)newValue;})
 {
 	std::thread([this] {
@@ -88,6 +89,7 @@ void RobotDataDelegator::enqueue(const RobotRequestType &msg)
 bm::Status RobotDataDelegator::receive(std::string &msg)
 {
 	auto status = this->Client::receive(msg);
+	m_matcher->setSendStatus(status);
 	if (status != bm::Status::OK) {
 		// The client will display error message.
 		return status;

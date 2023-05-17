@@ -3,6 +3,7 @@
 #include "ReturnStatus.hpp"
 
 #include <chrono>
+#include <mutex>
 #include <string>
 
 using namespace std::chrono_literals;
@@ -33,7 +34,7 @@ public:
 	 * @param msg Message to be matched.
 	 * @return True if the @c msg is the last send message, false otherwise.
 	 */
-	bool operator()(const std::pair<double, double> &speeds);
+	bool checkLastInstance(const std::pair<double, double> &speeds);
 
 	/**
 	 * @brief Sets the last send message to be matched.
@@ -60,5 +61,7 @@ private:
 
 	/// Last send status.
 	bm::Status m_sendStatus;
+
+	std::mutex m_lock;
 };
 

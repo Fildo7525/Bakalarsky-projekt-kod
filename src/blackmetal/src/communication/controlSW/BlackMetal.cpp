@@ -13,9 +13,9 @@ INIT_MODULE(BlackMetal, dbg_level::DBG);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
-	, m_robotDataDelegator(new RobotDataDelegator(PORT, "192.168.1.3"))
+	, m_matcher(new RequestMatcher({0, 0}))
+	, m_robotDataDelegator(new RobotDataDelegator(PORT, "192.168.1.3", m_matcher))
 	, m_odometry(new Odometry(m_robotDataDelegator))
-	, m_matcher({0, 0})
 {
 	m_odometry->setChassisLength(declare_parameter<double>("chasis", 1));
 	m_odometry->setWheelRadius(declare_parameter<double>("wheelRadius", 0.2));
@@ -52,8 +52,11 @@ void BlackMetal::onTwistRecievedSendJson(const geometry_msgs::msg::Twist &msg)
 	m_rightWheelSpeed = std::clamp(m_rightWheelSpeed, -1., 1.);
 	m_leftWheelSpeed = std::clamp(m_leftWheelSpeed, -1., 1.);
 
-	if (!m_matcher({m_leftWheelSpeed, m_rightWheelSpeed})) {
-		m_matcher.setSendSpeeds({m_rightWheelSpeed, m_leftWheelSpeed});
+	// Than the queue will be filled with the same commands and the communication will be flooded and unresponsive to new
+	// We filter out the duplicate commands. This is useful when we are using a joystick and we are not releasing the button.
+	// changed commands.
+	if (!m_matcher->checkLastInstance({m_leftWheelSpeed, m_rightWheelSpeed})) {
+		m_matcher->setSendSpeeds({m_rightWheelSpeed, m_leftWheelSpeed});
 
 		// WARN: When we change the robot velocity the filter will enlarge the transition time to the requested velocity.
 		// In this case we have to forcefully reset the state of the filter. This should probably happen in RobotDataDelegator

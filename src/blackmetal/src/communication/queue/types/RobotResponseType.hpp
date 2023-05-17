@@ -22,7 +22,7 @@ public:
 	 * @param leftWheel Speed to be set in the json.
 	 * @return Reference to the object.
 	 */
-	RobotResponseType& setLeftWheel(long leftWheel);
+	RobotResponseType &setLeftWheel(long leftWheel);
 
 	/**
 	 * @brief Sets the right wheel speed in the json response representation.
@@ -30,7 +30,7 @@ public:
 	 * @param rightWheel Speed to be set in the json.
 	 * @return Reference to the object.
 	 */
-	RobotResponseType& setRightWheel(long rightWheel);
+	RobotResponseType &setRightWheel(long rightWheel);
 
 	/**
 	 * @brief Get the left wheel speed.
@@ -73,5 +73,5 @@ private:
 	double m_rightWheel;
 };
 
-std::ostream& operator<<(std::ostream &os, const RobotResponseType &robotResponse);
+std::ostream &operator<<(std::ostream &os, const RobotResponseType &robotResponse);
 

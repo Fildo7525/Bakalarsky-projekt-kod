@@ -19,5 +19,6 @@ target_link_libraries(client
 	logger
 	stopwatch
 	threadSafeQ
+	bm_controlSW
 )
 

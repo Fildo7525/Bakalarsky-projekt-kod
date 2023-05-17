@@ -1,4 +1,5 @@
 #include "RequestMatcher.hpp"
+#include <mutex>
 
 RequestMatcher::RequestMatcher(const std::pair<double, double> &speeds)
 	: m_time(std::chrono::system_clock::now() - 10s)
@@ -6,10 +7,11 @@ RequestMatcher::RequestMatcher(const std::pair<double, double> &speeds)
 	, m_sendStatus(bm::Status::OK)
 {}
 
-bool RequestMatcher::operator()(const std::pair<double, double> &speeds)
+bool RequestMatcher::checkLastInstance(const std::pair<double, double> &speeds)
 {
 	auto now = std::chrono::system_clock::now();
 
+	std::scoped_lock<std::mutex> lock(m_lock);
 	if (m_speeds == speeds) {
 		if (m_time + 9s < now) {
 			m_time = now;
@@ -28,12 +30,14 @@ bool RequestMatcher::operator()(const std::pair<double, double> &speeds)
 
 RequestMatcher &RequestMatcher::setSendSpeeds(const std::pair<double, double> &speeds)
 {
+	std::scoped_lock<std::mutex> lock(m_lock);
 	m_speeds = speeds;
 	return *this;
 }
 
 RequestMatcher &RequestMatcher::setSendStatus(bm::Status status)
 {
+	std::scoped_lock<std::mutex> lock(m_lock);
 	m_sendStatus = status;
 	return *this;
 }

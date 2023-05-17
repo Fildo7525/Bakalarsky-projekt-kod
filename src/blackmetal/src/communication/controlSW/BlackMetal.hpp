@@ -49,6 +49,9 @@ public:
 	[[maybe_unused]] double wheelRadius() const;
 
 private:
+	/// Object for filtering the duplicated requests.
+	std::shared_ptr<RequestMatcher> m_matcher;
+
 	/// Client for sending requests to robot.
 	std::shared_ptr<RobotDataDelegator> m_robotDataDelegator;
 
@@ -66,7 +69,5 @@ private:
 
 	/// Publisher the odometry of the robot.
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr m_positionPublisher;
-
-	RequestMatcher m_matcher;
 };
 

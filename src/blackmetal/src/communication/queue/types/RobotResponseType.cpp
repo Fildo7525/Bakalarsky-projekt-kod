@@ -1,12 +1,12 @@
 #include "RobotResponseType.hpp"
 
-RobotResponseType& RobotResponseType::setLeftWheel(long leftWheel)
+RobotResponseType &RobotResponseType::setLeftWheel(long leftWheel)
 {
 	m_leftWheel = leftWheel;
 	return *this;
 }
 
-RobotResponseType& RobotResponseType::setRightWheel(long rightWheel)
+RobotResponseType &RobotResponseType::setRightWheel(long rightWheel)
 {
 	m_rightWheel = rightWheel;
 	return *this;
@@ -51,7 +51,7 @@ bool RobotResponseType::operator>(const RobotResponseType &other) const
 	return false;
 }
 
-std::ostream& operator<<(std::ostream &os, const RobotResponseType &robotResponse)
+std::ostream &operator<<(std::ostream &os, const RobotResponseType &robotResponse)
 {
 	return os << robotResponse.toJson();
 }

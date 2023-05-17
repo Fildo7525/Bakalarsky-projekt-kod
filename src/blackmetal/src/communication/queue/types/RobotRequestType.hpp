@@ -34,7 +34,7 @@ public:
 	 * @brief Sets the user ID.
 	 *
 	 * @param id User ID to be set in the request.
-	 * @return RobotRequestType& Reference to this object.
+	 * @return RobotRequestType &Reference to this object.
 	 */
 	RobotRequestType &setUserID(int id);
 
@@ -42,7 +42,7 @@ public:
 	 * @brief Sets the command.
 	 *
 	 * @param cmd Command to be set in the request.
-	 * @return RobotRequestType& Reference to this object.
+	 * @return RobotRequestType &Reference to this object.
 	 */
 	RobotRequestType &setCommand(bm::Command cmd);
 
@@ -51,7 +51,7 @@ public:
 	 *
 	 * @param lw Left wheel value to be set in the request. This applies only
 	 * in @c bm::Command::SET_LR_WHEEL_VELOCITY and @c bm::Command::SET_LR_WHEEL_POSITION.
-	 * @return RobotRequestType& Reference to this object.
+	 * @return RobotRequestType &Reference to this object.
 	 */
 	RobotRequestType &setLeftWheel(WheelValueT lw);
 
@@ -60,7 +60,7 @@ public:
 	 *
 	 * @param rw Right wheel value to be set in the request. This applies only
 	 * in @c bm::Command::SET_LR_WHEEL_VELOCITY and @c bm::Command::SET_LR_WHEEL_POSITION.
-	 * @return RobotRequestType& Reference to this object.
+	 * @return RobotRequestType &Reference to this object.
 	 */
 	RobotRequestType &setRightWheel(WheelValueT rw);
 
@@ -110,10 +110,11 @@ public:
 	friend std::ostream &operator<<(std::ostream &os, const RobotRequestType &request);
 
 private:
+	/// Timestamp used for comparing the order of request in @c ts::Queue.
+	std::chrono::system_clock::time_point m_time;
+
 	/// User ID of the request.
 	int m_userID;
-
-	std::chrono::system_clock::time_point m_time;
 
 	/// Command that the robot should execute.
 	bm::Command m_command;
