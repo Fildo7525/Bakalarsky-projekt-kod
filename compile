@@ -1,9 +1,36 @@
 #!/bin/bash
 
 let numberOfCores=$(cat /proc/cpuinfo | grep "processor" | wc -l)*2
+args="--event-handlers console_direct+ --executor parallel --parallel-workers $numberOfCores"
+generateDoc=false
 
+help() {
+	echo "Usage: compile.sh [OPTION]"
+	echo "Compile the project"
+	echo ""
+	echo "  -d, --doc	Generate documentation"
+	echo "  -h, --help	Display this help and exit"
+	echo "  -c, --clean	Do a clean build"
+}
+
+for argument in $@; do
+	if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+		help
+		exit 0
+	fi
+
+	if [[ "$1" == "-c" || "$1" == "--clean" ]]; then
+		args="$args --cmake-clean-cache --cmake-clean-first"
+	fi
+
+	if [[ "$1" == "-d" || "$1" == "--doc" ]]; then
+		generateDoc=true
+	fi
+done
+
+echo "$args"
 pushd ~/Bakalarka/code/ &> /dev/null
-colcon build --event-handlers console_direct+ --parallel-workers $numberOfCores
+colcon build $args
 ret=$?
 
 if [[ $ret -ne 0 ]]; then
@@ -12,7 +39,7 @@ if [[ $ret -ne 0 ]]; then
 	exit $ret
 fi
 
-if [[ "$1" == "-d" || "$1" == "--doc" ]]; then
+if [[ $generateDoc == true ]]; then
 	echo "Generating documentation"
 	pushd doc &> /dev/null
 	doxygen config &> /dev/null
