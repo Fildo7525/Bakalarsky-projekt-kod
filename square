@@ -47,7 +47,7 @@ help() {
 	echo "Usage:"
 	echo "	./square [-h/--help] <size> <speed>"
 	echo
-	echo "	size	(m) This parameter is mendatory. The size is the size of one of the side of the square."
+	echo "	size	(m) This parameter is mendatory. The size is the size of one of the sides of the square."
 	echo "	speed	<-0.8; 0.8> (mps) This parameter is mendatory. The speed at which should the robot operate."
 	echo
 
