@@ -1,7 +1,11 @@
 #include "RequestMatcher.hpp"
 
+// Robot has timer set to 10 seconds. After this time the robot stops.
+#define ROBOT_TIMER_LIMIT 10s
+
 RequestMatcher::RequestMatcher(const std::pair<double, double> &speeds)
-	: m_time(std::chrono::system_clock::now() - 10s)
+	// Set the time to 10 seconds before now, so the first message is always send.
+	: m_time(std::chrono::system_clock::now() - ROBOT_TIMER_LIMIT)
 	, m_speeds(speeds)
 	, m_sendStatus(bm::Status::OK)
 {}
@@ -12,6 +16,7 @@ bool RequestMatcher::checkLastInstance(const std::pair<double, double> &speeds)
 
 	std::scoped_lock<std::mutex> lock(m_lock);
 	if (m_speeds == speeds) {
+		// We do not want to wate for the robot to stop.
 		if (m_time + 9s < now) {
 			m_time = now;
 			return false;
