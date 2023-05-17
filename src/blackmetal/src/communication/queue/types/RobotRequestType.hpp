@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <variant>
+#include <chrono>
 
 /**
  * @class RobotRequestType
@@ -18,7 +19,9 @@ public:
 	/**
 	 * @brief Default constructor.
 	 */
-	RobotRequestType() = default;
+	RobotRequestType()
+		: m_time(std::chrono::system_clock::now())
+	{}
 
 	/**
 	 * The sendRequest function takes arguments for left and right wheel
@@ -109,6 +112,8 @@ public:
 private:
 	/// User ID of the request.
 	int m_userID;
+
+	std::chrono::system_clock::time_point m_time;
 
 	/// Command that the robot should execute.
 	bm::Command m_command;

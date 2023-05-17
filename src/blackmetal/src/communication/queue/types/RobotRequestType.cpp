@@ -69,7 +69,14 @@ std::string RobotRequestType::toJson() const
 bool RobotRequestType::operator>(const RobotRequestType &other) const
 {
 	// The lower the command, the higher the priority.
-	return m_command < other.m_command;
+	if (m_command < other.m_command) {
+		return false;
+	}
+	if (m_command == other.command()) {
+		return m_time < other.m_time;
+	}
+
+	return false;
 }
 
 std::ostream& operator<<(std::ostream &os, const RobotRequestType &request)
