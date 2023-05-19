@@ -76,7 +76,7 @@ bool RobotRequestType::operator>(const RobotRequestType &other) const
 		return m_time < other.m_time;
 	}
 
-	return false;
+	return true;
 }
 
 std::ostream &operator<<(std::ostream &os, const RobotRequestType &request)
