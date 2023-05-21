@@ -34,7 +34,7 @@ constexpr std::chrono::milliseconds g_pollTime(100);
 
 using namespace std::placeholders;
 
-INIT_MODULE(Odometry, dbg_level::DBG);
+INIT_MODULE(Odometry, Logger::level::DBG);
 
 Odometry::Odometry(std::shared_ptr<RobotDataDelegator> robotDataDelegator)
 	: m_robotDataDelegator(robotDataDelegator)

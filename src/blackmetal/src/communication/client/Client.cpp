@@ -17,7 +17,7 @@
 #include <memory>
 #include <thread>
 
-INIT_MODULE(Client, dbg_level::DBG);
+INIT_MODULE(Client, Logger::level::DBG);
 
 Client::Client(int port, const std::string &address, long wateTime_usec)
 	: m_connected(false)

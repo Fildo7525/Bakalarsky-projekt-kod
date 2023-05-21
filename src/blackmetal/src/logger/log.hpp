@@ -19,7 +19,7 @@
 /// Writes the supplied message with the log level to log file based on the module and on the stdout/stderr stream.
 #define LOG(msg, color, log_level) \
 	do { \
-		if (lg.level() != dbg_level::OFF) { \
+		if (lg.level() != Logger::level::OFF) { \
 			std::stringstream ss; \
 			ss << msg; \
 			lg.log(log_level, __func__, getpid(), ss.str().c_str(), color); \
@@ -27,15 +27,15 @@
 	} while(false)
 
 /// Passes a debug log message to the registered logger. Works only in debug build.
-#define DBG(msg) LOG(msg, GRAY, dbg_level::DBG)
+#define DBG(msg) LOG(msg, GRAY, Logger::level::DBG)
 /// Passes a info log message to the registered logger. Works only in debug build.
-#define INFO(msg) LOG(msg, RESET, dbg_level::INFO)
+#define INFO(msg) LOG(msg, RESET, Logger::level::INFO)
 /// Passes a warn log message to the registered logger. Works only in debug build.
-#define WARN(msg) LOG(msg, YELLOW, dbg_level::WARN)
+#define WARN(msg) LOG(msg, YELLOW, Logger::level::WARN)
 /// Passes a error log message to the registered logger. Works only in debug build.
-#define ERR(msg) LOG(msg, RED, dbg_level::ERR)
+#define ERR(msg) LOG(msg, RED, Logger::level::ERR)
 /// Passes a fatal log message to the registered logger. Works only in debug build.
-#define FATAL(msg) LOG(msg, BACKGROUND_BRIGHT_RED, dbg_level::FATAL)
+#define FATAL(msg) LOG(msg, BACKGROUND_BRIGHT_RED, Logger::level::FATAL)
 /// Passes a success log message to the registered logger. Works only in debug build.
-#define SUCCESS(msg) LOG(msg, BOLD_GREEN, dbg_level::SUCCESS)
+#define SUCCESS(msg) LOG(msg, BOLD_GREEN, Logger::level::SUCCESS)
 

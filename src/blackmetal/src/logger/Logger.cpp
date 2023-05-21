@@ -34,7 +34,7 @@ std::string getLoggerPath(const std::string &module)
 
 std::fstream Logger::m_logAllFile = std::fstream(getLoggerPath("all"), std::ios::out);
 
-Logger::Logger(const char *module, dbg_level lvl)
+Logger::Logger(const char *module, enum Logger::level lvl)
 	: m_moduleName(module)
 	, m_logFile()
 	, m_level(lvl)
@@ -50,27 +50,27 @@ Logger::Logger(const char *module, dbg_level lvl)
 	}
 }
 
-const char* Logger::dbgLevelToString(const dbg_level level)
+const char* Logger::dbgLevelToString(const enum Logger::level level)
 {
 	switch (level) {
-		case dbg_level::DBG:
+		case level::DBG:
 			return "DBG";
-		case dbg_level::INFO:
+		case level::INFO:
 			return "INFO";
-		case dbg_level::WARN:
+		case level::WARN:
 			return "WARN";
-		case dbg_level::ERR:
+		case level::ERR:
 			return "ERR";
-		case dbg_level::FATAL:
+		case level::FATAL:
 			return "FATAL";
-		case dbg_level::SUCCESS:
+		case level::SUCCESS:
 			return "SUCCESS";
 		default:
 			return "";
 	}
 }
 
-void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, const char *message, const char *color)
+void Logger::log(const enum Logger::level dbgLevel, const char *codePath, pid_t pid, const char *message, const char *color)
 {
 	auto time = std::chrono::system_clock::now();
 	std::time_t pretty_time = std::chrono::system_clock::to_time_t(time);
@@ -82,7 +82,7 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 
 	if (dbgLevel >= m_level) {
 		std::scoped_lock<std::mutex> lk(mut);
-		if (dbgLevel == dbg_level::WARN || dbgLevel == dbg_level::ERR || dbgLevel == dbg_level::FATAL) {
+		if (dbgLevel == level::WARN || dbgLevel == level::ERR || dbgLevel == level::FATAL) {
 			std::fprintf(stderr, "%s[%d:%s] %s : %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
 		} else {
 			std::printf("%s[%d:%s] %s: %s => %s: %s\033[0;0m\n", color, pid, threadID.str().c_str(), dbgLevelToString(dbgLevel), m_moduleName, codePath, message);
@@ -102,7 +102,7 @@ void Logger::log(const dbg_level dbgLevel, const char *codePath, pid_t pid, cons
 	}
 }
 
-dbg_level Logger::level()
+enum Logger::level Logger::level()
 {
 	return m_level;
 }

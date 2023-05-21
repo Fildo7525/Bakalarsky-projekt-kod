@@ -7,7 +7,7 @@
 
 #define PORT 665
 
-INIT_MODULE(BlackMetal, dbg_level::DBG);
+INIT_MODULE(BlackMetal, Logger::level::DBG);
 
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
