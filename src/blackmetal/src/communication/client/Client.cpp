@@ -19,10 +19,10 @@
 
 INIT_MODULE(Client, Logger::level::DBG);
 
-Client::Client(int port, const std::string &address, long wateTime_usec)
+Client::Client(const std::string &address, int port, long wateTime_usec)
 	: m_connected(false)
 {
-	start(port, address, wateTime_usec);
+	start(address, port, wateTime_usec);
 }
 
 Client::~Client()
@@ -30,7 +30,7 @@ Client::~Client()
 	stop();
 }
 
-void Client::start(int port, const std::string &address, long wateTime_usec)
+void Client::start(const std::string &address, int port, long wateTime_usec)
 {
 	if (m_connected) {
 		WARN("The client is already connected to " << m_address << ':' << port);

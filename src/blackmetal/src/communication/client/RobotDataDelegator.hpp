@@ -40,10 +40,10 @@ public:
 	/**
 	 * @brief Constructor implementing @c Client constructor.
 	 *
-	 * @param port Port to connect to.
 	 * @param address IPv4 Address of the server.
+	 * @param port Port to connect to.
 	 */
-	RobotDataDelegator(int port, const std::string &address, std::shared_ptr<RequestMatcher> matcher);
+	RobotDataDelegator(const std::string &address, int port, std::shared_ptr<RequestMatcher> matcher);
 
 	/**
 	 * @brief Forms a json string out of supplied parameters and enqueues them.
@@ -149,7 +149,7 @@ private:
 
 private:
 	/// Thread safe priority queue managing the json string that are to be sent to the robot.
-	std::shared_ptr<ts::Queue<RobotRequestType>> m_queue;
+	std::shared_ptr<ts::Queue<RobotRequestType>> m_robotRequestQueue;
 
 	/// Thread safe queue containing the returned left and right wheel velocity.
 	std::shared_ptr<ts::Queue<RobotResponseType>> m_odometryMessages;

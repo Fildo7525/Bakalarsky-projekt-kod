@@ -29,7 +29,7 @@ public:
 	using WheelValueT = std::variant<long, double>;
 
 	/**
-	 * @brief Sets the user ID.
+	 * Sets the user ID.
 	 *
 	 * @param id User ID to be set in the request.
 	 * @return RobotRequestType &Reference to this object.
@@ -37,7 +37,7 @@ public:
 	RobotRequestType &setUserID(int id);
 
 	/**
-	 * @brief Sets the command.
+	 * Sets the command.
 	 *
 	 * @param cmd Command to be set in the request.
 	 * @return RobotRequestType &Reference to this object.
@@ -45,7 +45,7 @@ public:
 	RobotRequestType &setCommand(bm::Command cmd);
 
 	/**
-	 * @brief Sets the left wheel value.
+	 * Sets the left wheel value.
 	 *
 	 * @param lw Left wheel value to be set in the request. This applies only
 	 * in @c bm::Command::SET_LR_WHEEL_VELOCITY and @c bm::Command::SET_LR_WHEEL_POSITION.
@@ -54,7 +54,7 @@ public:
 	RobotRequestType &setLeftWheel(WheelValueT lw);
 
 	/**
-	 * @brief Sets the right wheel value.
+	 * Sets the right wheel value.
 	 *
 	 * @param rw Right wheel value to be set in the request. This applies only
 	 * in @c bm::Command::SET_LR_WHEEL_VELOCITY and @c bm::Command::SET_LR_WHEEL_POSITION.
@@ -63,33 +63,33 @@ public:
 	RobotRequestType &setRightWheel(WheelValueT rw);
 
 	/**
-	 * @brief Returns the user ID.
+	 * Returns the user ID.
 	 *
 	 * @return int User ID.
 	 */
 	int userID() const;
 
 	/**
-	 * @brief Returns the request command.
+	 * Returns the request command.
 	 */
 	bm::Command command() const;
 
 	/**
-	 * @brief Returns the left wheel value.
+	 * Returns the left wheel value.
 	 *
 	 * @return @c WheelValueT Left wheel value.
 	 */
 	WheelValueT leftWheel() const;
 
 	/**
-	 * @brief Returns the right wheel value.
+	 * Returns the right wheel value.
 	 *
 	 * @return @c WheelValueT Right wheel value.
 	 */
 	WheelValueT rightWheel() const;
 
 	/**
-	 * @brief Forms a json string out of the request.
+	 * Forms a json string out of the request.
 	 */
 	std::string toJson() const;
 

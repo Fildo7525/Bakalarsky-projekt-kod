@@ -11,16 +11,16 @@
 
 INIT_MODULE(RobotDataDelegator);
 
-RobotDataDelegator::RobotDataDelegator(int port, const std::string &address, std::shared_ptr<RequestMatcher> matcher)
-	: Client(port, address)
-	, m_queue(new ts::Queue<RobotRequestType>("m_clientQueue"))
+RobotDataDelegator::RobotDataDelegator(const std::string &address, int port, std::shared_ptr<RequestMatcher> matcher)
+	: Client(address, port)
+	, m_robotRequestQueue(new ts::Queue<RobotRequestType>("m_robotRequestQueue"))
 	, m_odometryMessages(new ts::Queue<RobotResponseType>("m_odometryQueue"))
 	, m_matcher(matcher)
-	, m_onVelocityChange([] (RobotRequestType newValue) { (void)newValue;})
+	, m_onVelocityChange([] (RobotRequestType newValue) { (void)newValue; })
 {
 	std::thread([this] {
 		// We want to create a simultated delay for other components to catch up.
-		std::this_thread::sleep_for(1s);
+		std::this_thread::sleep_for(100ms);
 		workerThread();
 	}).detach();
 }
@@ -81,8 +81,8 @@ std::vector<std::string> RobotDataDelegator::splitResponses(const std::string &m
 
 void RobotDataDelegator::enqueue(const RobotRequestType &msg)
 {
-	m_queue->push(msg);
-	INFO("Queue size is " << m_queue->size());
+	m_robotRequestQueue->push(msg);
+	INFO("Queue size is " << m_robotRequestQueue->size());
 }
 
 bm::Status RobotDataDelegator::receive(std::string &msg)
@@ -133,19 +133,8 @@ void RobotDataDelegator::workerThread()
 		return receiveStatus;
 	};
 
-	// Lambda function used for sending messages to the server.
-	auto _send = [this] (const std::string &message) -> bm::Status {
-		SUCCESS("Sending message: " << message);
-		auto sendStatus = this->send(message);
-		if (sendStatus != bm::Status::OK) {
-			FATAL("Could not send: " << message << ".");
-		}
-
-		return sendStatus;
-	};
-
 	while (connected()) {
-		robotRequest = m_queue->pop();
+		robotRequest = m_robotRequestQueue->pop();
 
 		if (robotRequest.command() == bm::Command::GET_LR_WHEEL_VELOCITY) {
 			getSpeedCommand = true;
@@ -170,7 +159,7 @@ void RobotDataDelegator::workerThread()
 		INFO("sending: " << message);
 
 		// Leave this iteration due to the error in communication.
-		if (_send(message) != bm::Status::OK) {
+		if (this->send(message) != bm::Status::OK) {
 			continue;
 		}
 

@@ -17,7 +17,7 @@ public:
 	RobotResponseType() = default;
 
 	/**
-	 * @brief Sets the left wheel speed in the json response representation.
+	 * Sets the left wheel speed in the json response representation.
 	 *
 	 * @param leftWheel Speed to be set in the json.
 	 * @return Reference to the object.
@@ -25,7 +25,7 @@ public:
 	RobotResponseType &setLeftWheel(long leftWheel);
 
 	/**
-	 * @brief Sets the right wheel speed in the json response representation.
+	 * Sets the right wheel speed in the json response representation.
 	 *
 	 * @param rightWheel Speed to be set in the json.
 	 * @return Reference to the object.
@@ -33,17 +33,17 @@ public:
 	RobotResponseType &setRightWheel(long rightWheel);
 
 	/**
-	 * @brief Get the left wheel speed.
+	 * Get the left wheel speed.
 	 */
 	long leftWheel() const;
 
 	/**
-	 * @brief Get the right wheel speed.
+	 * Get the right wheel speed.
 	 */
 	long rightWheel() const;
 
 	/**
-	 * @brief Returns the representation of the class in json format.
+	 * Returns the representation of the class in json format.
 	 */
 	std::string toJson() const;
 
@@ -58,7 +58,7 @@ public:
 	static RobotResponseType fromJson(const std::string &json);
 
 	/**
-	 * @brief Compares the left and right wheel speed.
+	 * Compares the left and right wheel speed.
 	 *
 	 * @param other Object to be compared with.
 	 * @return Always false

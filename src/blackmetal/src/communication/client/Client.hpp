@@ -30,24 +30,24 @@ public:
 	 *
 	 * If -1 is supplied as a wateTime_usec the functions will stay blocking.
 	 *
-	 * @param port On which to start the communication.
 	 * @param address IPv4 Address of the server.
+	 * @param port On which to start the communication.
 	 * @param wateTime_usec How many seconds should the client wait on receive and send functions.
 	 */
-	Client(int port, const std::string &address, long wateTime_usec = WAIT_TIME);
+	Client(const std::string &address, int port, long wateTime_usec = WAIT_TIME);
 
 	/// Destructor
 	virtual ~Client();
 
 	/**
-	 * @brief Starts the client and connects to the specified server at IP:port.
+	 * @brief Starts the client and connects to the specified server at address:port.
 	 *
-	 * @param port Port to connect to.
 	 * @param address Address to connect to.
+	 * @param port Port to connect to.
 	 * @param wateTime_usec How many seconds should the client wait on receive and send functions.
 	 * If -1 is supplied the functions will stay blocking.
 	 */
-	void start(int port, const std::string &address, long wateTime_usec);
+	void start(const std::string &address, int port, long wateTime_usec);
 
 	/**
 	 * @brief Disconnects the client from the server and closes the opened socket.

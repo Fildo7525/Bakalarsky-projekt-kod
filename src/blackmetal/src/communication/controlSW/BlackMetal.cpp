@@ -12,7 +12,7 @@ INIT_MODULE(BlackMetal, Logger::level::DBG);
 BlackMetal::BlackMetal()
 	: rclcpp::Node("blackmetal")
 	, m_matcher(new RequestMatcher({0, 0}))
-	, m_robotDataDelegator(new RobotDataDelegator(PORT, "192.168.1.3", m_matcher))
+	, m_robotDataDelegator(new RobotDataDelegator("192.168.1.3", PORT, m_matcher))
 	, m_odometry(new Odometry(m_robotDataDelegator))
 {
 	m_odometry->setChassisLength(declare_parameter<double>("chasis", 1));
