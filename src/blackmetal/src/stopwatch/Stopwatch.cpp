@@ -48,8 +48,8 @@ double Stopwatch::stoppedTimeAt(const std::vector<double>::size_type index)
 std::vector<double> Stopwatch::getStoppedTimes()
 {
 	std::lock_guard lock(mut);
-	auto copy = stoppedTimes;
-	stoppedTimes.clear();
+	auto copy = std::vector<double>();
+	std::swap(copy, stoppedTimes);
 	return copy;
 }
 
