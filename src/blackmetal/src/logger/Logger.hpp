@@ -53,8 +53,8 @@ public:
 	 *
 	 * The same log is printed to the file named according to the module name. In the file
 	 * is a timestamp at the beginning of the logging message. This method is counting with
-	 * multiple threads writing to the standard output and to the same file. Thus the 
-	 * printing is guarded with scoped mutex.
+	 * multiple threads writing to the standard output and to the same file. Thus the printing
+	 * is guarded with scoped mutex.
 	 *
 	 * @param dbgLevel Level of the log that is to be printed.
 	 * @param codePath Function name where the logging message is supported.
@@ -65,19 +65,19 @@ public:
 	void log(const level dbgLevel, const char *codePath, pid_t pid, const char *message, const char *color = "");
 
 	/**
-	 * @brief Prints info about the class.
+	 * Prints info about the class.
 	 *
 	 * @return The logging level for the module.
 	 */
 	level level();
 
 	/**
-	 * @brief Returns the name of the module.
+	 * Returns the name of the module.
 	 */
 	std::string moduleName();
 
 	/**
-	 * @brief Free the resources.
+	 * Free the resources.
 	 */
 	~Logger();
 
