@@ -16,5 +16,6 @@ PUBLIC
 target_link_libraries(dummyServer
 	logger
 	stopwatch
+	client
 )
 

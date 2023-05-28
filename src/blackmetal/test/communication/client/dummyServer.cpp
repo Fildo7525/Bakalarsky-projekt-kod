@@ -13,6 +13,8 @@
 
 INIT_MODULE(DummyServer);
 
+static int ignore;
+
 Server::Server(int port)
 	: m_port(port)
 {
@@ -63,7 +65,7 @@ Server::Server(int port)
 		INFO("Reading...");
 
 		clearBff(buffer, 1024);
-		read(m_socket, buffer, 1024);
+		ignore = read(m_socket, buffer, 1024);
 		printf("READ: %s\n", buffer);
 
 		send(m_socket, hello, strlen(hello), 0);
